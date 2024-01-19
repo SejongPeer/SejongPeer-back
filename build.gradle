@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.7'
 	id 'io.spring.dependency-management' version '1.1.4'
-    id 'com.diffplug.spotless' version '6.11.0'
+	id 'com.diffplug.spotless' version '6.11.0'
 }
 
 group = 'com.sejong'
@@ -23,6 +23,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -44,12 +45,12 @@ tasks.named('test') {
 }
 
 spotless {
-    java {
-        target("**/*.java")
-        importOrder()
-        removeUnusedImports() // 사용하지 않는 import 제거
-        trimTrailingWhitespace() // 공백 제거
-        endWithNewline() // 끝부분 NewLine 처리
-        googleJavaFormat().aosp() // google java format
-    }
+	java {
+		target("**/*.java")
+		importOrder()
+		removeUnusedImports() // 사용하지 않는 import 제거
+		trimTrailingWhitespace() // 공백 제거
+		endWithNewline() // 끝부분 NewLine 처리
+		googleJavaFormat().aosp() // google java format
+	}
 }
