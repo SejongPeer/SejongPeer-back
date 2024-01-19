@@ -11,6 +11,14 @@ end_of_line = lf
 # [newline-eof]
 insert_final_newline = true
 
+[build.gradle]
+# [indentation-tab]
+indent_style = tab
+
+# [4-spaces-tab]
+indent_size = 4
+tab_width = 4
+
 [*.bat]
 end_of_line = crlf
 
@@ -27,3 +35,4 @@ trim_trailing_whitespace = true
 
 [line-length-120]
 max_line_length = 120
+
