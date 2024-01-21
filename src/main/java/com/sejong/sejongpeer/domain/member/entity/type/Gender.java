@@ -1,4 +1,4 @@
-package com.sejong.sejongpeer.domain.entity.type;
+package com.sejong.sejongpeer.domain.member.entity.type;
 
 import lombok.Getter;
 

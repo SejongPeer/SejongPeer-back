@@ -1,37 +1,33 @@
-package com.sejong.sejongpeer.domain.entity;
+package com.sejong.sejongpeer.domain.member.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.sejong.sejongpeer.domain.entity.type.Gender;
-import com.sejong.sejongpeer.domain.entity.type.Status;
+import com.sejong.sejongpeer.domain.member.dto.SignUpRequest;
+import com.sejong.sejongpeer.domain.member.entity.type.Gender;
+import com.sejong.sejongpeer.domain.member.entity.type.Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Pattern;
-import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Member {
 	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2")
-	@Column(columnDefinition = "char(36)")
+	@UuidGenerator
+	@Column(name = "id", columnDefinition = "char(36)")
 	private String id;
 
 	@Column(columnDefinition = "varchar(20)", nullable = false, unique = true)
@@ -41,7 +37,6 @@ public class Member {
 	private String password;
 
 	@Column(columnDefinition = "varchar(50)", nullable = false, unique = true)
-	@Pattern(regexp = "^[a-zA-z0-9]+@sju\\.ac\\.kr$")
 	private String email;
 
 	@Column(columnDefinition = "varchar(40)", nullable = false)
@@ -51,7 +46,6 @@ public class Member {
 	private LocalDate birthday;
 
 	@Column(columnDefinition = "varchar(30)", nullable = false)
-	@Pattern(regexp = "^010\\d{4}\\d{4}$")
 	private String phoneNumber;
 
 	@Enumerated(EnumType.STRING)
@@ -78,5 +72,50 @@ public class Member {
 	@LastModifiedDate
 	@Column(updatable = false)
 	private LocalDateTime updatedAt;
+
+	@Builder
+	private Member(String account, String password, String email, String name, LocalDate birthday,
+		String phoneNumber, Gender gender, String major, Integer grade, String studentId) {
+		this.account = account;
+		this.password = password;
+		this.email = email;
+		this.name = name;
+		this.birthday = birthday;
+		this.phoneNumber = phoneNumber;
+		this.gender = gender;
+		this.major = major;
+		this.grade = grade;
+		this.studentId = studentId;
+		this.status = Status.ACTIVE;
+	}
+
+	protected Member() {    // 테스트용 기본 생성자
+		this.account = "account";
+		this.password = "password";
+		this.email = "email";
+		this.name = "name";
+		this.birthday = LocalDate.now();
+		this.phoneNumber = "phoneNumber";
+		this.gender = Gender.MALE;
+		this.major = "major";
+		this.grade = 1;
+		this.studentId = "11111111";
+		this.status = Status.ACTIVE;
+	}
+
+	public static Member create(SignUpRequest request, String encodedPassword) {
+		return Member.builder()
+			.name(request.name())
+			.major(request.major())
+			.grade(request.grade())
+			.phoneNumber(request.phoneNumber())
+			.email(request.email())
+			.account(request.account())
+			.password(encodedPassword)
+			.birthday(request.birthday())
+			.gender(request.gender())
+			.studentId(request.studentId())
+			.build();
+	}
 }
 
