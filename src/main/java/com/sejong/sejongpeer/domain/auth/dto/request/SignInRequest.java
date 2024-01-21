@@ -1,4 +1,4 @@
-package com.sejong.sejongpeer.domain.auth.dto;
+package com.sejong.sejongpeer.domain.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 
