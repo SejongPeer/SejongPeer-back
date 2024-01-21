@@ -1,0 +1,11 @@
+spring:
+  config:
+    activate:
+      on-profile: "security"
+
+jwt:
+  access-token-key: ${ACCESS_JWT_KEY:}
+  refresh-token-key: ${REFRESH_JWT_KEY:}
+  access-token-expiration: ${ACCESS_JWT_EXPIRATION:7200}
+  refresh-token-expiration: ${REFRESH_JWT_EXPIRATION:604800}
+
