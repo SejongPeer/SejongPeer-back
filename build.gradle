@@ -63,3 +63,5 @@ spotless {
 		googleJavaFormat().aosp() // google java format
 	}
 }
+
+tasks.build.dependsOn tasks.spotlessApply
