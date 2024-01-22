@@ -1,0 +1,18 @@
+# 프로그램 실행 시 테이블 create
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# spring security 로그 설정
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
+        web: DEBUG

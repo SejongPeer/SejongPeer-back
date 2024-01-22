@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    group:
+      dev: "dev, datasource, security"
+    include:
+      - security
