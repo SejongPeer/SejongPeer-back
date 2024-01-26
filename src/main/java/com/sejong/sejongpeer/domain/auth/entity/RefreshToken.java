@@ -22,11 +22,13 @@ public class RefreshToken {
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    @Column(nullable = false)
     private String token;
 
     @Builder
-    private RefreshToken(Member member) {
+    private RefreshToken(Member member, String token) {
         this.member = member;
+        this.token = token;
     }
 
     public void renewToken(String token) {
