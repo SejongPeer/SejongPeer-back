@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.college.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,18 +14,19 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class CollegeMajorService {
 
 	private final CollegeMajorRepository collegeMajorRepository;
 
+	@Transactional(readOnly = true)
 	public List<String> getAllColleges() {
 		return collegeMajorRepository.findAllColleges();
 	}
 
+	@Transactional(readOnly = true)
 	public List<CollegeMajorResponse> getAllMajorsByCollege(String college) {
 		return collegeMajorRepository.findAllByCollege(college).stream()
 			.map(cm -> new CollegeMajorResponse(cm.getCollege(), cm.getMajor()))
-			.toList();
+			.collect(Collectors.toUnmodifiableList());
 	}
 }
