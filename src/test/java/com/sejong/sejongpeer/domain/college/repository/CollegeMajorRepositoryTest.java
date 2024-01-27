@@ -16,7 +16,6 @@ import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
 class CollegeMajorRepositoryTest {
 
 	@Autowired
