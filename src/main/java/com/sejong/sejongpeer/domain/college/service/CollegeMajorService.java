@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CollegeMajorService {
 
 	private final CollegeMajorRepository collegeMajorRepository;
