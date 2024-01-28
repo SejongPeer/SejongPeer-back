@@ -1,12 +1,10 @@
 package com.sejong.sejongpeer.domain.member.entity;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
-import com.sejong.sejongpeer.domain.common.BaseEntity;
 import com.sejong.sejongpeer.domain.member.dto.SignUpRequest;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.entity.type.Status;
 import com.sejong.sejongpeer.domain.study.entity.Study;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,18 +12,14 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -73,8 +67,8 @@ public class Member extends BaseAuditEntity {
     @Column(columnDefinition = "enum('ACTIVE', 'BLOCKED')", nullable = false)
     private Status status;
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Study> studies = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Study> studies = new ArrayList<>();
 
     @Builder
     private Member(
