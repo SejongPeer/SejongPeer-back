@@ -18,11 +18,11 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void signUp(SignUpRequest request) {
+    public void signUp(SignUpRequest request) { // TODO: 이메일, 학번 중복 여부 체크
         String encodedPassword = passwordEncoder.encode(request.password());
         Member member = Member.create(request, encodedPassword);
 
-        RefreshToken refreshToken = RefreshToken.builder().member(member).build();
+        RefreshToken refreshToken = RefreshToken.builder().member(member).token("").build();
         refreshTokenRepository.save(refreshToken);
 
         memberRepository.save(member);

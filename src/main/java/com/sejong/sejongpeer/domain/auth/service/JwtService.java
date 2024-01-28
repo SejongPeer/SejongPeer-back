@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.auth.service;
 
+import com.sejong.sejongpeer.security.constant.HeaderConstant;
 import com.sejong.sejongpeer.security.util.JwtProvider;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class JwtService {
         String refreshToken = jwtProvider.generateRefreshToken(memberId);
 
         return Map.of(
-                "accessToken", accessToken,
-                "refreshToken", refreshToken);
+                HeaderConstant.ACCESS_TOKEN_HEADER, accessToken,
+                HeaderConstant.REFRESH_TOKEN_HEADER, refreshToken);
     }
 }

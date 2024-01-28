@@ -4,3 +4,18 @@ spring:
       dev: "dev, datasource, security"
     include:
       - security
+
+swagger:
+  version: ${SWAGGER_VERSION:0.0.1}
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui
+    disable-swagger-default-url: true
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    syntax-highlight:
+      theme: none
+    urls-primary-name: SEJONG PEER API DOCS

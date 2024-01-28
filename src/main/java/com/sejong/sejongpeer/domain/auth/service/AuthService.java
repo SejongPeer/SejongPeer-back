@@ -1,11 +1,12 @@
 package com.sejong.sejongpeer.domain.auth.service;
 
 import com.sejong.sejongpeer.domain.auth.dto.request.SignInRequest;
+import com.sejong.sejongpeer.domain.auth.dto.response.SignInResponse;
 import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
 import com.sejong.sejongpeer.domain.auth.repository.RefreshTokenRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
-import java.util.Map;
+import com.sejong.sejongpeer.security.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,37 +18,34 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtProvider jwtProvider;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public Map<String, String> signIn(SignInRequest request) {
+    public SignInResponse signIn(SignInRequest request) {
         Member member =
                 memberRepository
                         .findByAccount(request.account())
-                        .orElseThrow(
-                                () ->
-                                        new UsernameNotFoundException(
-                                                "Member not found with account: "
-                                                        + request.account()));
+                        .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
 
         if (!passwordEncoder.matches(request.password(), member.getPassword())) {
-            throw new UsernameNotFoundException(
-                    "Member not found with account: " + request.account());
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        Map<String, String> tokens = jwtService.generateTokens(member.getId());
+        String accessToken = jwtProvider.generateAccessToken(member.getId());
+        String refreshToken = jwtProvider.generateRefreshToken(member.getId());
 
+        renewRefreshToken(member, refreshToken);
+
+        return new SignInResponse(accessToken, refreshToken);
+    }
+
+    private void renewRefreshToken(Member member, String token) {
         RefreshToken refreshToken =
                 refreshTokenRepository
                         .findById(member.getId())
-                        .orElseThrow(
-                                () ->
-                                        new UsernameNotFoundException(
-                                                "RefreshToken not found with memberId: "
-                                                        + member.getId()));
-        refreshToken.renewToken(tokens.get("refreshToken"));
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        return tokens;
+        refreshToken.renewToken(token);
     }
 }
