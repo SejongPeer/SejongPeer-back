@@ -1,22 +1,23 @@
 package com.sejong.sejongpeer.domain.member.service;
 
-import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
-import com.sejong.sejongpeer.domain.auth.repository.RefreshTokenRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.sejong.sejongpeer.domain.member.dto.SignUpRequest;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
+@Transactional
 public class MemberService {
-    private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final PasswordEncoder passwordEncoder;
+	private final MemberRepository memberRepository;
+	private final PasswordEncoder passwordEncoder;
 
     public void signUp(SignUpRequest request) { // TODO: 이메일, 학번 중복 여부 체크
         String encodedPassword = passwordEncoder.encode(request.password());
