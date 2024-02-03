@@ -66,10 +66,14 @@ public class MemberService {
         }
     }
 
-	@Transactional(readOnly = true)
-	public boolean isEmailExists(String email) {
-		return memberRepository.existsByEmail(email);
-	}
+    public MemberInfoResponse getMemberInfo(String memberId) {
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+        return MemberInfoResponse.of(member);
+    }
 
     @Transactional(readOnly = true)
     public boolean isStudentIdExists(String studentId) {
