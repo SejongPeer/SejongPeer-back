@@ -7,7 +7,7 @@ public record MemberInfoResponse(
         String name,
         String kakaoAccount,
         String major,
-        String subMajor,
+        String minor,
         String nickname,
         String phoneNumber,
         String account,
