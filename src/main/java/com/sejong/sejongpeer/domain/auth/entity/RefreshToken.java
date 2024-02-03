@@ -1,7 +1,6 @@
 package com.sejong.sejongpeer.domain.auth.entity;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,24 +15,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class RefreshToken {
 
-	@Id
-	@Column(columnDefinition = "char(36)")
-	private String memberId;
+    @Id
+    @Column(columnDefinition = "char(36)")
+    private String memberId;
 
-	@MapsId
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Member member;
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Member member;
 
-	@Column(nullable = false)
-	private String token;
+    @Column(nullable = false)
+    private String token;
 
-	@Builder
-	private RefreshToken(Member member, String token) {
-		this.member = member;
-		this.token = token;
-	}
+    @Builder
+    private RefreshToken(Member member, String token) {
+        this.member = member;
+        this.token = token;
+    }
 
-	public void renewToken(String token) {
-		this.token = token;
-	}
+    public void renewToken(String token) {
+        this.token = token;
+    }
 }

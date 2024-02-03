@@ -1,10 +1,14 @@
 package com.sejong.sejongpeer.domain.college.entity;
 
+import com.sejong.sejongpeer.domain.member.entity.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +30,12 @@ public class CollegeMajor {
     @Comment("학과 이름")
     @Column(length = 30, nullable = false)
     private String major;
+
+    @OneToMany(mappedBy = "collegeMajor", cascade = CascadeType.ALL)
+    private List<Member> majorMembers;
+
+    @OneToMany(mappedBy = "collegeMinor", cascade = CascadeType.ALL)
+    private List<Member> minorMembers;
 
     @Builder
     private CollegeMajor(String college, String major) {
