@@ -126,4 +126,12 @@ public class Member extends BaseAuditEntity { // TODO: 카카오톡 ID, 닉네�
                 .studentId(request.studentId())
                 .build();
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changePassword(String encryptedPassword) {
+        this.password = encryptedPassword;
+    }
 }
