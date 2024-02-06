@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,11 @@ public class StudyController {
     public StudyUpdateResponse studyUpdate(
             @Valid @RequestBody StudyUpdateRequest studyUpdateRequest, @PathVariable Long studyId) {
         return studyService.updateStudy(studyUpdateRequest, studyId);
+    }
+
+    @Operation(summary = "스터디 단건 삭제", description = "스터디 한 개를 삭제합니다.")
+    @DeleteMapping("/{studyId}")
+    public void studyDelete(@PathVariable Long studyId) {
+        studyService.deleteStudy(studyId);
     }
 }
