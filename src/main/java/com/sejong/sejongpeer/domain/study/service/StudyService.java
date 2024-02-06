@@ -1,8 +1,11 @@
 package com.sejong.sejongpeer.domain.study.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +52,11 @@ public class StudyService {
 	}
 
 	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
-		studyRepository.
+		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
+		List<StudyFindResponse> content = studySlice.getContent().stream()
+			.map(StudyFindResponse::from)
+			.collect(Collectors.toList());
+
+		return new SliceImpl<>(content, studySlice.getPageable(), studySlice.hasNext());
 	}
 }
