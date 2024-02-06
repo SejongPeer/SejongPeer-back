@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.study.api;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
@@ -39,5 +41,11 @@ public class StudyController {
 	@GetMapping("/{studyId}")
 	public StudyFindResponse studyFindOne(@PathVariable Long studyId) {
 		return studyService.findOneStudy(studyId);
+	}
+
+	@Operation(summary = "스터디 리스트 조회", description = "스터디 리스트를 조회합니다.")
+	@GetMapping
+	public Slice<StudyFindResponse> studyFindSlice(@RequestParam("size") int size, @RequestParam("lastId") Long lastId) {
+		return studyService.findSliceStudy(size, lastId);
 	}
 }

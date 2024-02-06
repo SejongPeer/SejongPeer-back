@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.study.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +46,9 @@ public class StudyService {
 			.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		return StudyFindResponse.from(study);
+	}
+
+	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
+		studyRepository.
 	}
 }
