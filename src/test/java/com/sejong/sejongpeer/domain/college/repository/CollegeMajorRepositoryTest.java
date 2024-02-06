@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import com.sejong.sejongpeer.TestQuerydslConfig;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.global.config.JpaAuditingConfig;
-
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
