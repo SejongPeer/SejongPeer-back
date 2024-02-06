@@ -10,6 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -25,7 +26,7 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Study extends BaseAuditEntity {
 
-    @Id @GeneratedValue private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
 
     @Comment("스터디 제목")
     @Column(length = 50, nullable = false)
