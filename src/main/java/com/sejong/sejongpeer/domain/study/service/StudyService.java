@@ -8,8 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
+import com.sejong.sejongpeer.global.error.exception.CustomException;
+import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,5 +38,12 @@ public class StudyService {
 			studyCreateRequest.recruitmentStartAt(),
 			studyCreateRequest.recruitmentEndAt(),
 			Member.builder().build());
+	}
+
+	public StudyFindResponse findOneStudy(Long studyId) {
+		Study study = studyRepository
+			.findById(studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+		return StudyFindResponse.from(study);
 	}
 }

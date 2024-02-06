@@ -2,6 +2,8 @@ package com.sejong.sejongpeer.domain.study.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
 
@@ -30,5 +33,11 @@ public class StudyController {
 	public ResponseEntity<StudyCreateResponse> studyCreate(@Valid @RequestBody StudyCreateRequest studyCreateRequest) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(studyService.createStudy(studyCreateRequest));
+	}
+
+	@Operation(summary = "스터디 단건 조회", description = "스터디 한개를 조회합니다.")
+	@GetMapping("/{studyId}")
+	public StudyFindResponse studyFindOne(@PathVariable Long studyId) {
+		return studyService.findOneStudy(studyId);
 	}
 }
