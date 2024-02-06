@@ -76,4 +76,8 @@ public class StudyService {
                 studyUpdateRequest.recruitmentEndAt());
         return StudyUpdateResponse.from(study);
     }
+
+    public void deleteStudy(Long studyId) {
+        studyRepository.deleteById(studyId);
+    }
 }
