@@ -26,7 +26,9 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Study extends BaseAuditEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Comment("스터디 제목")
     @Column(length = 50, nullable = false)
@@ -95,5 +97,20 @@ public class Study extends BaseAuditEntity {
                 .recruitmentEndAt(recruitmentEndAt)
                 .member(member)
                 .build();
+    }
+
+    public void updateStudy(
+            String title,
+            String content,
+            Integer recruitmentCount,
+            StudyType type,
+            LocalDateTime recruitmentStartAt,
+            LocalDateTime recruitmentEndAt) {
+        this.title = title;
+        this.content = content;
+        this.recruitmentCount = recruitmentCount;
+        this.type = type;
+        this.recruitmentStartAt = recruitmentStartAt;
+        this.recruitmentEndAt = recruitmentEndAt;
     }
 }
