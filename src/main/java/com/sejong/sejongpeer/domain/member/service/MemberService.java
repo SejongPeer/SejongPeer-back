@@ -174,4 +174,13 @@ public class MemberService {
 
 		member.changePassword(passwordEncoder.encode(request.password()));
 	}
+
+	public void deleteMember(String memberId) {
+		Member member =
+			memberRepository
+				.findById(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+		memberRepository.delete(member);
+	}
 }
