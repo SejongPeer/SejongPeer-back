@@ -10,7 +10,6 @@ import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,7 @@ public class StudyService {
                 Member.builder().build());
     }
 
-	@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public StudyFindResponse findOneStudy(Long studyId) {
         Study study =
                 studyRepository
@@ -52,7 +51,7 @@ public class StudyService {
         return StudyFindResponse.from(study);
     }
 
-	@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
         Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
         List<StudyFindResponse> content =
