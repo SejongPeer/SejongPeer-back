@@ -21,6 +21,11 @@ public enum ErrorCode {
     DUPLICATED_STUDENT_ID(HttpStatus.BAD_REQUEST, "이미 존재하는 학번입니다."),
     DUPLICATED_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "이미 존재하는 전화번호입니다."),
     DUPLICATED_ACCOUNT(HttpStatus.BAD_REQUEST, "이미 존재하는 계정입니다."),
+
+    // ID/PW 찾기 에러
+    ACCOUNT_FIND_ERROR(HttpStatus.BAD_REQUEST, "이름 또는 전화번호를 입력해주세요."),
+    ACCOUNT_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 정보로 가입된 계정이 존재하지 않습니다."),
+    ACCOUNT_FIND_OPTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 인증 방법입니다."),
     ;
 
     private final HttpStatus status;
