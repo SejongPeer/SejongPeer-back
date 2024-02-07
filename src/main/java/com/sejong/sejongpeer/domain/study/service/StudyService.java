@@ -54,12 +54,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
         Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
-        List<StudyFindResponse> content =
-                studySlice.getContent().stream()
-                        .map(StudyFindResponse::from)
-                        .collect(Collectors.toList());
-
-        return new SliceImpl<>(content, studySlice.getPageable(), studySlice.hasNext());
+        return studySlice.map(StudyFindResponse::from);
     }
 
     public StudyUpdateResponse updateStudy(StudyUpdateRequest studyUpdateRequest, Long studyId) {
