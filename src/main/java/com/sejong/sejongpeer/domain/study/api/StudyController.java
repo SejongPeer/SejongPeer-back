@@ -48,7 +48,7 @@ public class StudyController {
     @Operation(summary = "스터디 리스트 조회", description = "스터디 리스트를 조회합니다.")
     @GetMapping
     public Slice<StudyFindResponse> studyFindSlice(
-            @RequestParam("size") int size, @RequestParam("lastId") Long lastId) {
+            @RequestParam int size, @RequestParam(required = false) Long lastId) {
         return studyService.findSliceStudy(size, lastId);
     }
 

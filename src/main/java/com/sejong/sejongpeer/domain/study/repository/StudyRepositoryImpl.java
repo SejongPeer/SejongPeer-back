@@ -24,7 +24,7 @@ public class StudyRepositoryImpl implements StudyRepositoryCustom {
                         .selectFrom(study)
                         .where(ltStudyId(lastId))
                         .orderBy(study.id.desc())
-                        .limit(size + 1)
+                        .limit((long) size + 1)
                         .fetch();
         return checkLastPage(size, studies);
     }
