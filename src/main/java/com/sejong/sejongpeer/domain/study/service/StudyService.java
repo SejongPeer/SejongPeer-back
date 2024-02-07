@@ -33,7 +33,6 @@ public class StudyService {
     }
 
     private Study createStudyEntity(final StudyCreateRequest studyCreateRequest) {
-        LocalDateTime recruitmentStartAt = LocalDateTime.now();
         return Study.createStudy(
                 studyCreateRequest.title(),
                 studyCreateRequest.content(),
@@ -44,6 +43,7 @@ public class StudyService {
                 Member.builder().build());
     }
 
+	@Transactional(readOnly = true)
     public StudyFindResponse findOneStudy(Long studyId) {
         Study study =
                 studyRepository
@@ -52,6 +52,7 @@ public class StudyService {
         return StudyFindResponse.from(study);
     }
 
+	@Transactional(readOnly = true)
     public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
         Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
         List<StudyFindResponse> content =
