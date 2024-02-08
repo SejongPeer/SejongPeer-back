@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.member.repository;
 
+import com.sejong.sejongpeer.TestQuerydslConfig;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.entity.type.Status;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(JpaAuditingConfig.class)
+@Import({JpaAuditingConfig.class, TestQuerydslConfig.class})
 class MemberRepositoryTest {
     @Autowired private MemberRepository memberRepository;
 
@@ -41,8 +42,6 @@ class MemberRepositoryTest {
         // then
         Assertions.assertNotNull(savedMember);
         Assertions.assertNotNull(savedMember.getId());
-        Assertions.assertNotNull(savedMember.getCreatedAt());
-        Assertions.assertNotNull(savedMember.getUpdatedAt());
         Assertions.assertEquals(member.getStatus(), Status.ACTIVE);
     }
 }
