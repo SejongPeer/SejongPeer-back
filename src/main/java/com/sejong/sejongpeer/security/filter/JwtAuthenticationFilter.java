@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.security.filter;
 
 import com.sejong.sejongpeer.security.constant.HeaderConstant;
+import com.sejong.sejongpeer.security.constant.WebSecurityURIs;
 import com.sejong.sejongpeer.security.util.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,15 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final List<String> EXCLUDE_URLS =
-            List.of(
-                    "/api/v1/auth/sign-in",
-                    "/api/v1/member/sign-up",
-                    "/api/v1/member/check-account",
-                    "/api/v1/member/check-nickname",
-                    "/api/v1/member/help/find-account",
-                    "/api/v1/member/help/reset-password");
-
     private final JwtProvider jwtProvider;
 
     @Override
@@ -75,9 +66,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
 
-        return EXCLUDE_URLS.contains(path);
+        return WebSecurityURIs.PUBLIC_URIS.contains(path);
     }
 }
