@@ -1,4 +1,4 @@
-package com.sejong.sejongpeer.domain.member.dto.reqeust;
+package com.sejong.sejongpeer.domain.member.dto.request;
 
 import com.sejong.sejongpeer.domain.member.type.AccountFindOption;
 import jakarta.validation.constraints.NotBlank;

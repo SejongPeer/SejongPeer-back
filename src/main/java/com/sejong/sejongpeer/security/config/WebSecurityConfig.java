@@ -1,7 +1,7 @@
 package com.sejong.sejongpeer.security.config;
 
+import com.sejong.sejongpeer.security.constant.WebSecurityURIs;
 import com.sejong.sejongpeer.security.filter.JwtAuthenticationFilter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,15 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig {
-    private static final List<String> EXCLUDE_URLS =
-            List.of(
-                    "/api/v1/auth/sign-in",
-                    "/api/v1/member/sign-up",
-                    "/api/v1/member/check-account",
-                    "/api/v1/member/check-nickname",
-                    "/api/v1/member/help/find-account",
-                    "/api/v1/member/help/reset-password");
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -41,8 +32,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         authorize ->
                                 authorize
-                                        .requestMatchers(
-                                                EXCLUDE_URLS.stream().toArray(String[]::new))
+                                        .requestMatchers(WebSecurityURIs.PUBLIC_URIS::contains)
                                         .permitAll()
                                         .anyRequest()
                                         .permitAll())

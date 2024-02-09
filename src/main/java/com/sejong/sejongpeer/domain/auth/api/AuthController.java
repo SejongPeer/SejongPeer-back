@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +32,5 @@ public class AuthController {
                 cookieUtil.generateTokenHeader(response.accessToken(), response.refreshToken());
 
         return ResponseEntity.ok().headers(headers).build();
-    }
-
-    @GetMapping("/test") // TODO: 테스트용이므로 추후 삭제 필요
-    public void test() {
-        System.out.println("test");
     }
 }
