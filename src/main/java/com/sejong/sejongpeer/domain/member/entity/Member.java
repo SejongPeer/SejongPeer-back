@@ -9,7 +9,6 @@ import com.sejong.sejongpeer.domain.study.entity.Study;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -23,13 +22,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Getter
-public class Member extends BaseAuditEntity { // TODO: 카카오톡 ID, 닉네임 필드 추가 필요
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+public class Member extends BaseAuditEntity {
     @Id
     @UuidGenerator
     @Column(name = "id", columnDefinition = "char(36)")
