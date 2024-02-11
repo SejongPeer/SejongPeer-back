@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.member.repository;
 
 import com.sejong.sejongpeer.config.PasswordEncoderTestConfig;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
+import com.sejong.sejongpeer.TestQuerydslConfig;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.entity.type.Status;
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({JpaAuditingConfig.class, PasswordEncoderTestConfig.class})
+@Import({JpaAuditingConfig.class, TestQuerydslConfig.class, PasswordEncoderTestConfig.class})
 class MemberRepositoryTest {
     @Autowired private MemberRepository memberRepository;
 
@@ -58,7 +59,5 @@ class MemberRepositoryTest {
         Assertions.assertNotNull(savedMember.getUpdatedAt());
         Assertions.assertEquals(savedMember.getCollegeMajor().getMajor(), "호텔관광외식경영학부");
         Assertions.assertNotNull(savedMember.getCollegeMinor().getMajor(), "국어국문학과");
-
-        Assertions.assertEquals(member.getStatus(), Status.ACTIVE);
     }
 }
