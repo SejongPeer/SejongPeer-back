@@ -1,11 +1,10 @@
 package com.sejong.sejongpeer.domain.member.repository;
 
+import com.sejong.sejongpeer.TestQuerydslConfig;
 import com.sejong.sejongpeer.config.PasswordEncoderTestConfig;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
-import com.sejong.sejongpeer.TestQuerydslConfig;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
-import com.sejong.sejongpeer.domain.member.entity.type.Status;
 import com.sejong.sejongpeer.global.config.JpaAuditingConfig;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
