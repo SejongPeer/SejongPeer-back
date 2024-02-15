@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.auth.entity;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +20,7 @@ public class RefreshToken {
     private String memberId;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Member member;
 
     @Column(nullable = false)
