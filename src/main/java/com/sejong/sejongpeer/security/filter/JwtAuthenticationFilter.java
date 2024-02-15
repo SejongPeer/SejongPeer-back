@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.security.filter;
 
 import com.sejong.sejongpeer.security.constant.HeaderConstant;
+import com.sejong.sejongpeer.security.constant.WebSecurityURIs;
 import com.sejong.sejongpeer.security.util.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -65,9 +66,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
 
-        return path.equals("/api/v1/auth/sign-in") || path.equals("/api/v1/member/sign-up");
+        return WebSecurityURIs.PUBLIC_URIS.contains(path);
     }
 }
