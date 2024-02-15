@@ -41,11 +41,18 @@ public class AuthService {
     }
 
     private void renewRefreshToken(Member member, String token) {
-        RefreshToken refreshToken =
-                refreshTokenRepository
-                        .findById(member.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        RefreshToken refreshToken = refreshTokenRepository.findById(member.getId()).orElse(null);
 
-        refreshToken.renewToken(token);
+        if (refreshToken == null) { // 최초가입 후 로그인일 경우 Refresh Token 존재하지 않음
+            initRefreshToken(member, token);
+        } else {
+            refreshToken.renewToken(token);
+        }
+    }
+
+    private void initRefreshToken(Member member, String token) {
+        RefreshToken refreshToken = RefreshToken.builder().member(member).token(token).build();
+
+        refreshTokenRepository.save(refreshToken);
     }
 }

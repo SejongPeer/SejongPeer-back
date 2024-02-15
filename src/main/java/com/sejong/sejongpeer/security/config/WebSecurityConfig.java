@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.security.config;
 
+import com.sejong.sejongpeer.security.constant.WebSecurityURIs;
 import com.sejong.sejongpeer.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +32,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         authorize ->
                                 authorize
-                                        .requestMatchers(
-                                                "/api/v1/member/sign-up", "/api/v1/auth/sign-in")
+                                        .requestMatchers(WebSecurityURIs.PUBLIC_URIS::contains)
                                         .permitAll()
                                         .anyRequest()
                                         .permitAll())
@@ -41,7 +41,8 @@ public class WebSecurityConfig {
                 .anonymous(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);
-        // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);	//
+        // TODO: 추후 적용 필요
 
         return http.build();
     }
