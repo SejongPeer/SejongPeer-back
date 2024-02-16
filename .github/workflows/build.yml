@@ -1,4 +1,4 @@
-name: BackEnd - CD
+name: SejongPeer - BackEnd - CI
 
 on:
   pull_request:
