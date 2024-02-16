@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "3. [스터디 신청현황]", description = "스터디 신청 현황 API입니다.")
 @RestController
-@RequestMapping("/study/relations")
+@RequestMapping("/api/v1/study/relations")
 @RequiredArgsConstructor
 public class StudyRelationController {
 
@@ -36,13 +36,13 @@ public class StudyRelationController {
 	}
 
 	@Operation(summary = "스터디 수락", description = "스터디 신청을 취소합니다.")
-	@PutMapping
+	@PutMapping("/accept")
 	public ResponseEntity<?> relationAccept() {
 		return null;
 	}
 
 	@Operation(summary = "스터디 거부", description = "스터디 신청을 취소합니다.")
-	@PutMapping
+	@PutMapping("/reject")
 	public ResponseEntity<?> relationReject() {
 		return null;
 	}
