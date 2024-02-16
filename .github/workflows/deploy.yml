@@ -69,7 +69,7 @@ jobs:
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
-          zip -r -qq -j ./spring-build.zip ./deploy
+          zip -r -qq -j ./sejongpeer-app.zip ./deploy
 
       # AWS에 연결해줍니다.
       - name: AWS 연결
@@ -84,11 +84,11 @@ jobs:
         run: |
           aws s3 cp \
           --region ap-northeast-2 \
-          ./spring-build.zip s3://sejongpeer-backend-app
+          ./sejongpeer-app.zip s3://sejongpeer-backend-app
 
       # CodeDelploy에 배포를 요청합니다.
       - name: Code Deploy 배포 요청
         run: aws deploy create-deployment --application-name sejongpeer-code-deploy-app
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name sejongpeer-code-deploy-app
-          --s3-location bucket=sejongpeer-backend-app,bundleType=zip,key=spring-build.zip
+          --s3-location bucket=sejongpeer-backend-app,bundleType=zip,key=sejongpeer-app.zip
