@@ -1,5 +1,5 @@
 # Workflow의 이름을 지정합니다.
-name: SejongPeer - BackEnd - CI/CD
+name: SejongPeer - BackEnd - CD
 
 on:
   push:
