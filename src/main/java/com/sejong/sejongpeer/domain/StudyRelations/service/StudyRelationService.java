@@ -15,7 +15,7 @@ public class StudyRelationService {
 
 	private final StudyRelationRepository studyRelationRepository;
 
-	// public StudyRelationCreateResponse createStudyRelation(final Long studyId) {
-	//
-	// }
+	public StudyRelationCreateResponse createStudyRelation(final Long studyId) {
+		return null;
+	}
 }

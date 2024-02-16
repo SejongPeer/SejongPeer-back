@@ -5,6 +5,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,7 +22,9 @@ import org.hibernate.annotations.Comment;
 @Table(name = "college-major-relations")
 public class CollegeMajor {
 
-    @Id @GeneratedValue private Long id;
+    @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
     @Comment("단과대 이름")
     @Column(length = 30, nullable = false)
