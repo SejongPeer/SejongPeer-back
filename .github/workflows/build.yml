@@ -33,6 +33,7 @@ jobs:
           # src/main 으로 경로를 이동합니다.
           cd ./src/main
           # src/main 경로에 resources 폴더를 만들어줍니다.
+          cd ./
           mkdir resources
           cd ./resources
           # 필요한 yml 파일들을 만들어줍니다.
