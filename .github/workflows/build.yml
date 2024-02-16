@@ -1,4 +1,4 @@
-name: BackEnd - CI/CD
+name: BackEnd - CD
 
 on:
   pull_request:
