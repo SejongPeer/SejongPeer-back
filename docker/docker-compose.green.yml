@@ -2,7 +2,7 @@
 version: '3'
 services:
   backend:
-    build: ..
+    build: .
     ports:
       - "8082:80"
     container_name: sejongpeer-green
