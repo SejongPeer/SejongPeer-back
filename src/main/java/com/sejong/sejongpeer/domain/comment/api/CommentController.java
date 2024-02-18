@@ -14,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,16 +29,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 	private final CommentService commentService;
 
-	@PostMapping("/study/{studyId}/comments")
+	@PostMapping("/study/{studyId}/comment")
 	public ResponseEntity<CommentCreateResponse> studyUpdate(
 		@Valid @RequestBody CommentCreateRequest commentCreateRequest, @PathVariable Long studyId) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(commentService.createComment(commentCreateRequest, studyId));
 	}
 
-	@GetMapping("/study/{studyId}/comments")
+	@GetMapping("/study/{studyId}/comment")
 	public List<CommentFindResponse> getComments(@PathVariable(name = "studyId") Long studyId) {
 		return commentService.getComments(studyId);
 	}
 
+	@DeleteMapping("/comment/{studyId}/comment/{commentId}")
+	public void studyDelete(@PathVariable Long studyId, @PathVariable Long commentId) {
+		commentService.deleteComment(commentId);
+	}
 }

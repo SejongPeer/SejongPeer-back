@@ -86,4 +86,8 @@ public class CommentService {
 			.map(comment -> commentResponseMap.get(comment.getId()))
 			.collect(Collectors.toList());
 	}
+
+	public void deleteComment(Long commentId) {
+		commentRepository.deleteById(commentId);
+	}
 }
