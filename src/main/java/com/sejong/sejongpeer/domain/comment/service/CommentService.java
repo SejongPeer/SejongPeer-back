@@ -1,6 +1,6 @@
 package com.sejong.sejongpeer.domain.comment.service;
 
-import com.sejong.sejongpeer.domain.comment.dto.response.CommentResponse;
+import com.sejong.sejongpeer.domain.comment.dto.response.CommentFindResponse;
 import com.sejong.sejongpeer.domain.comment.entity.Comment;
 import com.sejong.sejongpeer.domain.comment.repository.CommentRepository;
 import java.util.ArrayList;
@@ -20,14 +20,14 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 
 	@Transactional(readOnly = true)
-	public List<CommentResponse> getComments(String studyId) {
+	public List<CommentFindResponse> getComments(Long studyId) {
 		List<Comment> comments = commentRepository.findAllByStudyId(studyId);
 
-		Map<Long, CommentResponse> commentResponseMap = comments.stream()
+		Map<Long, CommentFindResponse> commentResponseMap = comments.stream()
 			.filter(comment -> comment.getParent() == null)
 			.collect(Collectors.toMap(
 				Comment::getId,
-				comment -> new CommentResponse(
+				comment -> new CommentFindResponse(
 					comment.getId(),
 					comment.getMember().getNickname(),
 					comment.getContent(),
@@ -41,7 +41,7 @@ public class CommentService {
 				commentResponseMap.get(comment.getParent().getId())
 					.subComments()
 					.add(
-						new CommentResponse(
+						new CommentFindResponse(
 							comment.getId(),
 							comment.getMember().getNickname(),
 							comment.getContent(),
