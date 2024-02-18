@@ -35,19 +35,20 @@ public class CommentService {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		Comment parent = commentRepository.findById(commentCreateRequest.parentId())
+			.orElseGet(() -> null);
 
-		createCommentEntity(commentCreateRequest);
-
-		Study saveStudy = studyRepository.save(study);
-		return StudyCreateResponse.from(saveStudy);
+		Comment comment = createCommentEntity(commentCreateRequest, study, parent);
+		Comment saveComment = commentRepository.save(comment);
+		return CommentCreateResponse.from(saveComment);
 	}
 
-	private Comment createStudyEntity(final CommentCreateRequest commentCreateRequest, Study study, Comment parent) {
+	private Comment createCommentEntity(final CommentCreateRequest commentCreateRequest, Study study,
+										final Comment parent) {
 		return Comment.builder()
 			.study(study)
-			.parent(commentCreateRequest.parentId())
-			.content()
-			.member()
+			.parent(parent)
+			.content(commentCreateRequest.content())
+			.member(Member.builder().build())
 			.build();
 	}
 
