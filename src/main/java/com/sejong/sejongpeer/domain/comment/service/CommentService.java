@@ -1,11 +1,22 @@
 package com.sejong.sejongpeer.domain.comment.service;
 
+import com.sejong.sejongpeer.domain.comment.dto.request.CommentCreateRequest;
+import com.sejong.sejongpeer.domain.comment.dto.response.CommentCreateResponse;
 import com.sejong.sejongpeer.domain.comment.dto.response.CommentFindResponse;
 import com.sejong.sejongpeer.domain.comment.entity.Comment;
 import com.sejong.sejongpeer.domain.comment.repository.CommentRepository;
+import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
+import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
+import com.sejong.sejongpeer.domain.study.service.StudyService;
+import com.sejong.sejongpeer.global.error.exception.CustomException;
+import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +29,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentService {
 	private final CommentRepository commentRepository;
+	private final StudyRepository studyRepository;
+
+	public CommentCreateResponse createComment(CommentCreateRequest commentCreateRequest, Long studyId) {
+		Study study = studyRepository.findById(studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+		Comment parent = commentRepository.findById(commentCreateRequest.parentId())
+
+		createCommentEntity(commentCreateRequest);
+
+		Study saveStudy = studyRepository.save(study);
+		return StudyCreateResponse.from(saveStudy);
+	}
+
+	private Comment createStudyEntity(final CommentCreateRequest commentCreateRequest, Study study, Comment parent) {
+		return Comment.builder()
+			.study(study)
+			.parent(commentCreateRequest.parentId())
+			.content()
+			.member()
+			.build();
+	}
 
 	@Transactional(readOnly = true)
 	public List<CommentFindResponse> getComments(Long studyId) {
