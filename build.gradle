@@ -43,6 +43,7 @@ dependencies {
 
 	// Querydsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	implementation 'org.springframework:spring-webflux:6.0.11'
 
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
