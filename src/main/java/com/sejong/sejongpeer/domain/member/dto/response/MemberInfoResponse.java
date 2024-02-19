@@ -18,7 +18,7 @@ public record MemberInfoResponse(
                 member.getName(),
                 member.getKakaoAccount(),
                 member.getCollegeMajor().getMajor(),
-                member.getCollegeMinor().getMajor(),
+                member.getCollegeMinor() != null ? member.getCollegeMinor().getMajor() : null,
                 member.getNickname(),
                 member.getPhoneNumber(),
                 member.getAccount(),

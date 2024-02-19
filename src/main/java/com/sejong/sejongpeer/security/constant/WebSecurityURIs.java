@@ -12,5 +12,8 @@ public final class WebSecurityURIs {
                     "/api/v1/member/check-account",
                     "/api/v1/member/check-nickname",
                     "/api/v1/member/help/find-account",
-                    "/api/v1/member/help/reset-password");
+                    "/api/v1/member/help/reset-password",
+                    "/swagger-ui/**");
+    public static final List<String> CORS_ALLOW_URIS =
+            List.of("http://localhost:3000", "http://127.0.0.1:3000", "https://sejongpeer.com");
 }
