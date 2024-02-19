@@ -2,7 +2,7 @@
 version: '3'
 services:
   backend:
-    build: ..
-    ports:
+    build: .
+    ports: # 2024/02/28 기존의 8082 -> 80을 임시로 80 -> 8080으로 포워딩하기로 변경
       - "8082:80"
     container_name: sejongpeer-green

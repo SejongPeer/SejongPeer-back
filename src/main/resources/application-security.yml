@@ -6,6 +6,6 @@ spring:
 jwt:
   access-token-key: ${ACCESS_JWT_KEY:}
   refresh-token-key: ${REFRESH_JWT_KEY:}
-  access-token-expiration: ${ACCESS_JWT_EXPIRATION:7200}
-  refresh-token-expiration: ${REFRESH_JWT_EXPIRATION:604800}
+  access-token-expiration: ${ACCESS_JWT_EXPIRATION:300000}  # 5 minutes
+  refresh-token-expiration: ${REFRESH_JWT_EXPIRATION:259200000} # 3 days
 

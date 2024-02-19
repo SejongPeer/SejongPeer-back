@@ -9,7 +9,6 @@ import com.sejong.sejongpeer.domain.member.dto.response.AccountFindResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.MemberInfoResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.NicknameCheckResponse;
 import com.sejong.sejongpeer.domain.member.service.MemberService;
-import com.sejong.sejongpeer.security.MemberDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,23 +69,17 @@ public class MemberController {
     @Operation(summary = "회원정보 조회", description = "회원정보를 조회합니다.")
     @GetMapping("/my-page")
     public MemberInfoResponse getMemberInfo() {
-        MemberDetails memberDetails =
-                (MemberDetails)
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String memberId = memberDetails.getUsername();
+        String memberId =
+                (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return memberService.getMemberInfo(memberId);
     }
 
     @Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
-    @PutMapping("/my-page")
+    @PatchMapping("/my-page")
     public void updateMemberInfo(@Valid @RequestBody MemberUpdateRequest request) {
-        MemberDetails memberDetails =
-                (MemberDetails)
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String memberId = memberDetails.getUsername();
+        String memberId =
+                (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         memberService.updateMemberInfo(memberId, request);
     }
@@ -93,11 +87,8 @@ public class MemberController {
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
     @DeleteMapping("/my-page")
     public void deleteMember() {
-        MemberDetails memberDetails =
-                (MemberDetails)
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String memberId = memberDetails.getUsername();
+        String memberId =
+                (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         memberService.deleteMember(memberId);
     }
