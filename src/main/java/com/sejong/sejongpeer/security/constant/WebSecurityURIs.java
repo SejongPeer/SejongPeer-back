@@ -12,5 +12,6 @@ public final class WebSecurityURIs {
                     "/api/v1/member/check-account",
                     "/api/v1/member/check-nickname",
                     "/api/v1/member/help/find-account",
-                    "/api/v1/member/help/reset-password");
+                    "/api/v1/member/help/reset-password",
+                    "/swagger-ui/**");
 }
