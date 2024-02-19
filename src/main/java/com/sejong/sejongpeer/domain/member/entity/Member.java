@@ -121,8 +121,8 @@ public class Member extends BaseAuditEntity {
                 .birthday(request.birthday())
                 .gender(request.gender())
                 .studentId(request.studentId())
-				.nickname(request.nickname())
-				.kakaoAccount(request.kakaoAccount())
+                .nickname(request.nickname())
+                .kakaoAccount(request.kakaoAccount())
                 .build();
     }
 
