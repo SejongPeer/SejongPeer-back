@@ -23,8 +23,8 @@ import org.hibernate.annotations.Comment;
 public class CollegeMajor {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Comment("단과대 이름")
     @Column(length = 30, nullable = false)
