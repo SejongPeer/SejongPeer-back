@@ -13,7 +13,6 @@ import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
-import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +57,6 @@ class MemberServiceTest {
                             "호텔관광외식경영학부",
                             2,
                             Gender.MALE,
-                            LocalDate.of(1999, 1, 1),
                             "01011112222",
                             "tester",
                             "testkakao");
@@ -160,7 +158,6 @@ class MemberServiceTest {
                             "호텔관광외식경영학부",
                             2,
                             Gender.MALE,
-                            LocalDate.of(1999, 1, 1),
                             "01011112222",
                             "tester",
                             "testkakao");
@@ -205,7 +202,6 @@ class MemberServiceTest {
                             .studentId("12345678")
                             .name("홍길동")
                             .kakaoAccount("test")
-                            .birthday(LocalDate.of(1999, 1, 1))
                             .collegeMajor(collegeMajor)
                             .collegeMinor(collegeMinor)
                             .account("test")
