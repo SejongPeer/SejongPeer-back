@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum BuddyType {
 	SENIOR("시니어"),
 	JUNIOR("주니어"),
-	MATE("메이트");
+	MATE("메이트"),
+	NONE("상관없음");
 	private final String value;
 }
