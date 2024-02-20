@@ -43,11 +43,6 @@ public class Buddy extends BaseAuditEntity {
 	@Column(columnDefinition = "enum('GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'NONE')", nullable = false)
 	private GradeOption gradeOption;
 
-	@Comment("버디 찾는 상태")
-	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('IN_PROGRESS', 'FOUND_BUDDY')", nullable = false)
-	private SearchState searchState;
-
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition = "enum('IN_PROGRESS', 'CANCEL', 'ACCEPT','REJECT', 'DENIED', 'MATCHING_COMPLETED', 'FOUND_BUDDY')", nullable = false)
@@ -64,14 +59,12 @@ public class Buddy extends BaseAuditEntity {
 			BuddyType type,
 			BuddyRange range,
 			GradeOption gradeOption,
-			SearchState searchState,
 			MatchingStatus matchingStatus) {
 		this.member = member;
 		this.genderOption = genderOption;
 		this.type = type;
 		this.range = range;
 		this.gradeOption = gradeOption;
-		this.searchState = searchState;
 		this.matchingStatus = matchingStatus;
 	}
 
@@ -81,7 +74,6 @@ public class Buddy extends BaseAuditEntity {
 			BuddyType type,
 			BuddyRange range,
 			GradeOption gradeOption,
-			SearchState searchState,
 			MatchingStatus matchingStatus) {
 		return Buddy.builder()
 			.member(member)
@@ -89,7 +81,6 @@ public class Buddy extends BaseAuditEntity {
 			.type(type)
 			.range(range)
 			.gradeOption(gradeOption)
-			.searchState(searchState)
 			.matchingStatus(matchingStatus)
 			.build();
 	}
