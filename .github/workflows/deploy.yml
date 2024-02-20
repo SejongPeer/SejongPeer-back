@@ -72,8 +72,6 @@ jobs:
           cp ./build/libs/*.jar ./deploy/
           chmod +x ./deploy/deploy.sh
           zip -r -qq -j ./sejongpeer-app.zip ./deploy
-        env:
-          ENV: ${{ secrets.ENV }}
 
       # AWS에 연결해줍니다.
       - name: AWS 연결
