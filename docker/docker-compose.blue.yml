@@ -1,5 +1,5 @@
 #blue
-version: "3.8"
+version: '3'
 services:
   # 서비스의 이름
   backend:
