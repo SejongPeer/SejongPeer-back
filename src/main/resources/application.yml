@@ -4,17 +4,18 @@ spring:
       dev: "dev, datasource"
     include:
       - security
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-#
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: trace
-#        web: DEBUG
+# TODO: Profiling 적용이 필요
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: trace
+        web: DEBUG
 
 swagger:
   version: ${SWAGGER_VERSION:0.0.1}
