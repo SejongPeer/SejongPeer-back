@@ -25,7 +25,7 @@ public class Buddy extends BaseAuditEntity {
 
 	@Comment("버디 성별")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('SAME', 'NONE')", nullable = false)
+	@Column(columnDefinition = "enum('SAME', 'NO_MATTER')", nullable = false)
 	private GenderOption genderOption;
 
 	@Comment("버디 타입")
@@ -35,12 +35,12 @@ public class Buddy extends BaseAuditEntity {
 
 	@Comment("버디 범위")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('COLLEGE', 'DEPARTMENT', 'SAME_COLLEGE', 'SAME_DEPARTMENT', 'NONE')", nullable = false)
+	@Column(columnDefinition = "enum('COLLEGE', 'DEPARTMENT', 'SAME_COLLEGE', 'SAME_DEPARTMENT', 'NO_MATTER')", nullable = false)
 	private BuddyRange range;
 
 	@Comment("버디 학년 범위")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'NONE')", nullable = false)
+	@Column(columnDefinition = "enum('GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'NO_MATTER')", nullable = false)
 	private GradeOption gradeOption;
 
 	@Comment("매칭 상태")
