@@ -10,7 +10,7 @@ public final class WebSecurityURIs {
                     "/api/v1/auth/sign-in",
                     "/api/v1/member/**",
                     "/api/v1/member/help/**",
-					"/api/v1/study/**",
+                    "/api/v1/study/**",
                     "/swagger-ui/**");
     public static final List<String> CORS_ALLOW_URIS =
             List.of("http://localhost:3000", "https://sejongpeer.com");
