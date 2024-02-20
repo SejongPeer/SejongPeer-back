@@ -40,13 +40,13 @@ jobs:
           touch ./application-datasource.yml
           touch ./application-dev.yml
           touch ./application-security.yml
-          touch ./.env
+          
           # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
           echo "$APPLICATION" > ./application.yml
           echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
           echo "$APPLICATION_DEV" > ./application-dev.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
-          echo "$ENV" >./.env
+
         env:
           APPLICATION: ${{ secrets.APPLICATION }}
           APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
@@ -64,6 +64,8 @@ jobs:
       - name: zip file 생성
         run: |
           mkdir deploy
+          touch ./.env
+          echo "$ENV" > ./.env
           cp ./docker/docker-compose.blue.yml ./deploy/
           cp ./docker/docker-compose.green.yml ./deploy/
           cp ./appspec.yml ./deploy/
