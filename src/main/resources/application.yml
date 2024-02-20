@@ -4,17 +4,17 @@ spring:
       dev: "dev, datasource"
     include:
       - security
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-logging:
-  level:
-    org:
-      springframework:
-        security: trace
-        web: DEBUG
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: trace
+#        web: DEBUG
 
 swagger:
   version: ${SWAGGER_VERSION:0.0.1}
