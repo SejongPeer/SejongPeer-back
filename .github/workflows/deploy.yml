@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build:
+    environment: DEV
     # build를 진행할 운영체제를 선택합니다.
     runs-on: ubuntu-latest
 
