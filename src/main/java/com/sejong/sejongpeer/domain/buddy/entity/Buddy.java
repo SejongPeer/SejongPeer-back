@@ -49,10 +49,6 @@ public class Buddy extends BaseAuditEntity {
 	@Column(columnDefinition = "enum('IN_PROGRESS', 'CANCEL', 'ACCEPT','REJECT', 'DENIED', 'MATCHING_COMPLETED', 'FOUND_BUDDY')", nullable = false)
 	private MatchingStatus matchingStatus;
 
-	@OneToOne(mappedBy = "buddy")
-	private BuddyMatched buddyMatched;
-
-
 	@Builder(access = AccessLevel.PRIVATE)
 	private Buddy(
 			Member member,
