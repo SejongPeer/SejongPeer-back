@@ -30,17 +30,17 @@ public class Buddy extends BaseAuditEntity {
 
 	@Comment("버디 타입")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('SENIOR', 'JUNIOR', 'MATE')", nullable = false)
+	@Column(columnDefinition = "enum('SENIOR', 'JUNIOR', 'MATE', 'NONE')", nullable = false)
 	private BuddyType type;
 
 	@Comment("버디 범위")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('COLLEGE', 'DEPARTMENT', 'SAME_COLLEGE', 'SAME_DEPARTMENT', 'ALL')", nullable = false)
+	@Column(columnDefinition = "enum('COLLEGE', 'DEPARTMENT', 'SAME_COLLEGE', 'SAME_DEPARTMENT', 'NONE')", nullable = false)
 	private BuddyRange range;
 
 	@Comment("버디 학년 범위")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'ALL')", nullable = false)
+	@Column(columnDefinition = "enum('GRADE_1', 'GRADE_2', 'GRADE_3', 'GRADE_4', 'NONE')", nullable = false)
 	private GradeOption gradeOption;
 
 	@Comment("버디 찾는 상태")
@@ -50,7 +50,7 @@ public class Buddy extends BaseAuditEntity {
 
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "enum('IN_PROGRESS', 'CANCEL', 'ACCEPT','REJECT', 'DENIED', 'MATCHING_COMPLETED')", nullable = false)
+	@Column(columnDefinition = "enum('IN_PROGRESS', 'CANCEL', 'ACCEPT','REJECT', 'DENIED', 'MATCHING_COMPLETED', 'FOUND_BUDDY')", nullable = false)
 	private MatchingStatus matchingStatus;
 
 	@OneToOne(mappedBy = "buddy")
