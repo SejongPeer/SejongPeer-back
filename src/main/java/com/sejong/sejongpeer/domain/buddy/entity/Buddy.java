@@ -5,6 +5,7 @@ import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class Buddy extends BaseAuditEntity {
 	private BuddyMatched buddyMatched;
 
 
-	@Builder
+	@Builder(access = AccessLevel.PRIVATE)
 	private Buddy(
 			Member member,
 			GenderOption genderOption,
