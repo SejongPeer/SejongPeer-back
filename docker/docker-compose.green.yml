@@ -1,5 +1,5 @@
 #green
-version: "3.8"
+version: '3'
 services:
   backend:
     build: .
