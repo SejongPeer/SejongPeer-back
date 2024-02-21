@@ -1,5 +1,10 @@
 package com.sejong.sejongpeer.domain.buddy.entity;
 
+import org.hibernate.annotations.Comment;
+
+import com.sejong.sejongpeer.domain.buddy.entity.type.BuddyMatchedStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.type.MatchingStatus;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +26,9 @@ public class BuddyMatched {
 	@JoinColumn(name = "buddy_id_2")
 	private Buddy buddyId2;
 
+	@Comment("매칭 상태")
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private BuddyMatchedStatus buddyMatchedStatus;
 
 }
