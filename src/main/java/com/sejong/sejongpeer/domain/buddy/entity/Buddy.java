@@ -59,13 +59,15 @@ public class Buddy extends BaseAuditEntity {
             BuddyType type,
             BuddyRange range,
             GradeOption gradeOption,
-            MatchingStatus matchingStatus) {
+            MatchingStatus matchingStatus,
+			boolean isSubMajor) {
         this.member = member;
         this.genderOption = genderOption;
         this.type = type;
         this.range = range;
         this.gradeOption = gradeOption;
         this.matchingStatus = matchingStatus;
+		this.isSubMajor = isSubMajor;
     }
 
     public static Buddy createBuddy(
@@ -74,7 +76,8 @@ public class Buddy extends BaseAuditEntity {
             BuddyType type,
             BuddyRange range,
             GradeOption gradeOption,
-            MatchingStatus matchingStatus) {
+            MatchingStatus matchingStatus,
+			boolean isSubMajor) {
         return Buddy.builder()
                 .member(member)
                 .genderOption(genderOption)
@@ -82,6 +85,7 @@ public class Buddy extends BaseAuditEntity {
                 .range(range)
                 .gradeOption(gradeOption)
                 .matchingStatus(matchingStatus)
+				.isSubMajor(isSubMajor)
                 .build();
     }
 }
