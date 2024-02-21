@@ -6,7 +6,6 @@ import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.global.config.JpaAuditingConfig;
-import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,6 @@ class MemberRepositoryTest {
                         .studentId("12345678")
                         .name("홍길동")
                         .kakaoAccount("test")
-                        .birthday(LocalDate.of(1999, 1, 1))
                         .collegeMajor(collegeMajor)
                         .collegeMinor(collegeMinor)
                         .account("test")
