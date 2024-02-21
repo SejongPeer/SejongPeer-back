@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum MemberInfo {
-    PASSWORD(request -> request.newPassword()) {
-        @Override
-        protected void update(Member member, String value) {
-            member.changePassword(value);
-        }
-    },
+    // PASSWORD(request -> request.newPassword()) {
+    //     @Override
+    //     protected void update(Member member, String value) {
+    //         member.changePassword(value);
+    //     }
+    // },
     NICKNAME(request -> request.nickname()) {
         @Override
         protected void update(Member member, String value) {
