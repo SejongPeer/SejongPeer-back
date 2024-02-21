@@ -52,7 +52,6 @@ public class Buddy extends BaseAuditEntity {
 	@Column(nullable = false)
 	private boolean isSubMajor;
 
-
     @Builder(access = AccessLevel.PRIVATE)
     private Buddy(
             Member member,
