@@ -16,12 +16,12 @@ public class BuddyMatched {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buddy_id_1")
-    private Buddy buddyId1;
+    @JoinColumn(name = "owner")
+    private Buddy ownerBuddy;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buddy_id_2")
-    private Buddy buddyId2;
+    @JoinColumn(name = "partner")
+    private Buddy partnerBuddy;
 
     @Comment("매칭 상태")
     @Enumerated(EnumType.STRING)
