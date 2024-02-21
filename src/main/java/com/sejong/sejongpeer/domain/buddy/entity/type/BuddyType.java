@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BuddyType {
-    SENIOR("시니어"),
-    JUNIOR("주니어"),
-    MATE("메이트"),
+    SENIOR("선배"),
+    JUNIOR("후배"),
+    MATE("동기"),
     NO_MATTER("상관없음");
     private final String value;
 }
