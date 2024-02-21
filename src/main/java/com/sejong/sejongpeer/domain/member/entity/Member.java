@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.member.entity;
 
+import com.sejong.sejongpeer.domain.buddy.entity.Buddy;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
@@ -71,6 +72,9 @@ public class Member extends BaseAuditEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Study> studies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Buddy> buddies = new ArrayList<>();
 
     @Builder
     private Member(
