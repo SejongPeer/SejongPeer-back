@@ -233,7 +233,7 @@ class MemberServiceTest {
             // given
             String newNickname = "newNickname";
             MemberUpdateRequest request =
-                    new MemberUpdateRequest(newNickname, MEMBER_PASSWORD, null, null);
+                    new MemberUpdateRequest(newNickname, null, null, MEMBER_PASSWORD, null, null);
 
             given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.ofNullable(member));
 
@@ -249,7 +249,8 @@ class MemberServiceTest {
             // given
             String newPassword = "newPassword";
             MemberUpdateRequest request =
-                    new MemberUpdateRequest(null, MEMBER_PASSWORD, newPassword, newPassword);
+                    new MemberUpdateRequest(
+                            null, null, null, MEMBER_PASSWORD, newPassword, newPassword);
 
             given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.ofNullable(member));
 
