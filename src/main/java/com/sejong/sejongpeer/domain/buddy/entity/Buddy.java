@@ -21,7 +21,7 @@ public class Buddy extends BaseAuditEntity {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "member_id")
 	private Member member;
 
 	@Comment("버디 성별")
