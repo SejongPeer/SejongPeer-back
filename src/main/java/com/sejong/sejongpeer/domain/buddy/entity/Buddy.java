@@ -48,6 +48,11 @@ public class Buddy extends BaseAuditEntity {
     @Column(nullable = false)
     private MatchingStatus matchingStatus;
 
+	@Comment("복수전공 확인")
+	@Column(nullable = false)
+	private boolean isSubMajor;
+
+
     @Builder(access = AccessLevel.PRIVATE)
     private Buddy(
             Member member,
