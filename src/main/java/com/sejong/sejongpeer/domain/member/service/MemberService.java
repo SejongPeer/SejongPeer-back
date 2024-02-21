@@ -115,18 +115,46 @@ public class MemberService {
                         .findById(memberId)
                         .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
-        if (!passwordEncoder.matches(request.currentPassword(), member.getPassword())) {
-            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
-        }
+        update(member, request);
+    }
 
-        if (request.nickname() != null) {
-            member.changeNickname(request.nickname());
+    private void update(Member member, MemberUpdateRequest request) {
+        verifyUpdatable(member, request);
+
+        // TODO: 추후 executeUpdateAll로 리팩토링. 해싱된 비밀번호를 줘야해서 VO로 포장해서 보내던 해야할 것 같음
+        if (request.newPassword() != null) {
+            String hashedPassword = passwordEncoder.encode(request.newPasswordCheck());
+
+            MemberInfo.PASSWORD.executeUpdate(member, hashedPassword);
+        }
+        MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
+        MemberInfo.PHONE_NUMBER.executeUpdate(member, request.phoneNumber());
+        MemberInfo.KAKAO_ACCOUNT.executeUpdate(member, request.kakaoAccount());
+
+        log.info("회원정보 변경 완료: {}", member.getId());
+    }
+
+    // 원자성 보장을 위해 하나라도 잘못되거나 중복된 정보가 있으면 업데이트 되어서는 안됨
+    private void verifyUpdatable(Member member, MemberUpdateRequest request) {
+        if (!passwordEncoder.matches(request.currentPassword(), member.getPassword())) {
+            throw new CustomException(ErrorCode.WRONG_PASSWORD);
         }
 
         if (request.newPassword() != null
-                && (request.newPassword()).equals(request.newPasswordCheck())) {
-            String encryptedPassword = passwordEncoder.encode(request.newPassword());
-            member.changePassword(encryptedPassword);
+                && !request.newPassword().equals(request.newPasswordCheck())) {
+            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
+        }
+
+        if (request.nickname() != null && existsNickname(request.nickname())) {
+            throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+        }
+
+        if (request.phoneNumber() != null && existsPhoneNumber(request.phoneNumber())) {
+            throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
+        }
+
+        if (request.kakaoAccount() != null && existsKakaoAccount(request.kakaoAccount())) {
+            throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
         }
     }
 
