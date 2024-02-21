@@ -115,10 +115,10 @@ public class MemberService {
                         .findById(memberId)
                         .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
-        update(member, request);
+        updateMember(member, request);
     }
 
-    private void update(Member member, MemberUpdateRequest request) {
+    private void updateMember(Member member, MemberUpdateRequest request) {
         verifyUpdatable(request);
 
         MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
