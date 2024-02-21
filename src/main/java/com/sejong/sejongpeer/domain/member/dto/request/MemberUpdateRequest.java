@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 public record MemberUpdateRequest(
         @Pattern(regexp = "^[a-zA-Z가-힣0-9]{2,8}$", message = "닉네임은 2자 이상 8자 이하 한글, 영어, 숫자만 입력해주세요.")
                 String nickname,
+        @Pattern(regexp = "^010[0-9]{8}$", message = "올바른 전화번호를 입력해주세요.") String phoneNumber,
+        String kakaoAccount,
         @NotBlank(message = "기존 비밀번호를 입력해주세요.") String currentPassword,
         @Pattern(
                         regexp = "^[a-zA-Z0-9!@#$%^&*()_+{}\\[\\]:;<>,.?/~\\\\-]{8,20}$",
