@@ -29,7 +29,7 @@ public enum ErrorCode {
     DUPLICATED_STUDENT_ID(HttpStatus.CONFLICT, "이미 존재하는 학번입니다."),
     DUPLICATED_PHONE_NUMBER(HttpStatus.CONFLICT, "이미 존재하는 전화번호입니다."),
     DUPLICATED_ACCOUNT(HttpStatus.CONFLICT, "이미 존재하는 계정입니다."),
-    DUPLICATED_KAKAO_ACCOUNT(HttpStatus.BAD_REQUEST, "이미 사용중인 카카오 계정으로 가입된 사용자입니다."),
+    DUPLICATED_KAKAO_ACCOUNT(HttpStatus.BAD_REQUEST, "이미 사용중인 카카오 계정입니다."),
 
     // 조회 에러
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),

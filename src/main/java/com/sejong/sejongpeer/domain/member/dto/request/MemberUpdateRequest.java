@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.member.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record MemberUpdateRequest(
@@ -8,7 +7,7 @@ public record MemberUpdateRequest(
                 String nickname,
         @Pattern(regexp = "^010[0-9]{8}$", message = "올바른 전화번호를 입력해주세요.") String phoneNumber,
         String kakaoAccount,
-        @NotBlank(message = "기존 비밀번호를 입력해주세요.") String currentPassword,
+        /*@NotBlank(message = "기존 비밀번호를 입력해주세요.") String currentPassword, 임시 제외*/
         @Pattern(
                         regexp = "^[a-zA-Z0-9!@#$%^&*()_+{}\\[\\]:;<>,.?/~\\\\-]{8,20}$",
                         message = "최소 8자, 최대 20자의 영문자, 숫자, 특수문자로만 이루어져야합니다.")

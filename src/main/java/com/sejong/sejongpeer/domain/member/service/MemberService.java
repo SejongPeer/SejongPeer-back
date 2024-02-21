@@ -119,14 +119,8 @@ public class MemberService {
     }
 
     private void update(Member member, MemberUpdateRequest request) {
-        verifyUpdatable(member, request);
+        verifyUpdatable(request);
 
-        // TODO: 추후 executeUpdateAll로 리팩토링. 해싱된 비밀번호를 줘야해서 VO로 포장해서 보내던 해야할 것 같음
-        if (request.newPassword() != null) {
-            String hashedPassword = passwordEncoder.encode(request.newPasswordCheck());
-
-            MemberInfo.PASSWORD.executeUpdate(member, hashedPassword);
-        }
         MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
         MemberInfo.PHONE_NUMBER.executeUpdate(member, request.phoneNumber());
         MemberInfo.KAKAO_ACCOUNT.executeUpdate(member, request.kakaoAccount());
@@ -135,16 +129,7 @@ public class MemberService {
     }
 
     // 원자성 보장을 위해 하나라도 잘못되거나 중복된 정보가 있으면 업데이트 되어서는 안됨
-    private void verifyUpdatable(Member member, MemberUpdateRequest request) {
-        if (!passwordEncoder.matches(request.currentPassword(), member.getPassword())) {
-            throw new CustomException(ErrorCode.WRONG_PASSWORD);
-        }
-
-        if (request.newPassword() != null
-                && !request.newPassword().equals(request.newPasswordCheck())) {
-            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
-        }
-
+    private void verifyUpdatable(MemberUpdateRequest request) {
         if (request.nickname() != null && existsNickname(request.nickname())) {
             throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
         }
