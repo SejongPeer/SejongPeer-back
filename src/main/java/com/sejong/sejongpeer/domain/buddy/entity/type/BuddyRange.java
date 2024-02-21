@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BuddyRange {
-    COLLEGE("단과대"),
-    DEPARTMENT("학과"),
     SAME_COLLEGE("같은 단과대"),
     SAME_DEPARTMENT("같은 학과"),
     NO_MATTER("상관없음");
