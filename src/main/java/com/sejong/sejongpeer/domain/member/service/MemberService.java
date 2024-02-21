@@ -84,7 +84,7 @@ public class MemberService {
         Member member =
                 memberRepository
                         .findById(memberId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberInfoResponse.of(member);
     }
