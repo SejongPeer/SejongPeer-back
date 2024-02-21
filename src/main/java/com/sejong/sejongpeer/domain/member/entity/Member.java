@@ -73,11 +73,10 @@ public class Member extends BaseAuditEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Study> studies = new ArrayList<>();
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Buddy> buddies = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Buddy> buddies = new ArrayList<>();
 
-
-	@Builder
+    @Builder
     private Member(
             String account,
             String password,
