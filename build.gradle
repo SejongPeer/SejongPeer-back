@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.7'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id 'com.diffplug.spotless' version '6.11.0'
+	id 'checkstyle'
 }
 
 group = 'com.sejong'
@@ -64,15 +64,16 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-spotless {
-	java {
-		target("**/*.java")
-		importOrder()
-		removeUnusedImports() // 사용하지 않는 import 제거
-		trimTrailingWhitespace() // 공백 제거
-		endWithNewline() // 끝부분 NewLine 처리
-		googleJavaFormat().aosp() // google java format
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+tasks.withType(Checkstyle) {
+	reports {
+		xml.required = true
+		html.required = true
 	}
 }
-
-tasks.build.dependsOn tasks.spotlessApply
+checkstyle {
+	configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
+	configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppression.xml"]
+}
