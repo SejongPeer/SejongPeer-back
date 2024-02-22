@@ -1,13 +1,24 @@
 package com.sejong.sejongpeer.domain.buddy.entity.buddymatched;
 
+import org.hibernate.annotations.Comment;
+
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.Status;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
@@ -30,5 +41,20 @@ public class BuddyMatched {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Status status;
+
+	@Builder(access = AccessLevel.PRIVATE)
+	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, Status status) {
+		this.owner = ownerBuddy;
+		this.partner = partnerBuddy;
+		this.status = status;
+	}
+
+	public static BuddyMatched registerMatchingPair(Buddy ownerBuddy, Buddy partnerBuddy) {
+		return BuddyMatched.builder()
+			.ownerBuddy(ownerBuddy)
+			.partnerBuddy(partnerBuddy)
+			.status(Status.IN_PROGRESS)
+			.build();
+	}
 
 }
