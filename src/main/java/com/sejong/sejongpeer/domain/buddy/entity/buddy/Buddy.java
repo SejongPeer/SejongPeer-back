@@ -1,5 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.entity.buddy;
 
+import org.hibernate.annotations.Comment;
+
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.ClassTypeOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
@@ -8,13 +10,20 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
@@ -93,5 +102,9 @@ public class Buddy extends BaseAuditEntity {
 			.status(status)
 			.isSubMajor(isSubMajor)
 			.build();
+	}
+
+	public void changeStatus(Status status) {
+		this.status = status;
 	}
 }
