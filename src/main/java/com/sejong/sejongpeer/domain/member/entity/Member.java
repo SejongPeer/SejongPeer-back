@@ -130,4 +130,12 @@ public class Member extends BaseAuditEntity {
     public void changePassword(String encryptedPassword) {
         this.password = encryptedPassword;
     }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeKakaoAccount(String kakaoAccount) {
+        this.kakaoAccount = kakaoAccount;
+    }
 }
