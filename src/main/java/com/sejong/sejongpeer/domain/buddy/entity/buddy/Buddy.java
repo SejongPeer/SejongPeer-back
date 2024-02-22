@@ -1,6 +1,10 @@
-package com.sejong.sejongpeer.domain.buddy.entity;
+package com.sejong.sejongpeer.domain.buddy.entity.buddy;
 
-import com.sejong.sejongpeer.domain.buddy.entity.type.*;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.ClassTypeOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GradeOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 
@@ -48,7 +52,7 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private MatchingStatus matchingStatus;
+	private Status status;
 
 	@Comment("복수전공 확인")
 	@Column(nullable = false)
@@ -61,14 +65,14 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		MatchingStatus matchingStatus,
+		Status status,
 		boolean isSubMajor) {
 		this.member = member;
 		this.genderOption = genderOption;
 		this.classTypeOption = classTypeOption;
 		this.collegeMajorOption = collegeMajorOption;
 		this.gradeOption = gradeOption;
-		this.matchingStatus = matchingStatus;
+		this.status = status;
 		this.isSubMajor = isSubMajor;
 	}
 
@@ -78,7 +82,7 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		MatchingStatus matchingStatus,
+		Status status,
 		boolean isSubMajor) {
 		return Buddy.builder()
 			.member(member)
@@ -86,7 +90,7 @@ public class Buddy extends BaseAuditEntity {
 			.classTypeOption(classTypeOption)
 			.collegeMajorOption(collegeMajorOption)
 			.gradeOption(gradeOption)
-			.matchingStatus(matchingStatus)
+			.status(status)
 			.isSubMajor(isSubMajor)
 			.build();
 	}

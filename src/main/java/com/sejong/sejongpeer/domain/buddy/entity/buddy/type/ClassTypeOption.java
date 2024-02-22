@@ -1,4 +1,4 @@
-package com.sejong.sejongpeer.domain.buddy.entity.type;
+package com.sejong.sejongpeer.domain.buddy.entity.buddy.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

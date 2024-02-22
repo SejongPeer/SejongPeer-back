@@ -1,6 +1,7 @@
-package com.sejong.sejongpeer.domain.buddy.entity;
+package com.sejong.sejongpeer.domain.buddy.entity.buddymatched;
 
-import com.sejong.sejongpeer.domain.buddy.entity.type.BuddyMatchedStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.Status;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,6 +29,6 @@ public class BuddyMatched {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BuddyMatchedStatus buddyMatchedStatus;
+	private Status status;
 
 }
