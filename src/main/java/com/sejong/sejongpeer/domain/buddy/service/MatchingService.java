@@ -1,5 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,8 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.buddy.util.BuddyFilter;
+import com.sejong.sejongpeer.infra.sms.service.SmsService;
+import com.sejong.sejongpeer.infra.sms.service.SmsText;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional
 public class MatchingService {
+	private final SmsService smsService;
+
 	private final BuddyRepository buddyRepository;
 	private final BuddyMatchedRepository buddyMatchedRepository;
 
@@ -52,7 +58,21 @@ public class MatchingService {
 			return null;
 		}
 
-		return BuddyMatched.registerMatchingPair(me, partner);
+		BuddyMatched buddyMatched = BuddyMatched.registerMatchingPair(me, partner);
+
+		partner.changeStatus(FOUND_BUDDY);
+		me.changeStatus(FOUND_BUDDY);
+
+		sendMatchingMessage(me);
+		sendMatchingMessage(partner);
+
+		return buddyMatched;
+	}
+
+	private void sendMatchingMessage(Buddy me) {
+		String phoneNumber = me.getMember().getPhoneNumber();
+
+		smsService.sendSms(phoneNumber, SmsText.MATCHING_FOUND_BUDDY);
 	}
 
 	private Buddy findSuitableBuddy(List<Buddy> candidates, Buddy me) {
