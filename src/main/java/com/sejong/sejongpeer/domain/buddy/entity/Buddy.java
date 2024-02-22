@@ -33,12 +33,12 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("버디 타입")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BuddyType classType;
+	private ClassTypeOption classTypeOption;
 
 	@Comment("버디 범위")
 	@Enumerated(EnumType.STRING)
-	@Column(name = "`range`", nullable = false)
-	private BuddyRange range;
+	@Column(nullable = false)
+	private CollegeMajorOption collegeMajorOption;
 
 	@Comment("버디 학년 범위")
 	@Enumerated(EnumType.STRING)
@@ -58,15 +58,15 @@ public class Buddy extends BaseAuditEntity {
 	private Buddy(
 		Member member,
 		GenderOption genderOption,
-		BuddyType classType,
-		BuddyRange range,
+		ClassTypeOption classTypeOption,
+		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
 		MatchingStatus matchingStatus,
 		boolean isSubMajor) {
 		this.member = member;
 		this.genderOption = genderOption;
-		this.classType = classType;
-		this.range = range;
+		this.classTypeOption = classTypeOption;
+		this.collegeMajorOption = collegeMajorOption;
 		this.gradeOption = gradeOption;
 		this.matchingStatus = matchingStatus;
 		this.isSubMajor = isSubMajor;
@@ -75,16 +75,16 @@ public class Buddy extends BaseAuditEntity {
 	public static Buddy createBuddy(
 		Member member,
 		GenderOption genderOption,
-		BuddyType classType,
-		BuddyRange range,
+		ClassTypeOption classTypeOption,
+		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
 		MatchingStatus matchingStatus,
 		boolean isSubMajor) {
 		return Buddy.builder()
 			.member(member)
 			.genderOption(genderOption)
-			.classType(classType)
-			.range(range)
+			.classTypeOption(classTypeOption)
+			.collegeMajorOption(collegeMajorOption)
 			.gradeOption(gradeOption)
 			.matchingStatus(matchingStatus)
 			.isSubMajor(isSubMajor)
