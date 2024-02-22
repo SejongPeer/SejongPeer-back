@@ -24,8 +24,6 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
-		checkRegisterRequest(request);
-
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
 	}
@@ -40,23 +38,5 @@ public class BuddyService {
 			MatchingStatus.IN_PROGRESS,
 			createBuddyRequest.isSubMajor()
 		);
-	}
-
-	private void checkRegisterRequest(RegisterRequest request) {
-		if (request.genderOption() == null) {
-			throw new CustomException(ErrorCode.EMPTY_GENDER);
-		}
-		if (request.buddyType() == null) {
-			throw new CustomException(ErrorCode.EMPTY_BUDDY_TYPE);
-		}
-		if (request.buddyRange() == null) {
-			throw new CustomException(ErrorCode.EMPTY_RANGE);
-		}
-		if (request.gradeOption() == null) {
-			throw new CustomException(ErrorCode.EMPTY_GRADE_OPTION);
-		}
-		if (request.isSubMajor() == null) {
-			throw new CustomException(ErrorCode.EMPTY_IS_SUB_MAJOR);
-		}
 	}
 }
