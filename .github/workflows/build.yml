@@ -2,9 +2,9 @@ name: SejongPeer - BackEnd - CI
 
 on:
   pull_request:
-    branches: ["main", "develop"]
+    branches: [ "main" ]
   push:
-    branches: ["develop"]
+    branches: [ "develop" ]
 
 permissions:
   contents: read
