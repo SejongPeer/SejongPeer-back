@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 /** SMS 메시지를 보내는 서비스를 제공합니다. Aligo API를 사용하여 SMS를 전송합니다. */
 @Service
-public class AligoSmsService {
+public class SmsService {
 	private static final String ALIGO_BASE_URL = "https://apis.aligo.in";
 
 	private final WebClient webClient;
@@ -26,7 +26,7 @@ public class AligoSmsService {
 	private String sender;
 
 	@Autowired
-	public AligoSmsService(WebClient.Builder webClientBuilder) {
+	public SmsService(WebClient.Builder webClientBuilder) {
 		this.webClient = webClientBuilder.baseUrl(ALIGO_BASE_URL).build();
 	}
 
@@ -35,14 +35,14 @@ public class AligoSmsService {
 	 * @param msg 보낼 메시지 90byte 한글 최대 45자 가능
 	 * @return 전송결과 또는 오류
 	 */
-	public String sendSms(String receiver, String msg) {
+	public String sendSms(String receiver, SmsText msg) {
 
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 		formData.add("key", apiKey);
 		formData.add("user_id", apiUserId);
 		formData.add("sender", sender);
 		formData.add("receiver", receiver);
-		formData.add("msg", msg);
+		formData.add("msg", msg.getValue());
 
 		return webClient
 			.post()
