@@ -31,12 +31,12 @@ public class Buddy extends BaseAuditEntity {
     @Comment("버디 타입")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BuddyType type;
+    private BuddyType buddyType;
 
     @Comment("버디 범위")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BuddyRange range;
+    private BuddyRange buddyRange;
 
     @Comment("버디 학년 범위")
     @Enumerated(EnumType.STRING)
@@ -56,15 +56,15 @@ public class Buddy extends BaseAuditEntity {
     private Buddy(
             Member member,
             GenderOption genderOption,
-            BuddyType type,
-            BuddyRange range,
+            BuddyType buddyType,
+            BuddyRange buddyRange,
             GradeOption gradeOption,
             MatchingStatus matchingStatus,
 			boolean isSubMajor) {
         this.member = member;
         this.genderOption = genderOption;
-        this.type = type;
-        this.range = range;
+        this.buddyType = buddyType;
+        this.buddyRange = buddyRange;
         this.gradeOption = gradeOption;
         this.matchingStatus = matchingStatus;
 		this.isSubMajor = isSubMajor;
@@ -73,16 +73,16 @@ public class Buddy extends BaseAuditEntity {
     public static Buddy createBuddy(
             Member member,
             GenderOption genderOption,
-            BuddyType type,
-            BuddyRange range,
+            BuddyType buddyType,
+            BuddyRange buddyRange,
             GradeOption gradeOption,
             MatchingStatus matchingStatus,
 			boolean isSubMajor) {
         return Buddy.builder()
                 .member(member)
                 .genderOption(genderOption)
-                .type(type)
-                .range(range)
+                .buddyType(buddyType)
+                .buddyRange(buddyRange)
                 .gradeOption(gradeOption)
                 .matchingStatus(matchingStatus)
 				.isSubMajor(isSubMajor)

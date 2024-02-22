@@ -37,13 +37,6 @@ public enum ErrorCode {
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 정보로 가입된 계정이 존재하지 않습니다."),
     ACCOUNT_FIND_OPTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 인증 방법입니다."),
 
-	// 버디 등록 에러
-	EMPTY_GENDER(HttpStatus.BAD_REQUEST, "성별을 선택해주세요."),
-	EMPTY_BUDDY_TYPE(HttpStatus.BAD_REQUEST, "버디 타입을 선택해주세요."),
-	EMPTY_RANGE(HttpStatus.BAD_REQUEST, "학부 범위를 선택해주세요."),
-	EMPTY_GRADE_OPTION(HttpStatus.BAD_REQUEST, "학년을 선택해주세요."),
-	EMPTY_IS_SUB_MAJOR(HttpStatus.BAD_REQUEST, "복수전공 여부를 선택해주세요."),
-
     // Study
     STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다.");
     private final HttpStatus status;
