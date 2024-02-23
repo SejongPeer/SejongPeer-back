@@ -4,10 +4,9 @@ import com.sejong.sejongpeer.domain.member.dto.request.AccountFindRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.MemberUpdateRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.PasswordResetRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
-import com.sejong.sejongpeer.domain.member.dto.response.AccountCheckResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.AccountFindResponse;
+import com.sejong.sejongpeer.domain.member.dto.response.ExistsCheckResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.MemberInfoResponse;
-import com.sejong.sejongpeer.domain.member.dto.response.NicknameCheckResponse;
 import com.sejong.sejongpeer.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +42,7 @@ public class MemberController {
 
     @Operation(summary = "아이디 중복 체크", description = "아이디 중복을 체크합니다.")
     @GetMapping("/check-account")
-    public AccountCheckResponse checkAccount(
+    public ExistsCheckResponse checkAccount(
             @RequestParam
                     @NotBlank
                     @Pattern(
@@ -56,7 +55,7 @@ public class MemberController {
 
     @Operation(summary = "닉네임 중복 체크", description = "닉네임 중복을 체크합니다.")
     @GetMapping("/check-nickname")
-    public NicknameCheckResponse checkNickname(
+    public ExistsCheckResponse checkNickname(
             @RequestParam
                     @NotBlank(message = "닉네임을 입력해주세요.")
                     @Pattern(
@@ -64,6 +63,23 @@ public class MemberController {
                             message = "닉네임은 2자 이상 8자 이하 한글, 영어, 숫자만 입력해주세요.")
                     String nickname) {
         return memberService.checkNicknameExists(nickname);
+    }
+
+    @Operation(summary = "휴대폰 번호 중복 체크", description = "휴대폰 번호 중복을 체크합니다.")
+    @GetMapping("/check-phone-number")
+    public ExistsCheckResponse checkPhoneNumber(
+            @RequestParam
+                    @NotBlank(message = "휴대폰 번호를 입력해주세요.")
+                    @Pattern(regexp = "^010[0-9]{8}$", message = "휴대폰 번호를 정확히 입력해주세요.")
+                    String phoneNumber) {
+        return memberService.checkPhoneNumberExists(phoneNumber);
+    }
+
+    @Operation(summary = "카카오 계정 중복 체크", description = "카카오 계정 중복을 체크합니다.")
+    @GetMapping("/check-kakao-account")
+    public ExistsCheckResponse checkKakaoAccount(
+            @RequestParam @NotBlank(message = "카카오 계정을 입력해주세요.") String kakaoAccount) {
+        return memberService.checkKakaoAccountExists(kakaoAccount);
     }
 
     @Operation(summary = "회원정보 조회", description = "회원정보를 조회합니다.")
