@@ -1,6 +1,6 @@
 package com.sejong.sejongpeer.domain.member.entity;
 
-import com.sejong.sejongpeer.domain.buddy.entity.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
@@ -129,5 +129,13 @@ public class Member extends BaseAuditEntity {
 
     public void changePassword(String encryptedPassword) {
         this.password = encryptedPassword;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeKakaoAccount(String kakaoAccount) {
+        this.kakaoAccount = kakaoAccount;
     }
 }

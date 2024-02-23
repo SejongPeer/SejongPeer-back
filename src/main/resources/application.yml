@@ -4,7 +4,9 @@ spring:
       dev: "dev, datasource"
     include:
       - security
-# TODO: Profiling 적용이 필요
+      - infra
+
+  # TODO: Profiling 적용이 필요
   jpa:
     hibernate:
       ddl-auto: update
