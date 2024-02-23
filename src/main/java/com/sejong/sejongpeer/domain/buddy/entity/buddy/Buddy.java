@@ -6,7 +6,7 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.ClassTypeOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GradeOption;
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 
@@ -61,7 +61,7 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Status status;
+	private BuddyStatus buddyStatus;
 
 	@Comment("복수전공 확인")
 	@Column(nullable = false)
@@ -74,14 +74,14 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		Status status,
+		BuddyStatus buddyStatus,
 		boolean isSubMajor) {
 		this.member = member;
 		this.genderOption = genderOption;
 		this.classTypeOption = classTypeOption;
 		this.collegeMajorOption = collegeMajorOption;
 		this.gradeOption = gradeOption;
-		this.status = status;
+		this.buddyStatus = buddyStatus;
 		this.isSubMajor = isSubMajor;
 	}
 
@@ -91,7 +91,7 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		Status status,
+		BuddyStatus buddyStatus,
 		boolean isSubMajor) {
 		return Buddy.builder()
 			.member(member)
@@ -99,12 +99,12 @@ public class Buddy extends BaseAuditEntity {
 			.classTypeOption(classTypeOption)
 			.collegeMajorOption(collegeMajorOption)
 			.gradeOption(gradeOption)
-			.status(status)
+			.buddyStatus(buddyStatus)
 			.isSubMajor(isSubMajor)
 			.build();
 	}
 
-	public void changeStatus(Status status) {
-		this.status = status;
+	public void changeStatus(BuddyStatus buddyStatus) {
+		this.buddyStatus = buddyStatus;
 	}
 }

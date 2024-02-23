@@ -2,7 +2,7 @@ package com.sejong.sejongpeer.domain.buddy.service;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
@@ -35,7 +35,7 @@ public class BuddyService {
 			createBuddyRequest.classTypeOption(),
 			createBuddyRequest.collegeMajorOption(),
 			createBuddyRequest.gradeOption(),
-			Status.IN_PROGRESS,
+			BuddyStatus.IN_PROGRESS,
 			createBuddyRequest.isSubMajor()
 		);
 	}
