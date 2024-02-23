@@ -21,9 +21,9 @@ public class BuddyController {
 
 	@Operation(summary = "버디등록", description = "유저가 버디에 등록")
 	@PostMapping("/register")
-	public void register(@Valid @RequestBody RegisterRequest request) {
+	public void buddyRegister(@Valid @RequestBody RegisterRequest request) {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		buddyService.register(request, memberId);
+		buddyService.registerBuddy(request, memberId);
 	}
 }

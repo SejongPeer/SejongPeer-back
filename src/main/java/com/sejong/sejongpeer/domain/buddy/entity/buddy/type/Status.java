@@ -1,11 +1,11 @@
-package com.sejong.sejongpeer.domain.buddy.entity.type;
+package com.sejong.sejongpeer.domain.buddy.entity.buddy.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MatchingStatus {
+public enum Status {
     IN_PROGRESS("매칭 중"),
     CANCEL("취소"),
     ACCEPT("수락"),
