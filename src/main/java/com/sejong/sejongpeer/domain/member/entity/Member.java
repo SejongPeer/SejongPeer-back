@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.member.entity;
 
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
@@ -15,7 +16,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
@@ -47,9 +47,6 @@ public class Member extends BaseAuditEntity {
     @Column(columnDefinition = "varchar(40)", nullable = false)
     private String name;
 
-    @Column(columnDefinition = "date", nullable = false)
-    private LocalDate birthday;
-
     @Column(columnDefinition = "varchar(30)", nullable = false)
     private String phoneNumber;
 
@@ -76,13 +73,15 @@ public class Member extends BaseAuditEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Study> studies = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Buddy> buddies = new ArrayList<>();
+
     @Builder
     private Member(
             String account,
             String password,
             String name,
             String nickname,
-            LocalDate birthday,
             String phoneNumber,
             Gender gender,
             CollegeMajor collegeMajor,
@@ -94,7 +93,6 @@ public class Member extends BaseAuditEntity {
         this.password = password;
         this.name = name;
         this.nickname = nickname;
-        this.birthday = birthday;
         this.phoneNumber = phoneNumber;
         this.kakaoAccount = kakaoAccount;
         this.collegeMinor = collegeMinor;
@@ -118,9 +116,10 @@ public class Member extends BaseAuditEntity {
                 .phoneNumber(request.phoneNumber())
                 .account(request.account())
                 .password(encodedPassword)
-                .birthday(request.birthday())
                 .gender(request.gender())
                 .studentId(request.studentId())
+                .kakaoAccount(request.kakaoAccount())
+                .nickname(request.nickname())
                 .build();
     }
 
@@ -130,5 +129,13 @@ public class Member extends BaseAuditEntity {
 
     public void changePassword(String encryptedPassword) {
         this.password = encryptedPassword;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeKakaoAccount(String kakaoAccount) {
+        this.kakaoAccount = kakaoAccount;
     }
 }

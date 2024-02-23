@@ -6,11 +6,11 @@ import com.sejong.sejongpeer.domain.member.dto.request.AccountFindRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.MemberUpdateRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.PasswordResetRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
-import com.sejong.sejongpeer.domain.member.dto.response.AccountCheckResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.AccountFindResponse;
+import com.sejong.sejongpeer.domain.member.dto.response.ExistsCheckResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.MemberInfoResponse;
-import com.sejong.sejongpeer.domain.member.dto.response.NicknameCheckResponse;
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.member.entity.type.MemberInfo;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.member.type.AccountFindOption;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
@@ -84,7 +84,7 @@ public class MemberService {
         Member member =
                 memberRepository
                         .findById(memberId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberInfoResponse.of(member);
     }
@@ -105,24 +105,41 @@ public class MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    private boolean existsKakaoAccount(String kakaoAccount) {
+        return memberRepository.existsByKakaoAccount(kakaoAccount);
+    }
+
     public void updateMemberInfo(String memberId, MemberUpdateRequest request) {
         Member member =
                 memberRepository
                         .findById(memberId)
                         .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
-        if (!passwordEncoder.matches(request.currentPassword(), member.getPassword())) {
-            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
+        updateMember(member, request);
+    }
+
+    private void updateMember(Member member, MemberUpdateRequest request) {
+        verifyUpdatable(request);
+
+        MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
+        MemberInfo.PHONE_NUMBER.executeUpdate(member, request.phoneNumber());
+        MemberInfo.KAKAO_ACCOUNT.executeUpdate(member, request.kakaoAccount());
+
+        log.info("회원정보 변경 완료: {}", member.getId());
+    }
+
+    // 원자성 보장을 위해 하나라도 잘못되거나 중복된 정보가 있으면 업데이트 되어서는 안됨
+    private void verifyUpdatable(MemberUpdateRequest request) {
+        if (request.nickname() != null && existsNickname(request.nickname())) {
+            throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
         }
 
-        if (request.nickname() != null) {
-            member.changeNickname(request.nickname());
+        if (request.phoneNumber() != null && existsPhoneNumber(request.phoneNumber())) {
+            throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
         }
 
-        if (request.newPassword() != null
-                && (request.newPassword()).equals(request.newPasswordCheck())) {
-            String encryptedPassword = passwordEncoder.encode(request.newPassword());
-            member.changePassword(encryptedPassword);
+        if (request.kakaoAccount() != null && existsKakaoAccount(request.kakaoAccount())) {
+            throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
         }
     }
 
@@ -139,7 +156,7 @@ public class MemberService {
                                 () -> new CustomException(ErrorCode.ACCOUNT_FIND_OPTION_NOT_FOUND))
                         .apply(request);
 
-        return new AccountFindResponse(account);
+        return AccountFindResponse.of(account);
     }
 
     private String findMemberAccountByName(AccountFindRequest request) {
@@ -183,12 +200,22 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public AccountCheckResponse checkAccountExists(String account) {
-        return new AccountCheckResponse(memberRepository.existsByAccount(account));
+    public ExistsCheckResponse checkAccountExists(String account) {
+        return new ExistsCheckResponse(memberRepository.existsByAccount(account));
     }
 
     @Transactional(readOnly = true)
-    public NicknameCheckResponse checkNicknameExists(String nickname) {
-        return new NicknameCheckResponse(memberRepository.existsByNickname(nickname));
+    public ExistsCheckResponse checkNicknameExists(String nickname) {
+        return new ExistsCheckResponse(memberRepository.existsByNickname(nickname));
+    }
+
+    @Transactional(readOnly = true)
+    public ExistsCheckResponse checkPhoneNumberExists(String phoneNumber) {
+        return new ExistsCheckResponse(memberRepository.existsByPhoneNumber(phoneNumber));
+    }
+
+    @Transactional(readOnly = true)
+    public ExistsCheckResponse checkKakaoAccountExists(String kakaoAccount) {
+        return new ExistsCheckResponse(memberRepository.existsByKakaoAccount(kakaoAccount));
     }
 }

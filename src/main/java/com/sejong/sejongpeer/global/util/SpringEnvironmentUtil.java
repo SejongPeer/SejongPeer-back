@@ -1,8 +1,8 @@
 package com.sejong.sejongpeer.global.util;
 
-import com.sejong.sejongpeer.global.common.constants.EnvironmentConstants;
+import static com.sejong.sejongpeer.global.common.constants.EnvironmentConstants.Constants.*;
+
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -11,31 +11,26 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class SpringEnvironmentUtil {
-    private final Environment environment;
 
-    private final List<String> PROD_AND_DEV =
-            List.of(EnvironmentConstants.PROD.getValue(), EnvironmentConstants.DEV.getValue());
+    private final Environment environment;
 
     public String getCurrentProfile() {
         return getActiveProfiles()
-                .filter(
-                        profile ->
-                                profile.equals(EnvironmentConstants.PROD.getValue())
-                                        || profile.equals(EnvironmentConstants.DEV.getValue()))
+                .filter(profile -> profile.equals(PROD_ENV) || profile.equals(DEV_ENV))
                 .findFirst()
-                .orElse(EnvironmentConstants.LOCAL.getValue());
+                .orElse(LOCAL_ENV);
     }
 
-    public Boolean isProdProfile() {
-        return getActiveProfiles().anyMatch(EnvironmentConstants.PROD.getValue()::equals);
+    public boolean isProdProfile() {
+        return getActiveProfiles().anyMatch(PROD_ENV::equals);
     }
 
-    public Boolean isDevProfile() {
-        return getActiveProfiles().anyMatch(EnvironmentConstants.DEV.getValue()::equals);
+    public boolean isDevProfile() {
+        return getActiveProfiles().anyMatch(DEV_ENV::equals);
     }
 
-    public Boolean isProdAndDevProfile() {
-        return getActiveProfiles().anyMatch(PROD_AND_DEV::contains);
+    public boolean isProdAndDevProfile() {
+        return getActiveProfiles().anyMatch(PROD_AND_DEV_ENV::contains);
     }
 
     private Stream<String> getActiveProfiles() {

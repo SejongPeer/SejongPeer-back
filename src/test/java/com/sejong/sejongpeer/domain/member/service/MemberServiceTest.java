@@ -13,7 +13,6 @@ import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
-import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +57,6 @@ class MemberServiceTest {
                             "호텔관광외식경영학부",
                             2,
                             Gender.MALE,
-                            LocalDate.of(1999, 1, 1),
                             "01011112222",
                             "tester",
                             "testkakao");
@@ -160,7 +158,6 @@ class MemberServiceTest {
                             "호텔관광외식경영학부",
                             2,
                             Gender.MALE,
-                            LocalDate.of(1999, 1, 1),
                             "01011112222",
                             "tester",
                             "testkakao");
@@ -205,7 +202,6 @@ class MemberServiceTest {
                             .studentId("12345678")
                             .name("홍길동")
                             .kakaoAccount("test")
-                            .birthday(LocalDate.of(1999, 1, 1))
                             .collegeMajor(collegeMajor)
                             .collegeMinor(collegeMinor)
                             .account("test")
@@ -237,7 +233,7 @@ class MemberServiceTest {
             // given
             String newNickname = "newNickname";
             MemberUpdateRequest request =
-                    new MemberUpdateRequest(newNickname, MEMBER_PASSWORD, null, null);
+                    MemberUpdateRequest.builder().nickname(newNickname).build();
 
             given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.ofNullable(member));
 
@@ -248,20 +244,23 @@ class MemberServiceTest {
             Assertions.assertEquals(newNickname, member.getNickname());
         }
 
-        @Test
-        void 비밀번호_변경() {
-            // given
-            String newPassword = "newPassword";
-            MemberUpdateRequest request =
-                    new MemberUpdateRequest(null, MEMBER_PASSWORD, newPassword, newPassword);
-
-            given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.ofNullable(member));
-
-            // when
-            memberService.updateMemberInfo(MEMBER_ID, request);
-
-            // then
-            Assertions.assertTrue(passwordEncoder.matches(newPassword, member.getPassword()));
-        }
+        // @Test
+        // void 비밀번호_변경() {
+        // 	// given
+        // 	String newPassword = "newPassword";
+        // 	MemberUpdateRequest request = MemberUpdateRequest.builder()
+        // 		.currentPassword(MEMBER_PASSWORD)
+        // 		.newPassword(newPassword)
+        // 		.newPasswordCheck(newPassword)
+        // 		.build();
+        //
+        // 	given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.ofNullable(member));
+        //
+        // 	// when
+        // 	memberService.updateMemberInfo(MEMBER_ID, request);
+        //
+        // 	// then
+        // 	Assertions.assertTrue(passwordEncoder.matches(newPassword, member.getPassword()));
+        // }
     }
 }
