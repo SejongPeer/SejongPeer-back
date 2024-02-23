@@ -1,5 +1,8 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
@@ -24,6 +27,8 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
+		checkPossibleRegistration(memberId);
+
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
 	}
@@ -39,4 +44,27 @@ public class BuddyService {
 			createBuddyRequest.isSubMajor()
 		);
 	}
+
+	private void checkPossibleRegistration(String memberId) {
+		Buddy latestBuddy = getLastBuddyByMemberId(memberId);
+
+		if (latestBuddy.getStatus().equals(Status.REJECT) &&
+			!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt())) {
+				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+		}
+	}
+
+	private Buddy getLastBuddyByMemberId(String memberId) {
+		Optional<Buddy> buddyOptional = buddyRepository.findLastBuddyByMemberId(memberId);
+		return buddyOptional.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+	}
+
+	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
+		return LocalDateTime.now().isAfter(oneHourAfterTime);
+	}
+
+
+
+
 }
