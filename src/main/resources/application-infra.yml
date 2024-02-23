@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: "infra"
+
+aligo:
+  api:
+    key: ${ALIGO_API_KEY:default}
+    user-id: ${ALIGO_USER_ID:default}
+    sender: ${ALIGO_SENDER:default}

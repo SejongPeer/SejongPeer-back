@@ -1,6 +1,6 @@
 package com.sejong.sejongpeer.domain.member.entity;
 
-import com.sejong.sejongpeer.domain.buddy.entity.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
