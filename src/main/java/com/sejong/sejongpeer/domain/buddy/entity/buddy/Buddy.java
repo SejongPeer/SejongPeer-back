@@ -1,4 +1,4 @@
-package com.sejong.sejongpeer.domain.buddy.entity;
+package com.sejong.sejongpeer.domain.buddy.entity.buddy;
 
 import org.hibernate.annotations.Comment;
 

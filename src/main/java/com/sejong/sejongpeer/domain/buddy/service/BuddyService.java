@@ -1,8 +1,8 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
-import com.sejong.sejongpeer.domain.buddy.entity.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.type.MatchingStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BuddyService {
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
-	public void register(RegisterRequest request, String memberId) {
+	public void registerBuddy(RegisterRequest request, String memberId) {
 		Member member =
 			memberRepository
 				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
@@ -32,10 +32,10 @@ public class BuddyService {
 		return Buddy.createBuddy(
 			member,
 			createBuddyRequest.genderOption(),
-			createBuddyRequest.buddyType(),
-			createBuddyRequest.buddyRange(),
+			createBuddyRequest.classTypeOption(),
+			createBuddyRequest.collegeMajorOption(),
 			createBuddyRequest.gradeOption(),
-			MatchingStatus.IN_PROGRESS,
+			Status.IN_PROGRESS,
 			createBuddyRequest.isSubMajor()
 		);
 	}
