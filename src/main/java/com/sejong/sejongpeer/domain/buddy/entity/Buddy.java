@@ -1,14 +1,29 @@
 package com.sejong.sejongpeer.domain.buddy.entity;
 
-import com.sejong.sejongpeer.domain.buddy.entity.type.*;
+import org.hibernate.annotations.Comment;
+
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.ClassTypeOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GradeOption;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
@@ -31,12 +46,12 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("버디 타입")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BuddyType buddyType;
+	private ClassTypeOption classTypeOption;
 
 	@Comment("버디 범위")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BuddyRange buddyRange;
+	private CollegeMajorOption collegeMajorOption;
 
 	@Comment("버디 학년 범위")
 	@Enumerated(EnumType.STRING)
@@ -46,7 +61,7 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private MatchingStatus matchingStatus;
+	private Status status;
 
 	@Comment("복수전공 확인")
 	@Column(nullable = false)
@@ -56,36 +71,40 @@ public class Buddy extends BaseAuditEntity {
 	private Buddy(
 		Member member,
 		GenderOption genderOption,
-		BuddyType buddyType,
-		BuddyRange buddyRange,
+		ClassTypeOption classTypeOption,
+		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		MatchingStatus matchingStatus,
+		Status status,
 		boolean isSubMajor) {
 		this.member = member;
 		this.genderOption = genderOption;
-		this.buddyType = buddyType;
-		this.buddyRange = buddyRange;
+		this.classTypeOption = classTypeOption;
+		this.collegeMajorOption = collegeMajorOption;
 		this.gradeOption = gradeOption;
-		this.matchingStatus = matchingStatus;
+		this.status = status;
 		this.isSubMajor = isSubMajor;
 	}
 
 	public static Buddy createBuddy(
 		Member member,
 		GenderOption genderOption,
-		BuddyType buddyType,
-		BuddyRange buddyRange,
+		ClassTypeOption classTypeOption,
+		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		MatchingStatus matchingStatus,
+		Status status,
 		boolean isSubMajor) {
 		return Buddy.builder()
 			.member(member)
 			.genderOption(genderOption)
-			.buddyType(buddyType)
-			.buddyRange(buddyRange)
+			.classTypeOption(classTypeOption)
+			.collegeMajorOption(collegeMajorOption)
 			.gradeOption(gradeOption)
-			.matchingStatus(matchingStatus)
+			.status(status)
 			.isSubMajor(isSubMajor)
 			.build();
+	}
+
+	public void changeStatus(Status status) {
+		this.status = status;
 	}
 }
