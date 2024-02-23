@@ -1,10 +1,10 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyMatchingStatusUpdateRequest;
-import com.sejong.sejongpeer.domain.buddy.entity.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.BuddyMatched;
-import com.sejong.sejongpeer.domain.buddy.entity.type.BuddyMatchedStatus;
-import com.sejong.sejongpeer.domain.buddy.entity.type.MatchingStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class BuddyMatchingService {
+
 	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
@@ -33,13 +34,9 @@ public class BuddyMatchingService {
 		List<Buddy> targetBuddies = buddyRepository.findAllByMemberOrderByCreatedAtDesc(target);
 
 		Buddy ownerLatestBuddy = ownerBuddies.isEmpty() ? null : ownerBuddies.get(0);
-		Buddy targetLatestBuddy = targetBuddies.isEmpty() ? null :targetBuddies.get(0);
+		Buddy targetLatestBuddy = targetBuddies.isEmpty() ? null : targetBuddies.get(0);
 
-		BuddyMatched buddyMatched = BuddyMatched.builder()
-			.ownerBuddy(ownerLatestBuddy)
-			.partnerBuddy(targetLatestBuddy)
-			.buddyMatchedStatus(BuddyMatchedStatus.IN_PROGRESS)
-			.build();
+		BuddyMatched buddyMatched = BuddyMatched.registerMatchingPair(ownerLatestBuddy, targetLatestBuddy);
 
 		updateStatusBasedOnBuddies(buddyMatched, ownerLatestBuddy, targetLatestBuddy);
 
@@ -54,36 +51,25 @@ public class BuddyMatchingService {
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
 		if (ownerBuddy != null && targetBuddy != null) {
 			BuddyMatchedStatus status;
-			if (ownerBuddy.getMatchingStatus() == MatchingStatus.ACCEPT &&
-				targetBuddy.getMatchingStatus() == MatchingStatus.ACCEPT) {
+			if (ownerBuddy.getBuddyStatus() == BuddyStatus.ACCEPT &&
+				targetBuddy.getBuddyStatus() == BuddyStatus.ACCEPT) {
 				status = BuddyMatchedStatus.MATCHING_COMPLETED;
-			} else if (ownerBuddy.getMatchingStatus() == MatchingStatus.CANCEL ||
-				targetBuddy.getMatchingStatus() == MatchingStatus.CANCEL ||
-				ownerBuddy.getMatchingStatus() == MatchingStatus.REJECT ||
-				targetBuddy.getMatchingStatus() == MatchingStatus.REJECT ||
-				ownerBuddy.getMatchingStatus() == MatchingStatus.DENIED ||
-				targetBuddy.getMatchingStatus() == MatchingStatus.DENIED) {
+			} else if (ownerBuddy.getBuddyStatus() == BuddyStatus.CANCEL ||
+				targetBuddy.getBuddyStatus() == BuddyStatus.CANCEL ||
+				ownerBuddy.getBuddyStatus() == BuddyStatus.REJECT ||
+				targetBuddy.getBuddyStatus() == BuddyStatus.REJECT ||
+				ownerBuddy.getBuddyStatus() == BuddyStatus.DENIED ||
+				targetBuddy.getBuddyStatus() == BuddyStatus.DENIED) {
 				status = BuddyMatchedStatus.MATCHING_FAIL;
 			} else {
 				status = BuddyMatchedStatus.IN_PROGRESS;
 			}
 
-			BuddyMatched updatedBuddyMatched = BuddyMatched.builder()
-				.ownerBuddy(ownerBuddy)
-				.partnerBuddy(targetBuddy)
-				.buddyMatchedStatus(status)
-				.build();
-
-			buddyMatched = buddyMatched.toBuilder()
-				.ownerBuddy(updatedBuddyMatched.getOwnerBuddy())
-				.partnerBuddy(updatedBuddyMatched.getPartnerBuddy())
-				.buddyMatchedStatus(updatedBuddyMatched.getBuddyMatchedStatus())
-				.build();
-
+			buddyMatched.setOwner(ownerBuddy);
+			buddyMatched.setPartner(targetBuddy);
+			buddyMatched.setBuddyMatchedStatus(status);
 		} else {
-			buddyMatched = buddyMatched.toBuilder()
-				.buddyMatchedStatus(BuddyMatchedStatus.MATCHING_FAIL)
-				.build();
+			buddyMatched.setBuddyMatchedStatus(BuddyMatchedStatus.MATCHING_FAIL);
 		}
 	}
 

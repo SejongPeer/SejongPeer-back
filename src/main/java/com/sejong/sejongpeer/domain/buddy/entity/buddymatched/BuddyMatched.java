@@ -1,9 +1,10 @@
 package com.sejong.sejongpeer.domain.buddy.entity.buddymatched;
 
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.Status;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,13 +16,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class BuddyMatched {
 
@@ -40,20 +38,20 @@ public class BuddyMatched {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Status status;
+	private BuddyMatchedStatus buddyMatchedStatus;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, Status status) {
+	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, BuddyMatchedStatus buddyMatchedStatus) {
 		this.owner = ownerBuddy;
 		this.partner = partnerBuddy;
-		this.status = status;
+		this.buddyMatchedStatus = buddyMatchedStatus;
 	}
 
 	public static BuddyMatched registerMatchingPair(Buddy ownerBuddy, Buddy partnerBuddy) {
 		return BuddyMatched.builder()
 			.ownerBuddy(ownerBuddy)
 			.partnerBuddy(partnerBuddy)
-			.status(Status.IN_PROGRESS)
+			.buddyMatchedStatus(BuddyMatchedStatus.IN_PROGRESS)
 			.build();
 	}
 
