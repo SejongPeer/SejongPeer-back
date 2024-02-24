@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
-import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyMatchingStatusUpdateRequest;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
@@ -27,7 +26,7 @@ public class BuddyMatchingService {
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 
-	public void updateBuddyMatchingStatus(String memberId, BuddyMatchingStatusUpdateRequest request) {
+	public void updateBuddyMatchingStatus(String memberId) {
 		Member owner = getMemberById(memberId);
 
 		List<Buddy> ownerBuddies = buddyRepository.findAllByMemberOrderByCreatedAtDesc(owner);
