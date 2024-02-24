@@ -46,25 +46,23 @@ public class BuddyService {
 	}
 
 	private void checkPossibleRegistration(String memberId) {
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId);
+		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
-		if (latestBuddy.getStatus().equals(Status.REJECT) &&
-			!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt())) {
+		optionalBuddy.ifPresent(latestBuddy -> {
+			if (latestBuddy.getStatus() == Status.IN_PROGRESS ||
+				(latestBuddy.getStatus().equals(Status.REJECT) &&
+					!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt()))) {
 				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
-		}
+			}
+		});
 	}
 
-	private Buddy getLastBuddyByMemberId(String memberId) {
-		Optional<Buddy> buddyOptional = buddyRepository.findLastBuddyByMemberId(memberId);
-		return buddyOptional.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+	private Optional<Buddy> getLastBuddyByMemberId(String memberId) {
+		return buddyRepository.findLastBuddyByMemberId(memberId);
 	}
 
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
 		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
-
-
-
-
 }
