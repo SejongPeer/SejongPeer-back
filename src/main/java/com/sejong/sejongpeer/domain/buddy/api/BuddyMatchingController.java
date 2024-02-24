@@ -1,7 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.api;
 
 import com.sejong.sejongpeer.domain.buddy.service.BuddyMatchingService;
-import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyMatchingStatusUpdateRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +20,9 @@ public class BuddyMatchingController {
 
 	@Operation(summary = "버디 매칭 상태 업데이트", description = "버디 매칭 상태 관리")
 	@PostMapping("/status")
-	public ResponseEntity<String> checkBuddyMatching(@RequestBody BuddyMatchingStatusUpdateRequest request) {
+	public ResponseEntity<String> checkBuddyMatching() {
 		String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		buddyMatchingService.updateBuddyMatchingStatus(memberId, request);
+		buddyMatchingService.updateBuddyMatchingStatus(memberId);
 		return ResponseEntity.ok("BuddyMatched status updated successfully");
 	}
 }
