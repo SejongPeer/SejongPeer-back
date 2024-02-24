@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,19 +27,17 @@ public class BuddyMatchingService {
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 
-	public void updateBuddyMatchingStatus(BuddyMatchingStatusUpdateRequest request) {
-		Member owner = getMemberById(request.ownerBuddyId());
-		Member target = getMemberById(request.partnerBuddyId());
+	public void updateBuddyMatchingStatus(String memberId, BuddyMatchingStatusUpdateRequest request) {
+		Member owner = getMemberById(memberId);
 
 		List<Buddy> ownerBuddies = buddyRepository.findAllByMemberOrderByCreatedAtDesc(owner);
-		List<Buddy> targetBuddies = buddyRepository.findAllByMemberOrderByCreatedAtDesc(target);
-
 		Buddy ownerLatestBuddy = ownerBuddies.isEmpty() ? null : ownerBuddies.get(0);
-		Buddy targetLatestBuddy = targetBuddies.isEmpty() ? null : targetBuddies.get(0);
 
-		BuddyMatched buddyMatched = BuddyMatched.registerMatchingPair(ownerLatestBuddy, targetLatestBuddy);
+		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
 
-		updateStatusBasedOnBuddies(buddyMatched, ownerLatestBuddy, targetLatestBuddy);
+		BuddyMatched buddyMatched = BuddyMatched.registerMatchingPair(ownerLatestBuddy, targetBuddy);
+
+		updateStatusBasedOnBuddies(buddyMatched, ownerLatestBuddy, targetBuddy);
 
 		buddyMatchedRepository.save(buddyMatched);
 	}
@@ -64,7 +63,6 @@ public class BuddyMatchingService {
 			} else {
 				status = BuddyMatchedStatus.IN_PROGRESS;
 			}
-
 			buddyMatched.setOwner(ownerBuddy);
 			buddyMatched.setPartner(targetBuddy);
 			buddyMatched.setBuddyMatchedStatus(status);
@@ -73,5 +71,9 @@ public class BuddyMatchingService {
 		}
 	}
 
+	private Buddy findTargetBuddy(Buddy ownerBuddy) {
+		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findByOwnerOrPartner(ownerBuddy);
 
+		return optionalBuddyMatched.map(BuddyMatched::getPartner).orElse(null);
+	}
 }
