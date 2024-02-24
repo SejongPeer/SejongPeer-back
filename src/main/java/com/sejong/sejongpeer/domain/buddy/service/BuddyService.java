@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
@@ -65,4 +66,14 @@ public class BuddyService {
 		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
+
+	@Transactional(readOnly = true)
+	public MatchingStatusResponse getMatchingStatus(String memberId) {
+		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+
+		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+
+		return new MatchingStatusResponse(buddy.getStatus());
+	}
 }
+
