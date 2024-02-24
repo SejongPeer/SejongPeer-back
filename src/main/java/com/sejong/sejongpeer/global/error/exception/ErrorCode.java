@@ -40,7 +40,12 @@ public enum ErrorCode {
     ACCOUNT_FIND_OPTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 인증 방법입니다."),
 
     // Study
-    STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다.");
+    STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
+
+	// 버디 등록 거절
+	REJECT_PENALTY(HttpStatus.BAD_REQUEST, "짝매칭 이후 거절한 유저는 버디를 등록할 수 없습니다.");
     private final HttpStatus status;
     private final String message;
+
+
 }
