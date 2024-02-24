@@ -34,8 +34,14 @@ public class BuddyMatchingService {
 
 		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
 
-		BuddyMatched buddyMatched = BuddyMatched.registerMatchingPair(ownerLatestBuddy, targetBuddy);
+		Optional<BuddyMatched> existingMatch = buddyMatchedRepository.findByOwnerAndPartner(ownerLatestBuddy, targetBuddy);
 
+		BuddyMatched buddyMatched;
+		if (existingMatch.isPresent()) {
+			buddyMatched = existingMatch.get();
+		} else {
+			buddyMatched = BuddyMatched.registerMatchingPair(ownerLatestBuddy, targetBuddy);
+		}
 		updateStatusBasedOnBuddies(buddyMatched, ownerLatestBuddy, targetBuddy);
 
 		buddyMatchedRepository.save(buddyMatched);
