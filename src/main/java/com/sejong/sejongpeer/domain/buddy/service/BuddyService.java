@@ -49,15 +49,14 @@ public class BuddyService {
 	}
 
 	public void cancelBuddy(String memberId) {
-		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getStatus() != IN_PROGRESS) {
-				throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
-			}
-			latestBuddy.changeStatus(CANCEL);
-			buddyRepository.save(latestBuddy);
-		});
+		if (latestBuddy.getStatus() != IN_PROGRESS) {
+			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
+		}
+		latestBuddy.changeStatus(CANCEL);
+		buddyRepository.save(latestBuddy);
 	}
   
   private void checkPossibleRegistration(String memberId) {
@@ -78,13 +77,13 @@ public class BuddyService {
   
   private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
 		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
+
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
   
   @Transactional(readOnly = true)
 	public MatchingStatusResponse getMatchingStatus(String memberId) {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
-
 		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		return new MatchingStatusResponse(buddy.getStatus());
