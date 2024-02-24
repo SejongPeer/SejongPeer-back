@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,5 @@ public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	List<Buddy> findByStatus(Status status);
 
 	@Query("SELECT b FROM Buddy b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
-	Buddy findLastBuddyByMemberId(@Param("memberId") String memberId);
+	Optional<Buddy> findLastBuddyByMemberId(@Param("memberId") String memberId);
 }
