@@ -45,21 +45,18 @@ public class BuddyService {
 	}
 
 	public void cancelBuddy(String memberId) {
-		Buddy buddy = getLastBuddyByMemberId(memberId);
+		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
-		if (buddy.getStatus() == IN_PROGRESS) {
-			buddy.changeStatus(CANCEL);
-			buddyRepository.save(buddy);
-		} else {
-			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
-		}
+		optionalBuddy.ifPresent(latestBuddy -> {
+			if (latestBuddy.getStatus() != IN_PROGRESS) {
+				throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
+			}
+			latestBuddy.changeStatus(CANCEL);
+			buddyRepository.save(latestBuddy);
+		});
 	}
 
-	private Buddy getLastBuddyByMemberId(String memberId) {
-		Optional<Buddy> buddyOptional = buddyRepository.findLastBuddyByMemberId(memberId);
-
-		return buddyOptional.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+	private Optional<Buddy> getLastBuddyByMemberId(String memberId) {
+		return buddyRepository.findLastBuddyByMemberId(memberId);
 	}
-
-
 }
