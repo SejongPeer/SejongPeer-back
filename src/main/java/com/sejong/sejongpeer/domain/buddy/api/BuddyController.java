@@ -21,7 +21,7 @@ public class BuddyController {
 
 	@Operation(summary = "버디등록", description = "유저가 버디에 등록")
 	@PostMapping("/register")
-	public void buddyRegister(@Valid @RequestBody RegisterRequest request) {
+	public void registerBuddy(@Valid @RequestBody RegisterRequest request) {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		buddyService.registerBuddy(request, memberId);
@@ -29,7 +29,7 @@ public class BuddyController {
 
 	@Operation(summary = "버디 중도 취소", description = "매칭 전 버디 취소")
 	@PostMapping("/cancel")
-	public void buddyCancel(@Valid @RequestBody RegisterRequest request) {
+	public void cancelBuddy(@Valid @RequestBody RegisterRequest request) {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		buddyService.cancelBuddy(memberId);
