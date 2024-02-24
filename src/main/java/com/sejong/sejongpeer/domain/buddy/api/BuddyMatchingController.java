@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,8 @@ public class BuddyMatchingController {
 	@Operation(summary = "버디 매칭 상태 업데이트", description = "버디 매칭 상태 관리")
 	@PostMapping("/status")
 	public ResponseEntity<String> checkBuddyMatching(@RequestBody BuddyMatchingStatusUpdateRequest request) {
-		buddyMatchingService.updateBuddyMatchingStatus(request);
+		String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		buddyMatchingService.updateBuddyMatchingStatus(memberId, request);
 		return ResponseEntity.ok("BuddyMatched status updated successfully");
 	}
 }
