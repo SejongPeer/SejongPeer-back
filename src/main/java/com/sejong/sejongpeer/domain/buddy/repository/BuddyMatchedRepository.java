@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface BuddyMatchedRepository extends JpaRepository<BuddyMatched, Long> {
+	@Query("SELECT bm FROM BuddyMatched bm WHERE bm.owner = :owner OR bm.partner = :owner")
+	Optional<BuddyMatched> findByOwnerOrPartner(@Param("owner") Buddy owner);
 
-	@Query("SELECT bm FROM BuddyMatched bm WHERE bm.owner = :ownerBuddy OR bm.partner = :ownerBuddy")
-	Optional<BuddyMatched> findByOwnerOrPartner(@Param("ownerBuddy") Buddy ownerBuddy);
 }
