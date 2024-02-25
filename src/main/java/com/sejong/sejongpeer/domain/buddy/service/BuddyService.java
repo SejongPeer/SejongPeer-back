@@ -58,13 +58,11 @@ public class BuddyService {
 		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getBuddyStatus() != BuddyStatus.IN_PROGRESS) {
-				throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
-			}
-			latestBuddy.changeStatus(BuddyStatus.CANCEL);
-			buddyRepository.save(latestBuddy);
-		});
+		if (latestBuddy.getBuddyStatus() != BuddyStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
+		}
+		latestBuddy.changeStatus(BuddyStatus.CANCEL);
+		buddyRepository.save(latestBuddy);
 	}
 
 	private void checkPossibleRegistration(String memberId) {
