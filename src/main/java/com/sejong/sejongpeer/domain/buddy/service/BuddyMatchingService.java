@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
+import com.sejong.sejongpeer.domain.buddy.dto.request.MatchingResultRequest;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
@@ -26,25 +27,20 @@ public class BuddyMatchingService {
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 
-	public void updateBuddyMatchingStatus(String memberId) {
+	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
 		Member owner = getMemberById(memberId);
 
 		List<Buddy> ownerBuddies = buddyRepository.findAllByMemberOrderByCreatedAtDesc(owner);
 		Buddy ownerLatestBuddy = ownerBuddies.isEmpty() ? null : ownerBuddies.get(0);
+		ownerLatestBuddy.changeStatus(request.buddyStatus());
 
 		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
 
-		Optional<BuddyMatched> existingMatch = buddyMatchedRepository.findByOwnerAndPartner(ownerLatestBuddy, targetBuddy);
+		BuddyMatched existingMatch = buddyMatchedRepository.findByOwnerAndPartner(ownerLatestBuddy, targetBuddy).orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
 
-		BuddyMatched buddyMatched;
-		if (existingMatch.isPresent()) {
-			buddyMatched = existingMatch.get();
-		} else {
-			buddyMatched = BuddyMatched.registerMatchingPair(ownerLatestBuddy, targetBuddy);
-		}
-		updateStatusBasedOnBuddies(buddyMatched, ownerLatestBuddy, targetBuddy);
+		updateStatusBasedOnBuddies(existingMatch, ownerLatestBuddy, targetBuddy);
 
-		buddyMatchedRepository.save(buddyMatched);
+		buddyMatchedRepository.save(existingMatch);
 	}
 
 	private Member getMemberById(String memberId) {
@@ -53,32 +49,25 @@ public class BuddyMatchingService {
 	}
 
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
-		if (ownerBuddy != null && targetBuddy != null) {
-			BuddyMatchedStatus status;
-			if (ownerBuddy.getStatus() == BuddyStatus.ACCEPT &&
-				targetBuddy.getStatus() == BuddyStatus.ACCEPT) {
-				status = BuddyMatchedStatus.MATCHING_COMPLETED;
-			} else if (ownerBuddy.getStatus() == BuddyStatus.CANCEL ||
-				targetBuddy.getStatus() == BuddyStatus.CANCEL ||
-				ownerBuddy.getStatus() == BuddyStatus.REJECT ||
-				targetBuddy.getStatus() == BuddyStatus.REJECT ||
-				ownerBuddy.getStatus() == BuddyStatus.DENIED ||
-				targetBuddy.getStatus() == BuddyStatus.DENIED) {
-				status = BuddyMatchedStatus.MATCHING_FAIL;
-			} else {
-				status = BuddyMatchedStatus.IN_PROGRESS;
-			}
-			buddyMatched.setOwner(ownerBuddy);
-			buddyMatched.setPartner(targetBuddy);
-			buddyMatched.setStatus(status);
-		} else {
+
+		// FOUND_BUDDY 일 경우, ownerBuddy는 ACCEPT, REJECT 선택만 가능
+		if (ownerBuddy.getStatus() != BuddyStatus.ACCEPT || targetBuddy.getStatus() != BuddyStatus.ACCEPT) {
+			// 매칭에 필요한 조건을 만족하지 않으면 MATCHING_FAIL 처리
 			buddyMatched.setStatus(BuddyMatchedStatus.MATCHING_FAIL);
+			ownerBuddy.changeStatus(BuddyStatus.REJECT);
+			targetBuddy.changeStatus(BuddyStatus.DENIED);
+			return;
 		}
+	
+		// 매칭이 성공할 경우 처리
+		buddyMatched.setStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
+		ownerBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
+		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 	}
 
 	private Buddy findTargetBuddy(Buddy ownerBuddy) {
-		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findByOwnerOrPartner(ownerBuddy);
+		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartner(ownerBuddy);
 
-		return optionalBuddyMatched.map(BuddyMatched::getPartner).orElse(null);
+		return optionalBuddyMatched.map(BuddyMatched::getPartner).orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
 	}
 }

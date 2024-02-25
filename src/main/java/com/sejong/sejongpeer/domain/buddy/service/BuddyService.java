@@ -34,9 +34,10 @@ public class BuddyService {
 		checkPossibleRegistration(memberId);
 
 		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member)
-			.orElse(null);
+			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+
 		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
-			latestBuddy.getUpdatedAt().isAfter(LocalDateTime.now().minusHours(1))) {
+			latestBuddy.getUpdatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
 		}
 		Buddy buddy = createBuddyEntity(request, member);
