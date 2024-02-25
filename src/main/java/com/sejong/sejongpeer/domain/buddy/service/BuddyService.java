@@ -5,6 +5,9 @@ import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
@@ -14,16 +17,17 @@ import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BuddyService {
+	private final MatchingService matchingService;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
+
 	public void registerBuddy(RegisterRequest request, String memberId) {
 		Member member =
 			memberRepository
@@ -34,6 +38,8 @@ public class BuddyService {
 
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
+
+		matchingService.matchBuddy(buddy);
 	}
 
 	private Buddy createBuddyEntity(RegisterRequest createBuddyRequest, Member member) {
