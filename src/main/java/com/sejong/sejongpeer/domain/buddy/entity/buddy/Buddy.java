@@ -7,6 +7,7 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GradeOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 
@@ -61,7 +62,7 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BuddyStatus buddyStatus;
+	private BuddyStatus status;
 
 	@Comment("복수전공 확인")
 	@Column(nullable = false)
@@ -74,14 +75,14 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		BuddyStatus buddyStatus,
+		BuddyStatus status,
 		boolean isSubMajor) {
 		this.member = member;
 		this.genderOption = genderOption;
 		this.classTypeOption = classTypeOption;
 		this.collegeMajorOption = collegeMajorOption;
 		this.gradeOption = gradeOption;
-		this.buddyStatus = buddyStatus;
+		this.status = status;
 		this.isSubMajor = isSubMajor;
 	}
 
@@ -91,7 +92,7 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		BuddyStatus buddyStatus,
+		BuddyStatus status,
 		boolean isSubMajor) {
 		return Buddy.builder()
 			.member(member)
@@ -99,12 +100,12 @@ public class Buddy extends BaseAuditEntity {
 			.classTypeOption(classTypeOption)
 			.collegeMajorOption(collegeMajorOption)
 			.gradeOption(gradeOption)
-			.buddyStatus(buddyStatus)
+			.status(status)
 			.isSubMajor(isSubMajor)
 			.build();
 	}
 
-	public void changeStatus(BuddyStatus buddyStatus) {
-		this.buddyStatus = buddyStatus;
+	public void changeStatus(BuddyStatus status) {
+		this.status = status;
 	}
 }

@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class MatchingService {
 			.filter(candidate -> candidate.getId() != me.getId()) // 본인은 제외 시킴
 			.filter(
 				candidate ->
-					candidate.getBuddyStatus()
+					candidate.getStatus()
 						== BuddyStatus.IN_PROGRESS) // 이전 과정에서 매칭된 Buddy가 존재할 수 있으므로 한 번 더 필터링
 			.filter(candidate -> BuddyFilter.filterSuitableGender(candidate, me))
 			.filter(candidate -> BuddyFilter.filterSuitableCollegeMajor(candidate, me))

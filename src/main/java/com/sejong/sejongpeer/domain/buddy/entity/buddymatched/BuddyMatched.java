@@ -38,20 +38,20 @@ public class BuddyMatched {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private BuddyMatchedStatus buddyMatchedStatus;
+	private BuddyMatchedStatus status;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, BuddyMatchedStatus buddyMatchedStatus) {
+	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, BuddyMatchedStatus status) {
 		this.owner = ownerBuddy;
 		this.partner = partnerBuddy;
-		this.buddyMatchedStatus = buddyMatchedStatus;
+		this.status = status;
 	}
 
 	public static BuddyMatched registerMatchingPair(Buddy ownerBuddy, Buddy partnerBuddy) {
 		return BuddyMatched.builder()
 			.ownerBuddy(ownerBuddy)
 			.partnerBuddy(partnerBuddy)
-			.buddyMatchedStatus(BuddyMatchedStatus.IN_PROGRESS)
+			.status(BuddyMatchedStatus.IN_PROGRESS)
 			.build();
 	}
 
