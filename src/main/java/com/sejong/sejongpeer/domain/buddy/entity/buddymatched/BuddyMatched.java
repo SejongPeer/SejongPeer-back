@@ -3,7 +3,7 @@ package com.sejong.sejongpeer.domain.buddy.entity.buddymatched;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.Status;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,10 +40,10 @@ public class BuddyMatched {
 	@Comment("매칭 상태")
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Status status;
+	private BuddyMatchedStatus status;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, Status status) {
+	private BuddyMatched(Buddy ownerBuddy, Buddy partnerBuddy, BuddyMatchedStatus status) {
 		this.owner = ownerBuddy;
 		this.partner = partnerBuddy;
 		this.status = status;
@@ -53,7 +53,7 @@ public class BuddyMatched {
 		return BuddyMatched.builder()
 			.ownerBuddy(ownerBuddy)
 			.partnerBuddy(partnerBuddy)
-			.status(Status.IN_PROGRESS)
+			.status(BuddyMatchedStatus.IN_PROGRESS)
 			.build();
 	}
 

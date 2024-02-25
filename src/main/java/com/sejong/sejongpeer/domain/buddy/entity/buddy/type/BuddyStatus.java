@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Status {
+public enum BuddyStatus {
     IN_PROGRESS("매칭 중"),
     CANCEL("취소"),
     ACCEPT("수락"),
