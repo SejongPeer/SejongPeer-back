@@ -31,15 +31,17 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-		checkPossibleRegistration(memberId);
-
 		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member)
-			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+		.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
 			latestBuddy.getUpdatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
 		}
+		
+		checkPossibleRegistration(memberId);
+
+		
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
 	}
