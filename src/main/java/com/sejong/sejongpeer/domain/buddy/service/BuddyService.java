@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class BuddyService {
 
 		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member)
 			.orElse(null);
-		if (latestBuddy != null && latestBuddy.getBuddyStatus() == BuddyStatus.REJECT &&
+		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
 			latestBuddy.getUpdatedAt().isAfter(LocalDateTime.now().minusHours(1))) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
 		}
@@ -58,7 +59,7 @@ public class BuddyService {
 		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (latestBuddy.getBuddyStatus() != BuddyStatus.IN_PROGRESS) {
+		if (latestBuddy.getStatus() != BuddyStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
 		latestBuddy.changeStatus(BuddyStatus.CANCEL);
@@ -69,8 +70,8 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getBuddyStatus() == BuddyStatus.IN_PROGRESS ||
-				(latestBuddy.getBuddyStatus().equals(BuddyStatus.REJECT) &&
+			if (latestBuddy.getStatus() == BuddyStatus.IN_PROGRESS ||
+				(latestBuddy.getStatus().equals(BuddyStatus.REJECT) &&
 					!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt()))) {
 				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
 			}
@@ -92,7 +93,7 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return new MatchingStatusResponse(buddy.getBuddyStatus());
+		return new MatchingStatusResponse(buddy.getStatus());
 	}
 }
 
