@@ -30,8 +30,8 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "버디 중도 취소", description = "매칭 전 버디 취소")
-	@PostMapping("/cancel")
-	public void cancelBuddy(@Valid @RequestBody RegisterRequest request) {
+	@GetMapping("/cancel")
+	public void cancelBuddy() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		buddyService.cancelBuddy(memberId);
