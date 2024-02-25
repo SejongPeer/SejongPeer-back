@@ -1,6 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.dto.response;
 
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 
-public record MatchingStatusResponse(Status status) {
+public record MatchingStatusResponse(BuddyStatus status) {
 }
