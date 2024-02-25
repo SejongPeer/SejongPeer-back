@@ -55,24 +55,24 @@ public class BuddyMatchingService {
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
 		if (ownerBuddy != null && targetBuddy != null) {
 			BuddyMatchedStatus status;
-			if (ownerBuddy.getBuddyStatus() == BuddyStatus.ACCEPT &&
-				targetBuddy.getBuddyStatus() == BuddyStatus.ACCEPT) {
+			if (ownerBuddy.getStatus() == BuddyStatus.ACCEPT &&
+				targetBuddy.getStatus() == BuddyStatus.ACCEPT) {
 				status = BuddyMatchedStatus.MATCHING_COMPLETED;
-			} else if (ownerBuddy.getBuddyStatus() == BuddyStatus.CANCEL ||
-				targetBuddy.getBuddyStatus() == BuddyStatus.CANCEL ||
-				ownerBuddy.getBuddyStatus() == BuddyStatus.REJECT ||
-				targetBuddy.getBuddyStatus() == BuddyStatus.REJECT ||
-				ownerBuddy.getBuddyStatus() == BuddyStatus.DENIED ||
-				targetBuddy.getBuddyStatus() == BuddyStatus.DENIED) {
+			} else if (ownerBuddy.getStatus() == BuddyStatus.CANCEL ||
+				targetBuddy.getStatus() == BuddyStatus.CANCEL ||
+				ownerBuddy.getStatus() == BuddyStatus.REJECT ||
+				targetBuddy.getStatus() == BuddyStatus.REJECT ||
+				ownerBuddy.getStatus() == BuddyStatus.DENIED ||
+				targetBuddy.getStatus() == BuddyStatus.DENIED) {
 				status = BuddyMatchedStatus.MATCHING_FAIL;
 			} else {
 				status = BuddyMatchedStatus.IN_PROGRESS;
 			}
 			buddyMatched.setOwner(ownerBuddy);
 			buddyMatched.setPartner(targetBuddy);
-			buddyMatched.setBuddyMatchedStatus(status);
+			buddyMatched.setStatus(status);
 		} else {
-			buddyMatched.setBuddyMatchedStatus(BuddyMatchedStatus.MATCHING_FAIL);
+			buddyMatched.setStatus(BuddyMatchedStatus.MATCHING_FAIL);
 		}
 	}
 
