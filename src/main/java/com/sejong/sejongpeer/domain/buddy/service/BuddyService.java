@@ -1,6 +1,12 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status.*;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
@@ -26,6 +32,8 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
+		checkPossibleRegistration(memberId);
+
 		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member)
 			.orElse(null);
 		if (latestBuddy != null && latestBuddy.getBuddyStatus() == BuddyStatus.REJECT &&
@@ -47,4 +55,47 @@ public class BuddyService {
 			createBuddyRequest.isSubMajor()
 		);
 	}
+
+	public void cancelBuddy(String memberId) {
+		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+
+		optionalBuddy.ifPresent(latestBuddy -> {
+			if (latestBuddy.getStatus() != IN_PROGRESS) {
+				throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
+			}
+			latestBuddy.changeStatus(CANCEL);
+			buddyRepository.save(latestBuddy);
+		});
+	}
+
+	private void checkPossibleRegistration(String memberId) {
+		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+
+		optionalBuddy.ifPresent(latestBuddy -> {
+			if (latestBuddy.getStatus() == Status.IN_PROGRESS ||
+				(latestBuddy.getStatus().equals(Status.REJECT) &&
+					!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt()))) {
+				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+			}
+		});
+	}
+
+	private Optional<Buddy> getLastBuddyByMemberId(String memberId) {
+		return buddyRepository.findLastBuddyByMemberId(memberId);
+	}
+
+	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
+		return LocalDateTime.now().isAfter(oneHourAfterTime);
+	}
+
+	@Transactional(readOnly = true)
+	public MatchingStatusResponse getMatchingStatus(String memberId) {
+		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+
+		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+
+		return new MatchingStatusResponse(buddy.getStatus());
+	}
 }
+
