@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
-import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -60,10 +58,10 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getStatus() != IN_PROGRESS) {
+			if (latestBuddy.getBuddyStatus() != BuddyStatus.IN_PROGRESS) {
 				throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 			}
-			latestBuddy.changeStatus(CANCEL);
+			latestBuddy.changeStatus(BuddyStatus.CANCEL);
 			buddyRepository.save(latestBuddy);
 		});
 	}
@@ -72,8 +70,8 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getStatus() == Status.IN_PROGRESS ||
-				(latestBuddy.getStatus().equals(Status.REJECT) &&
+			if (latestBuddy.getBuddyStatus() == BuddyStatus.IN_PROGRESS ||
+				(latestBuddy.getBuddyStatus().equals(BuddyStatus.REJECT) &&
 					!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt()))) {
 				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
 			}
@@ -95,7 +93,7 @@ public class BuddyService {
 
 		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return new MatchingStatusResponse(buddy.getStatus());
+		return new MatchingStatusResponse(buddy.getBuddyStatus());
 	}
 }
 
