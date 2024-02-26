@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 
 import jakarta.persistence.Column;
@@ -53,6 +54,10 @@ public class BuddyMatched {
 			.partnerBuddy(partnerBuddy)
 			.status(BuddyMatchedStatus.IN_PROGRESS)
 			.build();
+	}
+
+	public void changeStatus(BuddyMatchedStatus status) {
+		this.status = status;
 	}
 
 }
