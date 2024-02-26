@@ -11,7 +11,3 @@ services:
       - "8081:80"
     # 컨테이너의 이름
     container_name: sejongpeer-blue
-    environment:
-      - TZ=Asia/Seoul
-    env_file:
-      - .env
