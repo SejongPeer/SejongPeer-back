@@ -20,6 +20,7 @@ import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,8 +35,16 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
+		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member).orElse(null);
+
+		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
+			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(1))) {
+			throw new CustomException(ErrorCode.REJECT_PENALTY);
+		}
+		
 		checkPossibleRegistration(memberId);
 
+		
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
 
@@ -58,10 +67,10 @@ public class BuddyService {
 		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (latestBuddy.getStatus() != IN_PROGRESS) {
+		if (latestBuddy.getStatus() != BuddyStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
-		latestBuddy.changeStatus(CANCEL);
+		latestBuddy.changeStatus(BuddyStatus.CANCEL);
 		buddyRepository.save(latestBuddy);
 	}
 
