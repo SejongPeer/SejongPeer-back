@@ -69,6 +69,12 @@ public class MatchingService {
 		return buddyMatched;
 	}
 
+	public BuddyMatched matchBuddy(Buddy me) {
+		List<Buddy> candidates = buddyRepository.findByStatus(BuddyStatus.IN_PROGRESS);
+		
+		return matchBuddy(candidates, me);
+	}
+
 	private void sendMatchingMessage(Buddy me) {
 		String phoneNumber = me.getMember().getPhoneNumber();
 
