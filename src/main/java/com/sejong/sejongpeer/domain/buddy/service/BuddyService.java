@@ -37,7 +37,7 @@ public class BuddyService {
 		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member).orElse(null);
 
 		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
-			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(LimitTimeConstant.ONE_DAY))) {
+			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(LimitTimeConstant.MATCH_BLOCK_TIME))) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
 		}
 
@@ -90,7 +90,7 @@ public class BuddyService {
 	}
 
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
-		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.ONE_DAY);
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.MATCH_BLOCK_TIME);
 
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}

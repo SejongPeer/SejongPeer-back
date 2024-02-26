@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class LimitTimeConstant {
 
-	public static final int ONE_DAY = 24;
+	public static final int MATCH_BLOCK_TIME = 24;
 }
 
