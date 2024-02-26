@@ -31,8 +31,7 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member)
-		.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member).orElse(null);
 
 		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
 			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(1))) {
