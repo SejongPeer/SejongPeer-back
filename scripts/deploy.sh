@@ -27,13 +27,13 @@ if [ -z "$EXIST_BLUE" ]; then
   sleep 30
 
   # blue가 문제 없이 배포 되었는지 현재 실행여부를 확인한다
-  BLUE_HEALTH=$(sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
+#  BLUE_HEALTH=$(sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
 
   # blue가 현재 실행중이지 않다면 -> 런타임 에러 또는 다른 이유로 배포가 되지 못한 상태
-  if [ -z "$BLUE_HEALTH" ]; then
-     echo "blue 실행 중"
+#  if [ -z "$BLUE_HEALTH" ]; then
+#     echo "blue 실행 중"
   # blue가 현재 실행되고 있는 경우에만 green을 종료
-  else
+#  else
   # /home/ec2-user/deploy.log: 로그 파일에 "green 중단 시작"이라는 내용을 추가
     echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ec2-user/deploy.log
 
@@ -44,7 +44,7 @@ if [ -z "$EXIST_BLUE" ]; then
     sudo docker image prune -af
 
     echo "green 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ec2-user/deploy.log
-  fi
+#  fi
 # blue가 실행중이면 green up
 else
 	  echo "green 배포 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ec2-user/deploy.log
@@ -52,11 +52,11 @@ else
 
   sleep 30
 
-  GREEN_HEALTH=$(sudo docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml ps | grep Up)
+#  GREEN_HEALTH=$(sudo docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml ps | grep Up)
 
-  if [ -z "$GREEN_HEALTH" ]; then
-      echo "blue 실행 중"
-  else
+#  if [ -z "$GREEN_HEALTH" ]; then
+#      echo "blue 실행 중"
+#  else
       # /home/ec2-user/deploy.log: 로그 파일에 "blue 중단 시작"이라는 내용을 추가
       echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ec2-user/deploy.log
 
@@ -67,7 +67,7 @@ else
       sudo docker image prune -af
 
       echo "blue 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ec2-user/deploy.log
-  fi
+#  fi
 fi
 echo "배포 종료  : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >> /home/ec2-user/deploy.log
 echo "===================== 배포 완료 =====================" >> /home/ec2-user/deploy.log
