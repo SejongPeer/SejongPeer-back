@@ -41,7 +41,7 @@ public class MatchingService {
 	 * 3-2. 각 Buddy를 BuddyMatched에 저장한다.
 	 */
 	public void executeMatching() {
-		List<Buddy> candidates = buddyRepository.findAllByStatus(BuddyStatus.IN_PROGRESS);
+		List<Buddy> candidates = buddyRepository.findByStatus(IN_PROGRESS);
 		List<BuddyMatched> buddyMatcheds = new ArrayList<>();
 
 		for (Buddy me : candidates) {
@@ -74,7 +74,7 @@ public class MatchingService {
 	}
 
 	public BuddyMatched matchBuddy(Buddy me) {
-		List<Buddy> candidates = buddyRepository.findAllByStatus(BuddyStatus.IN_PROGRESS);
+		List<Buddy> candidates = buddyRepository.findByStatus(BuddyStatus.IN_PROGRESS);
 
 		return matchBuddy(candidates, me);
 	}
