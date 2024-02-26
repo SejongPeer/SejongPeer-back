@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
 
 import java.util.ArrayList;
 import java.util.List;

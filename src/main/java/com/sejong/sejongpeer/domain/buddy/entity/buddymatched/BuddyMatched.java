@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.entity.buddymatched;
 
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
@@ -15,10 +16,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -55,6 +52,10 @@ public class BuddyMatched {
 			.partnerBuddy(partnerBuddy)
 			.status(BuddyMatchedStatus.IN_PROGRESS)
 			.build();
+	}
+
+	public void changeStatus(BuddyMatchedStatus status) {
+		this.status = status;
 	}
 
 }
