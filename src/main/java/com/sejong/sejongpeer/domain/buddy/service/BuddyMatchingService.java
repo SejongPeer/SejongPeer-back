@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,9 +29,14 @@ public class BuddyMatchingService {
 	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
 		Member owner = getMemberById(memberId);
 
-		List<Buddy> ownerBuddies = buddyRepository.findAllByMemberOrderByCreatedAtDesc(owner);
-		Buddy ownerLatestBuddy = ownerBuddies.isEmpty() ? null : ownerBuddies.get(0);
-		ownerLatestBuddy.changeStatus(request.buddyStatus());
+		Optional<Buddy> optionalOwnerLatestBuddy = buddyRepository.findTopByMemberAndStatusOrderByCreatedAtDesc(owner, BuddyStatus.IN_PROGRESS);
+		Buddy ownerLatestBuddy = optionalOwnerLatestBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+
+		if (request.isAccept()) {
+			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
+		} else {
+			ownerLatestBuddy.changeStatus(BuddyStatus.REJECT);
+		}
 
 		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
 
@@ -53,14 +57,18 @@ public class BuddyMatchingService {
 		// FOUND_BUDDY 일 경우, ownerBuddy는 ACCEPT, REJECT 선택만 가능
 		if (ownerBuddy.getStatus() != BuddyStatus.ACCEPT || targetBuddy.getStatus() != BuddyStatus.ACCEPT) {
 			// 매칭에 필요한 조건을 만족하지 않으면 MATCHING_FAIL 처리
-			buddyMatched.setStatus(BuddyMatchedStatus.MATCHING_FAIL);
+			buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
 			ownerBuddy.changeStatus(BuddyStatus.REJECT);
 			targetBuddy.changeStatus(BuddyStatus.DENIED);
 			return;
 		}
 	
+		handlerBuddyMatchedSuccess(buddyMatched, ownerBuddy, targetBuddy);
+	}
+
+	private void handlerBuddyMatchedSuccess(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
 		// 매칭이 성공할 경우 처리
-		buddyMatched.setStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
+		buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
 		ownerBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 	}

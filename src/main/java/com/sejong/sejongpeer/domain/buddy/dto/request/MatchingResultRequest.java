@@ -1,9 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.dto.request;
 
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
-
 import jakarta.validation.constraints.NotNull;
 
 public record MatchingResultRequest(
-    @NotNull(message = "ACCEPT 또는 REJECT를 선택해주세요.") BuddyStatus buddyStatus
+    @NotNull(message = "짝매칭 수락, 거절에 대해 true, false로 요청해주세요.") boolean isAccept
 ) { }

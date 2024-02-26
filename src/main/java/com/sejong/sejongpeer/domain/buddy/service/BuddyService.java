@@ -35,7 +35,7 @@ public class BuddyService {
 		.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
-			latestBuddy.getUpdatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
+			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(1))) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
 		}
 		
