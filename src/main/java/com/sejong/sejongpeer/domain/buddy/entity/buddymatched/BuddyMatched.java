@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 
 import jakarta.persistence.Column;
@@ -20,7 +19,6 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class BuddyMatched {
 

@@ -7,7 +7,6 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GradeOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 
