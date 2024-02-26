@@ -1,13 +1,12 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
-import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sejong.sejongpeer.domain.buddy.constant.LimitTimeConstant;
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
@@ -38,13 +37,13 @@ public class BuddyService {
 		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member).orElse(null);
 
 		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
-			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(1))) {
+			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(LimitTimeConstant.ONE_DAY))) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
 		}
-		
+
 		checkPossibleRegistration(memberId);
 
-		
+
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
 
@@ -91,7 +90,7 @@ public class BuddyService {
 	}
 
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
-		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.ONE_DAY);
 
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
