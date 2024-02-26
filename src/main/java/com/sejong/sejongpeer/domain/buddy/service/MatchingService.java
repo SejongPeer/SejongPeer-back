@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
-import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status.*;
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
+import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.Status;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
@@ -37,7 +38,7 @@ public class MatchingService {
 	 * FOUND_BUDDY) 3-2. 각 Buddy를 BuddyMatched에 저장한다.
 	 */
 	public void executeMatching() {
-		List<Buddy> candidates = buddyRepository.findByStatus(Status.IN_PROGRESS);
+		List<Buddy> candidates = buddyRepository.findByStatus(BuddyStatus.IN_PROGRESS);
 		List<BuddyMatched> buddyMatcheds = new ArrayList<>();
 
 		for (Buddy me : candidates) {
@@ -69,6 +70,12 @@ public class MatchingService {
 		return buddyMatched;
 	}
 
+	public BuddyMatched matchBuddy(Buddy me) {
+		List<Buddy> candidates = buddyRepository.findByStatus(BuddyStatus.IN_PROGRESS);
+		
+		return matchBuddy(candidates, me);
+	}
+
 	private void sendMatchingMessage(Buddy me) {
 		String phoneNumber = me.getMember().getPhoneNumber();
 
@@ -81,7 +88,7 @@ public class MatchingService {
 			.filter(
 				candidate ->
 					candidate.getStatus()
-						== Status.IN_PROGRESS) // 이전 과정에서 매칭된 Buddy가 존재할 수 있으므로 한 번 더 필터링
+						== BuddyStatus.IN_PROGRESS) // 이전 과정에서 매칭된 Buddy가 존재할 수 있으므로 한 번 더 필터링
 			.filter(candidate -> BuddyFilter.filterSuitableGender(candidate, me))
 			.filter(candidate -> BuddyFilter.filterSuitableCollegeMajor(candidate, me))
 			.filter(candidate -> BuddyFilter.filterSuitableType(candidate, me))
