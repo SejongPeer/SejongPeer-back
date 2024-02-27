@@ -1,7 +1,8 @@
 package com.sejong.sejongpeer.infra.sms.service;
 
 public enum SmsText {
-	MATCHING_FOUND_BUDDY("버디가 매칭되었습니다. 접속하여 확인해주세요!");
+	MATCHING_FOUND_BUDDY("[세종피어] 버디를 찾았습니다! \n"
+		+ "세종버디에 재접속해 버디정보(학과, 학년) 확인 후 수락여부를 결정해주세요.");
 
 	private final String value;
 
