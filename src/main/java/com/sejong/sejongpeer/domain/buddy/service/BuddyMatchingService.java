@@ -73,13 +73,22 @@ public class BuddyMatchingService {
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 	}
 
-	public Buddy findTargetBuddy(Buddy ownerBuddy) {
-		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartner(ownerBuddy);
-		BuddyMatched selectedBuddyMatched = optionalBuddyMatched.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
-		if (selectedBuddyMatched.getOwner() == ownerBuddy) {
-			return selectedBuddyMatched.getPartner();
+	private Buddy findTargetBuddy(Buddy ownerBuddy) {
+		BuddyMatched selectedBuddyMatched = getLatestBuddyMatched(ownerBuddy);
+
+		return getOtherBuddyInBuddyMatched(selectedBuddyMatched, ownerBuddy);
+	}
+
+	public BuddyMatched getLatestBuddyMatched(Buddy buddy) {
+		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartner(buddy);
+		return  (optionalBuddyMatched.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND)));
+	}
+
+	public   Buddy getOtherBuddyInBuddyMatched(BuddyMatched buddyMatched, Buddy ownerBuddy) {
+		if (buddyMatched.getOwner() == ownerBuddy) {
+			return buddyMatched.getPartner();
 		} else {
-			return selectedBuddyMatched.getOwner();
+			return buddyMatched.getOwner();
 		}
 	}
 }
