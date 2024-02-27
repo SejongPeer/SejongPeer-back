@@ -72,7 +72,21 @@ public class MatchingService {
 	public BuddyMatched matchBuddy(Buddy me) {
 		List<Buddy> candidates = buddyRepository.findByStatus(BuddyStatus.IN_PROGRESS);
 		
-		return matchBuddy(candidates, me);
+		Buddy partner = findSuitableBuddy(candidates, me);
+
+		if (partner == null) {
+			return null;
+		}
+
+		BuddyMatched buddyMatched = BuddyMatched.registerMatchingPair(me, partner);
+
+		partner.changeStatus(FOUND_BUDDY);
+		me.changeStatus(FOUND_BUDDY);
+
+		sendMatchingMessage(me);
+		sendMatchingMessage(partner);
+
+		return buddyMatchedRepository.save(buddyMatched);
 	}
 
 	private void sendMatchingMessage(Buddy me) {
