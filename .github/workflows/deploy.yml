@@ -4,7 +4,7 @@ name: SejongPeer - BackEnd - CD
 on:
   push:
     # main branch에 push(merge)될 경우 실행됩니다.
-    branches: ["main"]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -38,6 +38,7 @@ jobs:
           # 필요한 yml 파일들을 만들어줍니다.
           touch ./application.yml
           touch ./application-datasource.yml
+          touch ./application-infra.yml
           touch ./application-dev.yml
           touch ./application-security.yml
           
@@ -46,12 +47,14 @@ jobs:
           echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
           echo "$APPLICATION_DEV" > ./application-dev.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
+          echo "$APPLICATION_INFRA" > ./application-infra.yml
 
         env:
           APPLICATION: ${{ secrets.APPLICATION }}
           APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
+          APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
         shell: bash
 
       - name: Gradle 권한 부여
