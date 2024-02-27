@@ -1,4 +1,4 @@
-# 프로그램 실행 시 테이블 create
+# 프로그램 실행 시 테이블 update
 spring:
   config:
     activate:
@@ -6,10 +6,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
 
-# spring security 로그 설정
 
+# 로깅 설정
 logging:
   level:
     org:
@@ -17,4 +20,6 @@ logging:
         security: trace
         web: DEBUG
       hibernate:
-        type: trace
+        orm:
+          jdbc:
+            bind: trace
