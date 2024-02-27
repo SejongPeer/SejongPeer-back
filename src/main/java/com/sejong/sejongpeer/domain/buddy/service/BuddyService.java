@@ -1,13 +1,12 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
-import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sejong.sejongpeer.domain.buddy.constant.LimitTimeConstant;
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
@@ -19,6 +18,7 @@ import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,15 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
+		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member).orElse(null);
+
+		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
+			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(LimitTimeConstant.MATCH_BLOCK_HOUR))) {
+			throw new CustomException(ErrorCode.REJECT_PENALTY);
+		}
+
 		checkPossibleRegistration(memberId);
+
 
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
@@ -58,10 +66,10 @@ public class BuddyService {
 		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (latestBuddy.getStatus() != IN_PROGRESS) {
+		if (latestBuddy.getStatus() != BuddyStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
-		latestBuddy.changeStatus(CANCEL);
+		latestBuddy.changeStatus(BuddyStatus.CANCEL);
 		buddyRepository.save(latestBuddy);
 	}
 
@@ -82,7 +90,7 @@ public class BuddyService {
 	}
 
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
-		LocalDateTime oneHourAfterTime = updatedAt.plusHours(1);
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.MATCH_BLOCK_HOUR);
 
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
