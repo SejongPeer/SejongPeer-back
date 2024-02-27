@@ -1,6 +1,11 @@
 package com.sejong.sejongpeer.domain.auth.repository;
 
-import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String> {}
+import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
+
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String> {
+	Optional<RefreshToken> findByMemberId(String memberId);
+}
