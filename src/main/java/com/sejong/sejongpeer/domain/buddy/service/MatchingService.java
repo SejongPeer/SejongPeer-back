@@ -69,9 +69,9 @@ public class MatchingService {
 		return buddyMatched;
 	}
 
-	public BuddyMatched matchBuddy(Buddy me) {
+	public BuddyMatched matchBuddyWhenRegister(Buddy me) {
 		List<Buddy> candidates = buddyRepository.findByStatus(BuddyStatus.IN_PROGRESS);
-		
+
 		Buddy partner = findSuitableBuddy(candidates, me);
 
 		if (partner == null) {
