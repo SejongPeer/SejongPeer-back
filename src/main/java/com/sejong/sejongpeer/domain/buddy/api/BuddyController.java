@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.buddy.api;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.PartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,5 +45,14 @@ public class BuddyController {
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return buddyService.getMatchingStatus(memberId);
 	}
+
+	@Operation(summary = "버디 매칭 후 상대방 정보요청", description = "매칭 후 상대방의 정보 리턴")
+	@GetMapping("/partner/details")
+	public PartnerInfoResponse getPartnerDetails() {
+		String memberId =
+			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return buddyService.getPartnerDetails(memberId);
+	}
 }
+
 
