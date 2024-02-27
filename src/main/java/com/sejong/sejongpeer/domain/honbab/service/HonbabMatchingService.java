@@ -43,10 +43,23 @@ public class HonbabMatchingService {
 		honbabMatchedRepository.saveAll(honbabMatcheds);
 	}
 
-	public HonbabMatched matchHonbab(Honbab me) {
+	public HonbabMatched matchHonbabWhenRegister(Honbab me) {
 		List<Honbab> candidates = honbabRepository.findAllByStatus(HonbabStatus.IN_PROGRESS);
+		Honbab partner = findSuitableHonbab(candidates, me);
 
-		return matchHonbab(candidates, me);
+		if (partner == null) {
+			return null;
+		}
+
+		HonbabMatched honbabMatched = HonbabMatched.registerMatchingPair(me, partner);
+
+		partner.changeStatus(HonbabStatus.MATCHING_COMPLETED);
+		me.changeStatus(HonbabStatus.MATCHING_COMPLETED);
+
+		sendMatchingMessage(me);
+		sendMatchingMessage(partner);
+
+		return honbabMatchedRepository.save(honbabMatched);
 	}
 
 	public HonbabMatched matchHonbab(List<Honbab> candidates, Honbab me) {
