@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.api;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
+import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.PartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyService;
@@ -52,6 +53,14 @@ public class BuddyController {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return buddyService.getPartnerDetails(memberId);
+	}
+
+	@Operation(summary = "매칭 수락 완료 후 상대방 정보요청", description = "이름, 학년, 학과, 카카오톡 정보 리턴")
+	@GetMapping("/matched/partner/details")
+	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails() {
+		String memberId =
+			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return buddyService.getBuddyMatchedPartnerDetails(memberId);
 	}
 }
 
