@@ -11,6 +11,9 @@ import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.infra.sms.service.SmsService;
+import com.sejong.sejongpeer.infra.sms.service.SmsText;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ public class BuddyMatchingService {
 	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
+	private final SmsService smsService;
 
 	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
 		Member owner = getMemberById(memberId);
@@ -71,11 +75,20 @@ public class BuddyMatchingService {
 		buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
 		ownerBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
+
+		// ownerBuddy와 targetBuddy에게 버디 매칭 성공 문자 발송
+		sendMatchingMessage(ownerBuddy);
+		sendMatchingMessage(targetBuddy);
 	}
 
 	private Buddy findTargetBuddy(Buddy ownerBuddy) {
 		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartner(ownerBuddy);
 
 		return optionalBuddyMatched.map(BuddyMatched::getPartner).orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+	}
+
+	private void sendMatchingMessage(Buddy matchingSuccessBuddy) {
+		String phoneNumber = matchingSuccessBuddy.getMember().getPhoneNumber();
+		smsService.sendSms(phoneNumber, SmsText.MATCHING_COMPLETE_BUDDY);
 	}
 }
