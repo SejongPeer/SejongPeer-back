@@ -73,7 +73,7 @@ public class BuddyMatchingService {
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 	}
 
-	private Buddy findTargetBuddy(Buddy ownerBuddy) {
+	public Buddy findTargetBuddy(Buddy ownerBuddy) {
 		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartner(ownerBuddy);
 
 		return optionalBuddyMatched.map(BuddyMatched::getPartner).orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
