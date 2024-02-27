@@ -27,6 +27,7 @@ public class BuddyService {
 	private final MatchingService matchingService;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
+	private final BuddyMatchingService buddyMatchingService;
 
 	public void registerBuddy(RegisterRequest request, String memberId) {
 		Member member =
@@ -34,15 +35,7 @@ public class BuddyService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-		Buddy latestBuddy = buddyRepository.findTopByMemberOrderByUpdatedAtDesc(member).orElse(null);
-
-		if (latestBuddy != null && latestBuddy.getStatus() == BuddyStatus.REJECT &&
-			LocalDateTime.now().isBefore(latestBuddy.getUpdatedAt().plusHours(LimitTimeConstant.MATCH_BLOCK_HOUR))) {
-			throw new CustomException(ErrorCode.REJECT_PENALTY);
-		}
-
 		checkPossibleRegistration(memberId);
-
 
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
@@ -77,10 +70,12 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getStatus() == BuddyStatus.IN_PROGRESS ||
-				(latestBuddy.getStatus().equals(BuddyStatus.REJECT) &&
-					!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt()))) {
+			if (latestBuddy.getStatus() == BuddyStatus.IN_PROGRESS) {
 				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+			}
+			if (latestBuddy.getStatus().equals(BuddyStatus.REJECT) &&
+				!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt())) {
+				throw new CustomException(ErrorCode.REJECT_PENALTY);
 			}
 		});
 	}
