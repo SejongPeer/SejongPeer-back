@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sejong.sejongpeer.domain.buddy.constant.LimitTimeConstant;
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.PartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
@@ -97,5 +98,22 @@ public class BuddyService {
 
 		return new MatchingStatusResponse(buddy.getStatus());
 	}
+
+	public PartnerInfoResponse getPartnerDetails(String memberId) {
+
+		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+
+		if (latestBuddy.getStatus() != BuddyStatus.FOUND_BUDDY) {
+			throw new CustomException(ErrorCode.BUDDY_NOT_MATCHED);
+		}
+
+		Buddy partner =  buddyMatchingService.findTargetBuddy(latestBuddy);
+
+		Member partnerMember = partner.getMember();
+
+		return (new PartnerInfoResponse(partnerMember.getCollegeMajor(), partnerMember.getGrade()));
+	}
+
 }
 
