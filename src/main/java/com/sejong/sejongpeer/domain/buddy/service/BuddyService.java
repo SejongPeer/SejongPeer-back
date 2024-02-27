@@ -112,7 +112,7 @@ public class BuddyService {
 
 		Member partnerMember = partner.getMember();
 
-		return (new PartnerInfoResponse(partnerMember.getCollegeMajor(), partnerMember.getGrade()));
+		return (new PartnerInfoResponse(partnerMember.getCollegeMajor().getMajor(), partnerMember.getGrade()));
 	}
 
 }
