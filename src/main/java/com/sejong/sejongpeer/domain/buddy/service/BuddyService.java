@@ -47,7 +47,7 @@ public class BuddyService {
 		Buddy buddy = createBuddyEntity(request, member);
 		buddyRepository.save(buddy);
 
-		matchingService.matchBuddy(buddy);
+		matchingService.matchBuddyWhenRegister(buddy);
 	}
 
 	private Buddy createBuddyEntity(RegisterRequest createBuddyRequest, Member member) {
