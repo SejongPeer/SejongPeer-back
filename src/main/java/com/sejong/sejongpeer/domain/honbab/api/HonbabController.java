@@ -1,11 +1,13 @@
 package com.sejong.sejongpeer.domain.honbab.api;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.service.HonbabService;
 
@@ -26,5 +28,13 @@ public class HonbabController {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		honbabService.registerHonbab(request, memberId);
+	}
+
+	@Operation(summary = "혼밥 매칭 상태 체크", description = "유저의 가장 최근 혼밥 상태값 리턴")
+	@GetMapping("/check-matching-status")
+	public MatchingStatusResponse getHonbabMatchingStatus() {
+		String memberId =
+			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return honbabService.getHonbabMatchingStatus(memberId);
 	}
 }
