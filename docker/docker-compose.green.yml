@@ -4,7 +4,7 @@ services:
   backend:
     build: .
     ports: # 2024/02/28 기존의 8082 -> 80을 임시로 80 -> 8080으로 포워딩하기로 변경
-      - "80:8080"
+      - "443:8080"
     container_name: sejongpeer-green
     environment:
       - TZ=Asia/Seoul
