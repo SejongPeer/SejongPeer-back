@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
+import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.HonbabStatus;
 import com.sejong.sejongpeer.domain.honbab.repository.HonbabRepository;
@@ -59,10 +59,10 @@ public class HonbabService {
 	}
 
 	@Transactional(readOnly = true)
-	public MatchingStatusResponse getHonbabMatchingStatus(String memberId) {
+	public HonbabMatchingStatusResponse getHonbabMatchingStatus(String memberId) {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 		Honbab honbab = optionalHonbab.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return new MatchingStatusResponse(honbab.getStatus().toString());
+		return new HonbabMatchingStatusResponse(honbab.getStatus());
 	}
 }
