@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
-import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.service.HonbabService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,11 +38,4 @@ public class HonbabController {
 		return honbabService.getHonbabMatchingStatus(memberId);
 	}
 
-	@Operation(summary = "혼밥 매칭완료 후 상대방 정보요청", description = "이름, 카카오, 선호메뉴 전달")
-	@GetMapping("/partner/details")
-	public HonbabPartnerInfoResponse getHonbabMPartnerDetails() {
-		String memberId =
-			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return honbabService.getHonbabMPartnerDetails(memberId);
-	}
 }
