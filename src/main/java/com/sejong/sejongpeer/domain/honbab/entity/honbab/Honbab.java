@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,6 +36,29 @@ public class Honbab extends BaseAuditEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
+	@Builder(access = AccessLevel.PRIVATE)
+	private Honbab(
+		Member member,
+		HonbabStatus status,
+		GenderOption genderOption,
+		MenuCategoryOption menuCategoryOption) {
+		this.member = member;
+		this.status = status;
+		this.genderOption = genderOption;
+		this.menuCategoryOption = menuCategoryOption;
+	}
+	public static Honbab createHonbab(
+		Member member,
+		HonbabStatus status,
+		GenderOption genderOption,
+		MenuCategoryOption menuCategoryOption) {
+		return Honbab.builder()
+			.member(member)
+			.status(status)
+			.genderOption(genderOption)
+			.menuCategoryOption(menuCategoryOption)
+			.build();
+	}
 	public void changeStatus(HonbabStatus status) {
 		this.status = status;
 	}
