@@ -100,7 +100,7 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return new MatchingStatusResponse(buddy.getStatus());
+		return new MatchingStatusResponse(buddy.getStatus().toString());
 	}
 }
 
