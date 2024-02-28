@@ -4,6 +4,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
+import com.sejong.sejongpeer.domain.auth.repository.RefreshTokenRepository;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.college.repository.CollegeMajorRepository;
 import com.sejong.sejongpeer.domain.member.dto.request.AccountFindRequest;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class MemberService {
 	private final MemberRepository memberRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final CollegeMajorRepository collegeMajorRepository;
 	private final PasswordEncoder passwordEncoder;
 
@@ -163,6 +166,12 @@ public class MemberService {
 	}
 
 	public void deleteMember(String memberId) {
+		RefreshToken refreshToken = refreshTokenRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(
+				ErrorCode.UNAUTHORIZED));    // refresh token이 없다는 것은 로그인하지 않았단 뜻. 로그인 없이 회원탈퇴는 불가
+
+		refreshTokenRepository.delete(refreshToken);
+
 		Member member =
 			memberRepository
 				.findById(memberId)
