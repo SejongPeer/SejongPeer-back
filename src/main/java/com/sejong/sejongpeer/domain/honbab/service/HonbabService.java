@@ -7,8 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
+import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.HonbabStatus;
+import com.sejong.sejongpeer.domain.honbab.entity.honbabmatched.HonbabMatched;
+import com.sejong.sejongpeer.domain.honbab.entity.honbabmatched.type.HonbabMatchedStatus;
+import com.sejong.sejongpeer.domain.honbab.repository.HonbabMatchedRepository;
 import com.sejong.sejongpeer.domain.honbab.repository.HonbabRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class HonbabService {
 	private final HonbabRepository honbabRepository;
 	private final MemberRepository memberRepository;
+	private final HonbabMatchedRepository honbabMatchedRepository;
 
 	public void registerHonbab(RegisterHonbabRequest request, String memberId) {
 		Member member =
@@ -64,5 +69,51 @@ public class HonbabService {
 		Honbab honbab = optionalHonbab.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		return new MatchingStatusResponse(honbab.getStatus().toString());
+	}
+
+	public HonbabPartnerInfoResponse getHonbabMPartnerDetails(String memberId) {
+
+		Honbab latestHonbab = getLastHonbabByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.HONBAB_NOT_FOUND));
+
+		checkHonbabStatus(latestHonbab, HonbabStatus.MATCHING_COMPLETED);
+
+		HonbabMatched latestHonbabMatched = getLatestHonbabMatched(latestHonbab);
+		checkHonbabMatchedStatus(latestHonbabMatched, HonbabMatchedStatus.MATCHING_COMPLETED);
+
+		Honbab partner = getOtherHonbabInHonbabMatched(latestHonbabMatched, latestHonbab);
+		Member partnerMember = partner.getMember();
+
+		return (new HonbabPartnerInfoResponse(
+			partnerMember.getName(),
+			partnerMember.getKakaoAccount(),
+			partner.getMenuCategoryOption().toString()
+		));
+	}
+
+	private HonbabMatched getLatestHonbabMatched(Honbab honbab) {
+		Optional<HonbabMatched> optionalHonbabMatched = honbabMatchedRepository.findLatestByOwnerOrPartner(honbab);
+
+		return  (optionalHonbabMatched.orElseThrow(() -> new CustomException(ErrorCode.TARGET_HONBAB_NOT_FOUND)));
+	}
+
+	private void checkHonbabStatus(Honbab honbab, HonbabStatus status) {
+		if (honbab.getStatus() != status) {
+			throw new CustomException(ErrorCode.HONBAB_NOT_MATCHED);
+		}
+	}
+
+	private void checkHonbabMatchedStatus(HonbabMatched honbabMatched, HonbabMatchedStatus status) {
+		if (honbabMatched.getStatus() != status) {
+			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
+		}
+	}
+
+	private Honbab getOtherHonbabInHonbabMatched(HonbabMatched honbabMatched, Honbab ownerHonbab) {
+		if (honbabMatched.getOwner() == ownerHonbab) {
+			return honbabMatched.getPartner();
+		} else {
+			return honbabMatched.getOwner();
+		}
 	}
 }
