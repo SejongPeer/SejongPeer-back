@@ -1,7 +1,9 @@
 package com.sejong.sejongpeer.domain.buddy.api;
 
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
+import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,5 +46,22 @@ public class BuddyController {
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return buddyService.getMatchingStatus(memberId);
 	}
+
+	@Operation(summary = "버디 수락/거절 창에서의 상대방 정보 요청", description = "매칭 후 상대방의 학과, 학년 정보 리턴")
+	@GetMapping("/partner/details")
+	public MatchingPartnerInfoResponse getPartnerDetails() {
+		String memberId =
+			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return buddyService.getPartnerDetails(memberId);
+	}
+
+	@Operation(summary = "매칭 수락 완료 후 상대방 정보요청", description = "이름, 학년, 학과, 카카오톡 정보 리턴")
+	@GetMapping("/matched/partner/details")
+	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails() {
+		String memberId =
+			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return buddyService.getBuddyMatchedPartnerDetails(memberId);
+	}
 }
+
 
