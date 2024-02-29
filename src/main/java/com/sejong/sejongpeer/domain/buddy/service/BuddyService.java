@@ -74,14 +74,22 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			if (latestBuddy.getStatus() == BuddyStatus.IN_PROGRESS) {
-				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
-			}
-			if (latestBuddy.getStatus().equals(BuddyStatus.REJECT) &&
-				!isPossibleFromUpdateAt(latestBuddy.getUpdatedAt())) {
-				throw new CustomException(ErrorCode.REJECT_PENALTY);
-			}
+			checkInProgressStatus(latestBuddy);
+			checkRejectPenaltyAndUpdateStatus(latestBuddy);
 		});
+	}
+
+	private void checkInProgressStatus(Buddy buddy) {
+		if (buddy.getStatus() == BuddyStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+		}
+	}
+
+	private void checkRejectPenaltyAndUpdateStatus(Buddy buddy) {
+		if (buddy.getStatus().equals(BuddyStatus.REJECT) &&
+			!isPossibleFromUpdateAt(buddy.getUpdatedAt())) {
+			throw new CustomException(ErrorCode.REJECT_PENALTY);
+		}
 	}
 
 	private Optional<Buddy> getLastBuddyByMemberId(String memberId) {
