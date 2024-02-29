@@ -10,7 +10,7 @@ import com.sejong.sejongpeer.domain.buddy.constant.LimitTimeConstant;
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
-import com.sejong.sejongpeer.domain.buddy.dto.response.PartnerInfoResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
@@ -102,7 +102,7 @@ public class BuddyService {
 		return new MatchingStatusResponse(buddy.getStatus());
 	}
 
-	public PartnerInfoResponse getPartnerDetails(String memberId) {
+	public MatchingPartnerInfoResponse getPartnerDetails(String memberId) {
 
 		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
@@ -114,10 +114,7 @@ public class BuddyService {
 		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
-		return (new PartnerInfoResponse(
-			partnerMember.getCollegeMajor().getMajor(),
-			partnerMember.getGrade()
-		));
+		return MatchingPartnerInfoResponse.from(partnerMember);
 	}
 
 	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails(String memberId) {
@@ -132,12 +129,7 @@ public class BuddyService {
 		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
-		return (new CompletedPartnerInfoResponse(
-			partnerMember.getCollegeMajor().getMajor(),
-			partnerMember.getGrade(),
-			partnerMember.getName(),
-			partnerMember.getKakaoAccount()
-		));
+		return CompletedPartnerInfoResponse.from(partnerMember);
 	}
 
 	private void checkBuddyStatus(Buddy buddy, BuddyStatus status) {
@@ -151,9 +143,4 @@ public class BuddyService {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
 	}
-
-
-
-
 }
-
