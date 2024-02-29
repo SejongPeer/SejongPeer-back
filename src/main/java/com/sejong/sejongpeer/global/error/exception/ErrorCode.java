@@ -41,9 +41,10 @@ public enum ErrorCode {
 
     // 버디 에러
     BUDDY_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 버디가 없습니다"),
-    NOT_IN_PROGRESS(HttpStatus.CONFLICT, "매칭중이 아닙니다."),
-    REGISTRATION_NOT_POSSIBLE(HttpStatus.CONFLICT, "신청을 할 수 없습니다."),
+    NOT_IN_PROGRESS(HttpStatus.CONFLICT, "버디 매칭중이 아닙니다."),
+    REGISTRATION_NOT_POSSIBLE(HttpStatus.CONFLICT, "버디 신청을 할 수 없습니다."),
     TARGET_BUDDY_NOT_FOUND(HttpStatus.NOT_FOUND, "상대 버디를 찾을 수 없습니다."),
+    BUDDY_NOT_MATCHED(HttpStatus.CONFLICT, "매칭 성사된 버디가 아닙니다."),
 
     // Study
     STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
@@ -57,5 +58,5 @@ public enum ErrorCode {
     private final HttpStatus status;
     private final String message;
 
-
 }
+
