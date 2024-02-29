@@ -32,18 +32,10 @@ public class HonbabService {
 
 		checkPossibleRegistration(memberId);
 
-		Honbab honbab = createHonbabEntity(request, member);
+		Honbab honbab = Honbab.createHonbab(member, request);
 		honbabRepository.save(honbab);
 	}
 
-	private Honbab createHonbabEntity(RegisterHonbabRequest createHonbabRequest, Member member) {
-		return Honbab.createHonbab(
-			member,
-			HonbabStatus.IN_PROGRESS,
-			createHonbabRequest.genderOption(),
-			createHonbabRequest.menuCategoryOption()
-		);
-	}
 	private void checkPossibleRegistration(String memberId) {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 

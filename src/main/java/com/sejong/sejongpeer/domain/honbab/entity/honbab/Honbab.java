@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.honbab.entity.honbab;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
+import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.GenderOption;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.HonbabStatus;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.MenuCategoryOption;
@@ -52,14 +53,12 @@ public class Honbab extends BaseAuditEntity {
 	}
 	public static Honbab createHonbab(
 		Member member,
-		HonbabStatus status,
-		GenderOption genderOption,
-		MenuCategoryOption menuCategoryOption) {
+		RegisterHonbabRequest request) {
 		return Honbab.builder()
 			.member(member)
-			.status(status)
-			.genderOption(genderOption)
-			.menuCategoryOption(menuCategoryOption)
+			.status(HonbabStatus.IN_PROGRESS)
+			.genderOption(request.genderOption())
+			.menuCategoryOption(request.menuCategoryOption())
 			.build();
 	}
 	public void changeStatus(HonbabStatus status) {
