@@ -56,9 +56,13 @@ public class HonbabService {
 	@Transactional(readOnly = true)
 	public HonbabMatchingStatusResponse getHonbabMatchingStatus(String memberId) {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
-		Honbab honbab = optionalHonbab.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return HonbabMatchingStatusResponse.honbabFrom(honbab);
+		if (optionalHonbab.isPresent()) {
+			Honbab honbab = optionalHonbab.get();
+			return HonbabMatchingStatusResponse.honbabFrom(honbab);
+		} else {
+			return null;
+		}
 	}
 
 	public MatchingPartnerInfoResponse getPartnerInfo(String memberId) {

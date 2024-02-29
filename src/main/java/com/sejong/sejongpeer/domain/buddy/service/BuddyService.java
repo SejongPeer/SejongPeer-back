@@ -105,9 +105,13 @@ public class BuddyService {
 	@Transactional(readOnly = true)
 	public MatchingStatusResponse getMatchingStatus(String memberId) {
 		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
-		Buddy buddy = optionalBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return MatchingStatusResponse.buddyFrom(buddy);
+		if (optionalBuddy.isPresent()) {
+			Buddy buddy = optionalBuddy.get();
+			return MatchingStatusResponse.buddyFrom(buddy);
+		} else {
+			return null;
+		}
 	}
 
 	public MatchingPartnerInfoResponse getPartnerDetails(String memberId) {
