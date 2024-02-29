@@ -63,6 +63,6 @@ public class HonbabService {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 		Honbab honbab = optionalHonbab.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		return new HonbabMatchingStatusResponse(honbab.getStatus());
+		return HonbabMatchingStatusResponse.honbabFrom(honbab);
 	}
 }
