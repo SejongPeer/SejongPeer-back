@@ -49,12 +49,12 @@ public enum ErrorCode {
     // Study
     STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 
-    // 혼밥 에러
-    HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "신청한 혼밥이 없습니다"),
-
-
 	// 버디 등록 거절
-	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 1시간 동안 버디를 등록할 수 없습니다.");
+	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 1시간 동안 버디를 등록할 수 없습니다."),
+
+	// 혼밥 에러
+	HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 혼밥이 없습니다"),
+	TARGET_HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "혼밥 짝꿍을 찾을 수 없습니다.");
     private final HttpStatus status;
     private final String message;
 
