@@ -122,7 +122,7 @@ public class BuddyService {
 		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
-		return MatchingPartnerInfoResponse.from(partnerMember);
+		return MatchingPartnerInfoResponse.memberFrom(partnerMember);
 	}
 
 	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails(String memberId) {
@@ -137,7 +137,7 @@ public class BuddyService {
 		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
-		return CompletedPartnerInfoResponse.from(partnerMember);
+		return CompletedPartnerInfoResponse.memberFrom(partnerMember);
 	}
 
 	private void checkBuddyStatus(Buddy buddy, BuddyStatus status) {

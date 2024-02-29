@@ -8,7 +8,7 @@ public record CompletedPartnerInfoResponse(
 	String name,
 	String kakaoAccount
 ) {
-	public static CompletedPartnerInfoResponse from(Member member) {
+	public static CompletedPartnerInfoResponse memberFrom(Member member) {
 		return new CompletedPartnerInfoResponse(
 			member.getCollegeMajor().getMajor(),
 			member.getGrade(),
