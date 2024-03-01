@@ -9,6 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -60,8 +61,8 @@ public class WebSecurityConfig {
 				session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.anonymous(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
-			.logout(AbstractHttpConfigurer::disable);
-		// .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);	//
+			.logout(AbstractHttpConfigurer::disable)
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		// TODO: 추후 적용 필요
 
 		return http.build();
