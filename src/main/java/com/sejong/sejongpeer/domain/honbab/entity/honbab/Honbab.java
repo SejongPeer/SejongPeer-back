@@ -20,6 +20,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,6 +39,8 @@ public class Honbab extends BaseAuditEntity {
 	@Enumerated(EnumType.STRING)
 	private MenuCategoryOption menuCategoryOption;
 
+	private Duration waitTime;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
@@ -45,11 +49,13 @@ public class Honbab extends BaseAuditEntity {
 		Member member,
 		HonbabStatus status,
 		GenderOption genderOption,
-		MenuCategoryOption menuCategoryOption) {
+		MenuCategoryOption menuCategoryOption,
+		Duration waitTime) {
 		this.member = member;
 		this.status = status;
 		this.genderOption = genderOption;
 		this.menuCategoryOption = menuCategoryOption;
+		this.waitTime = waitTime;
 	}
 	public static Honbab createHonbab(
 		Member member,
@@ -59,6 +65,7 @@ public class Honbab extends BaseAuditEntity {
 			.status(HonbabStatus.IN_PROGRESS)
 			.genderOption(request.genderOption())
 			.menuCategoryOption(request.menuCategoryOption())
+			.waitTime(request.waitTime())
 			.build();
 	}
 	public void changeStatus(HonbabStatus status) {
