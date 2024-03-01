@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.honbab.dto.request;
 
-import java.time.Duration;
 
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.GenderOption;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.MenuCategoryOption;
