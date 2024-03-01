@@ -103,7 +103,8 @@ public class HonbabMatchingService {
 	}
 
 	private boolean isWaitTimeExceeded(Honbab honbab) {
-		return Duration.between(honbab.getCreatedAt(), LocalDateTime.now()).getSeconds() > honbab.getWaitTime().getSeconds();
+		long fixedWaitTimeSeconds = 900; // 15분
+		return Duration.between(honbab.getCreatedAt(), LocalDateTime.now()).getSeconds() > fixedWaitTimeSeconds;
 	}
 
 	private void handleTimeOut(Honbab honbab) {

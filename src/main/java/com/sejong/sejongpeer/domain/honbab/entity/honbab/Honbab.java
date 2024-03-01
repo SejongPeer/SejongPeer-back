@@ -39,8 +39,6 @@ public class Honbab extends BaseAuditEntity {
 	@Enumerated(EnumType.STRING)
 	private MenuCategoryOption menuCategoryOption;
 
-	private Duration waitTime;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
@@ -49,13 +47,12 @@ public class Honbab extends BaseAuditEntity {
 		Member member,
 		HonbabStatus status,
 		GenderOption genderOption,
-		MenuCategoryOption menuCategoryOption,
-		Duration waitTime) {
+		MenuCategoryOption menuCategoryOption
+	) {
 		this.member = member;
 		this.status = status;
 		this.genderOption = genderOption;
 		this.menuCategoryOption = menuCategoryOption;
-		this.waitTime = waitTime;
 	}
 	public static Honbab createHonbab(
 		Member member,
@@ -65,7 +62,6 @@ public class Honbab extends BaseAuditEntity {
 			.status(HonbabStatus.IN_PROGRESS)
 			.genderOption(request.genderOption())
 			.menuCategoryOption(request.menuCategoryOption())
-			.waitTime(request.waitTime())
 			.build();
 	}
 	public void changeStatus(HonbabStatus status) {
