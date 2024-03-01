@@ -26,6 +26,7 @@ public class HonbabService {
 	private final HonbabRepository honbabRepository;
 	private final MemberRepository memberRepository;
 	private final HonbabMatchedRepository honbabMatchedRepository;
+	private final HonbabMatchingService honbabMatchingService;
 
 	public void registerHonbab(RegisterHonbabRequest request, String memberId) {
 		Member member =
@@ -37,6 +38,8 @@ public class HonbabService {
 
 		Honbab honbab = Honbab.createHonbab(member, request);
 		honbabRepository.save(honbab);
+
+		honbabMatchingService.matchHonbabWhenRegister(honbab);
 	}
 
 	private void checkPossibleRegistration(String memberId) {
