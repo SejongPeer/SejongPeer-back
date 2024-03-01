@@ -11,6 +11,12 @@ public enum MenuCategoryOption {
 			return true;
 		}
 	},
+	SCHOOL("학식") {
+		@Override
+		public boolean isMatch(MenuCategoryOption candidateOption) {
+			return candidateOption == NO_MATTER || candidateOption == SCHOOL;
+		}
+	},
 	KOREAN("한식") {
 		@Override
 		public boolean isMatch(MenuCategoryOption candidateOption) {
