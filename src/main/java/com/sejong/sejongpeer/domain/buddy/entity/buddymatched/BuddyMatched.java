@@ -1,10 +1,10 @@
 package com.sejong.sejongpeer.domain.buddy.entity.buddymatched;
 
-import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
+import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,11 +16,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class BuddyMatched {
+public class BuddyMatched extends BaseAuditEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
