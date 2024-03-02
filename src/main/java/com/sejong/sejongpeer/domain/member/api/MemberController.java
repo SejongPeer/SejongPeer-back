@@ -1,5 +1,17 @@
 package com.sejong.sejongpeer.domain.member.api;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sejong.sejongpeer.domain.member.dto.request.AccountFindRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.MemberUpdateRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.PasswordResetRequest;
@@ -15,18 +27,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "2. [회원]", description = "회원 관련 API")
 @Validated
@@ -61,7 +61,7 @@ public class MemberController {
 		@RequestParam
 		@NotBlank(message = "닉네임을 입력해주세요.")
 		@Pattern(
-			regexp = "^[a-zA-Z가-힣0-9]{2,8}$",
+			regexp = "^[a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ0-9]{2,8}$",
 			message = "닉네임은 2자 이상 8자 이하 한글, 영어, 숫자만 입력해주세요.")
 		String nickname) {
 		return memberService.checkNicknameExists(nickname);
