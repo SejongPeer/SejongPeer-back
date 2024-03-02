@@ -78,6 +78,9 @@ public class MemberService {
 		if (existsNickname(request.nickname())) {
 			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
 		}
+		if (existsKakaoAccount(request.kakaoAccount())) {
+			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
+		}
 	}
 
 	@Transactional(readOnly = true)
