@@ -9,8 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.HonbabStatus;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface HonbabRepository extends JpaRepository<Honbab, Long> {
 	List<Honbab> findAllByStatus(HonbabStatus status);

@@ -1,5 +1,7 @@
 package com.sejong.sejongpeer.domain.honbab.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +35,13 @@ public class HonbabMatchingService {
 		List<HonbabMatched> honbabMatcheds = new ArrayList<>();
 
 		for (Honbab me : candidates) {
-			HonbabMatched honbabMatched = matchHonbab(candidates, me);
-			if (honbabMatched != null) {
-				honbabMatcheds.add(honbabMatched);
+			if (isWaitTimeExceeded(me)) {
+				handleTimeOut(me);
+			} else {
+				HonbabMatched honbabMatched = matchHonbab(candidates, me);
+				if (honbabMatched != null) {
+					honbabMatcheds.add(honbabMatched);
+				}
 			}
 		}
 
@@ -94,5 +100,14 @@ public class HonbabMatchingService {
 		String phoneNumber = me.getMember().getPhoneNumber();
 
 		smsService.sendSms(phoneNumber, SmsText.MATCHING_FOUND_HONBAB);
+	}
+
+	private boolean isWaitTimeExceeded(Honbab honbab) {
+		long fixedWaitTimeSeconds = 900; // 15분
+		return Duration.between(honbab.getCreatedAt(), LocalDateTime.now()).getSeconds() > fixedWaitTimeSeconds;
+	}
+
+	private void handleTimeOut(Honbab honbab) {
+		honbab.changeStatus(HonbabStatus.TIME_OUT);
 	}
 }

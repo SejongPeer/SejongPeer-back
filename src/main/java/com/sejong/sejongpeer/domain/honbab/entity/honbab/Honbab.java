@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,7 +46,8 @@ public class Honbab extends BaseAuditEntity {
 		Member member,
 		HonbabStatus status,
 		GenderOption genderOption,
-		MenuCategoryOption menuCategoryOption) {
+		MenuCategoryOption menuCategoryOption
+	) {
 		this.member = member;
 		this.status = status;
 		this.genderOption = genderOption;
