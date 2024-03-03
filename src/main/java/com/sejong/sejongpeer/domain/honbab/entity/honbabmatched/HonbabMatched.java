@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.honbab.entity.honbabmatched;
 
 import org.hibernate.annotations.Comment;
 
+import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
 import com.sejong.sejongpeer.domain.honbab.entity.honbabmatched.type.HonbabMatchedStatus;
 
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class HonbabMatched {
+public class HonbabMatched extends BaseAuditEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
