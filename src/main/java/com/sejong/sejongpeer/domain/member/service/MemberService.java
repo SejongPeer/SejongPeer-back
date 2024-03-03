@@ -63,23 +63,47 @@ public class MemberService {
 	}
 
 	private void verifySignUp(SignUpRequest request) {
-		if (!request.password().equals(request.passwordCheck())) {
-			throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
+		verifyPassword(request.password(), request.passwordCheck());
+		verifyPhoneNumber(request.phoneNumber());
+		verifyAccount(request.account());
+		verifyStudentId(request.studentId());
+		verifyNickname(request.nickname());
+		verifyKakaoAccount(request.kakaoAccount());
+	}
+
+	private void verifyKakaoAccount(String kakaoAccount) {
+		if (existsKakaoAccount(kakaoAccount)) {
+			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
 		}
-		if (existsPhoneNumber(request.phoneNumber())) {
-			throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
-		}
-		if (existsAccount(request.account())) {
-			throw new CustomException(ErrorCode.DUPLICATED_ACCOUNT);
-		}
-		if (existsStudentId(request.studentId())) {
-			throw new CustomException(ErrorCode.DUPLICATED_STUDENT_ID);
-		}
-		if (existsNickname(request.nickname())) {
+	}
+
+	private void verifyNickname(String nickname) {
+		if (existsNickname(nickname)) {
 			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
 		}
-		if (existsKakaoAccount(request.kakaoAccount())) {
-			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
+	}
+
+	private void verifyStudentId(String studentId) {
+		if (existsStudentId(studentId)) {
+			throw new CustomException(ErrorCode.DUPLICATED_STUDENT_ID);
+		}
+	}
+
+	private void verifyAccount(String account) {
+		if (existsAccount(account)) {
+			throw new CustomException(ErrorCode.DUPLICATED_ACCOUNT);
+		}
+	}
+
+	private void verifyPhoneNumber(String phoneNumber) {
+		if (existsPhoneNumber(phoneNumber)) {
+			throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
+		}
+	}
+
+	private void verifyPassword(String password, String passwordCheck) {
+		if (!password.equals(passwordCheck)) {
+			throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
 		}
 	}
 
