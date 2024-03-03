@@ -33,7 +33,7 @@ public class BuddyMatchingService {
 	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
 		Member owner = getMemberById(memberId);
 
-		Optional<Buddy> optionalOwnerLatestBuddy = buddyRepository.findTopByMemberAndStatusOrderByCreatedAtDesc(owner, BuddyStatus.IN_PROGRESS);
+		Optional<Buddy> optionalOwnerLatestBuddy = buddyRepository.findTopByMemberAndStatusOrderByCreatedAtDesc(owner, BuddyStatus.FOUND_BUDDY);
 		Buddy ownerLatestBuddy = optionalOwnerLatestBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		if (request.isAccept()) {
