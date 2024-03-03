@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String refreshToken =
 			jwtProvider.resolveToken(request, HeaderConstant.REFRESH_TOKEN_HEADER);
 
-		if (accessToken == null) {
+		if (accessToken == null || refreshToken == null) {
 			throw new CustomException(ErrorCode.UNAUTHORIZED);
 		}
 
@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		// AccessToken이 만료되었으나 RefreshToken이 유효한 경우, AccessToken 재발급
-		if (!isAccessTokenValid) {
+		if (!isAccessTokenValid && isRefreshTokenValid) {
 			accessToken = jwtProvider.reissueAccessToken(refreshToken);
 			response.setHeader(
 				"accessToken",
