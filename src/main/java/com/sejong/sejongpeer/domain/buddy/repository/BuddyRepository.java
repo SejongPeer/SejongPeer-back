@@ -22,4 +22,7 @@ public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 
 	@Query("SELECT b FROM Buddy b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
 	Optional<Buddy> findLastBuddyByMemberId(@Param("memberId") String memberId);
+
+	@Query("SELECT COUNT(b) FROM Buddy b WHERE b.status = 'IN_PROGRESS' OR b.status = 'FOUND_BUDDY'")
+	Long countByStatusInProgressOrFoundBuddy();
 }

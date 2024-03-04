@@ -11,6 +11,7 @@ import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
@@ -154,5 +155,10 @@ public class BuddyService {
 		if (buddyMatched.getStatus() != status) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
+	}
+
+	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
+		Long totalBuddyCount = buddyRepository.countByStatusInProgressOrFoundBuddy();
+		return new ActiveCustomersCountResponse(totalBuddyCount);
 	}
 }
