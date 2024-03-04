@@ -50,12 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		// AccessToken이 만료되었으나 RefreshToken이 유효한 경우, AccessToken 재발급
-		if (!isAccessTokenValid) {
+		if (!isAccessTokenValid && isRefreshTokenValid) {
 			accessToken = jwtProvider.reissueAccessToken(refreshToken);
 			response.setHeader(
 				"accessToken",
-				accessToken); // FIXME: accessToken 만료 시 재발급은 따로 처리해야 함. 매 요청마다 프론트에서는 이전
-			// accessToken을 갖고 있을 것임
+				accessToken); // FIXME: accessToken 만료 시 재발급은 따로 처리해야 함. 매 요청마다 프론트에서는 이전 accessToken을 갖고 있을 것임
 		}
 
 		String memberId = jwtProvider.extractMemberId(accessToken, true);
