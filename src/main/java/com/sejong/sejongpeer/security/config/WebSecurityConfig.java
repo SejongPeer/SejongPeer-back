@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.security.config;
 
+import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.security.config.Customizer.*;
 
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.sejong.sejongpeer.global.common.constants.UrlConstants;
 import com.sejong.sejongpeer.global.util.SpringEnvironmentUtil;
 import com.sejong.sejongpeer.security.constant.WebSecurityURIs;
 import com.sejong.sejongpeer.security.filter.JwtAuthenticationFilter;
@@ -38,10 +40,18 @@ public class WebSecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		configuration.setAllowedOrigins(WebSecurityURIs.CORS_ALLOW_URIS);
+		// configuration.setAllowedOrigins(WebSecurityURIs.CORS_ALLOW_URIS);
+		configuration.addAllowedOriginPattern(UrlConstants.DEV_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.WWW_DEV_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.LOCAL_DOMAIN_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.LOCAL_SECURE_DOMAIN_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.DEV_NONE_SECURE_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.WWW_DEV_NONE_SECURE_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.CLOUDFRONT_URL.getValue());
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
 		configuration.setAllowCredentials(true);
+		configuration.addExposedHeader(SET_COOKIE);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
@@ -61,9 +71,8 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http)
 		throws Exception { // TODO: 추후 프로필에 따라 접근 권한 변경 필요
-		http.csrf(AbstractHttpConfigurer::disable)
-			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			.authorizeHttpRequests(
+		defaultFilterChain(http);
+		http.authorizeHttpRequests(
 				authorize ->
 					authorize
 						.requestMatchers(WebSecurityURIs.PUBLIC_URIS.toArray(String[]::new))
