@@ -2,14 +2,16 @@ package com.sejong.sejongpeer.domain.buddy.entity.buddy;
 
 import org.hibernate.annotations.Comment;
 
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.ClassTypeOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GenderOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.GradeOption;
-import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -66,6 +69,12 @@ public class Buddy extends BaseAuditEntity {
 	@Comment("복수전공 확인")
 	@Column(nullable = false)
 	private boolean isSubMajor;
+
+	@OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+	private BuddyMatched matchedAsOwner;
+
+	@OneToOne(mappedBy = "partner", cascade = CascadeType.ALL, orphanRemoval = true)
+	private BuddyMatched matchedAsPartner;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private Buddy(
