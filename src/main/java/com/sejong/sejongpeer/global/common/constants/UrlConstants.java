@@ -13,10 +13,10 @@ public enum UrlConstants {
 	LOCAL_DOMAIN_URL("http://localhost:3000"),
 	LOCAL_SECURE_DOMAIN_URL("https://localhost:3000"),
 
-	DEV_URL("https://sejongpeer.com"),
-	DEV_NONE_SECURE_URL("http://sejongpeer.com"),
-	WWW_DEV_NONE_SECURE_URL("http://www.sejongpeer.com"),
-	WWW_DEV_URL("https://www.sejongpeer.com"),
+	DEV_URL("https://sejongpeer.co.kr"),
+	DEV_NONE_SECURE_URL("http://sejongpeer.co.kr"),
+	WWW_DEV_NONE_SECURE_URL("http://www.sejongpeer.co.kr"),
+	WWW_DEV_URL("https://www.sejongpeer.co.kr"),
 
 	CLOUDFRONT_URL("https://d3tbacvbyfqs43.cloudfront.net");
 

@@ -22,5 +22,5 @@ public final class WebSecurityURIs {
 			"/v3/api-docs/**");
 	public static final List<String> CORS_ALLOW_URIS =
 		List.of("http://localhost:3000", "http://127.0.0.1:3000",
-			"https://sejongpeer.com", "https://www.sejongpeer.com");
+			"https://sejongpeer.co.kr", "https://www.sejongpeer.co.kr");
 }
