@@ -42,10 +42,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		boolean isAccessTokenValid = jwtProvider.isTokenValid(accessToken, true);
+		boolean isRefreshTokenValid = jwtProvider.isTokenValid(refreshToken, false);
 
-		// AccessToken이 만료된 경우
-		if (!isAccessTokenValid) {
+		// AccessToken이 만료되었고 RefreshToken도 만료된 경우, 인증 실패
+		if (!isAccessTokenValid && !isRefreshTokenValid) {
 			throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+		}
+
+		// AccessToken이 만료되었으나 RefreshToken이 유효한 경우, AccessToken 재발급
+		if (!isAccessTokenValid) {
+			accessToken = jwtProvider.reissueAccessToken(refreshToken);
+			response.setHeader(
+				"accessToken",
+				accessToken); // FIXME: accessToken 만료 시 재발급은 따로 처리해야 함. 매 요청마다 프론트에서는 이전
+			// accessToken을 갖고 있을 것임
 		}
 
 		String memberId = jwtProvider.extractMemberId(accessToken, true);
@@ -57,8 +67,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
 		return WebSecurityURIs.PUBLIC_URIS.stream()
-			.anyMatch(uri -> new AntPathRequestMatcher(uri).matches(request))
-			|| WebSecurityURIs.SWAGGER_URIS.stream()
 			.anyMatch(uri -> new AntPathRequestMatcher(uri).matches(request));
 	}
 }

@@ -68,7 +68,7 @@ public class WebSecurityConfig {
 					authorize
 						.requestMatchers(WebSecurityURIs.PUBLIC_URIS.toArray(String[]::new))
 						.permitAll()
-						.requestMatchers(WebSecurityURIs.SWAGGER_URIS.toArray(String[]::new))
+						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**")
 						.permitAll()
 						.anyRequest()
 						.authenticated())
@@ -78,6 +78,7 @@ public class WebSecurityConfig {
 			.formLogin(AbstractHttpConfigurer::disable)
 			.logout(AbstractHttpConfigurer::disable)
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		// TODO: 추후 적용 필요
 
 		return http.build();
 	}
