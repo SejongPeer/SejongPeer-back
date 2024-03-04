@@ -14,12 +14,11 @@ import com.sejong.sejongpeer.domain.member.entity.Member;
 public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	List<Buddy> findAllByStatus(BuddyStatus buddyStatus);
 
-	List<Buddy> findAllByMemberOrderByCreatedAtDesc(Member member);
-
 	Optional<Buddy> findTopByMemberAndStatusOrderByCreatedAtDesc(Member member, BuddyStatus status);
-
-	Optional<Buddy> findTopByMemberOrderByUpdatedAtDesc(Member member);
 
 	@Query("SELECT b FROM Buddy b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
 	Optional<Buddy> findLastBuddyByMemberId(@Param("memberId") String memberId);
+
+	@Query("SELECT COUNT(b) FROM Buddy b WHERE b.status = 'IN_PROGRESS' OR b.status = 'FOUND_BUDDY'")
+	Long countByStatusInProgressOrFoundBuddy();
 }
