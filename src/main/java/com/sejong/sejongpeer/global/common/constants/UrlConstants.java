@@ -16,7 +16,9 @@ public enum UrlConstants {
 	DEV_URL("https://sejongpeer.com"),
 	DEV_NONE_SECURE_URL("http://sejongpeer.com"),
 	WWW_DEV_NONE_SECURE_URL("http://www.sejongpeer.com"),
-	WWW_DEV_URL("https://www.sejongpeer.com");
+	WWW_DEV_URL("https://www.sejongpeer.com"),
+
+	CLOUDFRONT_URL("https://d3tbacvbyfqs43.cloudfront.net");
 
 	private String value;
 }
