@@ -47,6 +47,7 @@ public class WebSecurityConfig {
 		configuration.addAllowedOriginPattern(UrlConstants.LOCAL_SECURE_DOMAIN_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.DEV_NONE_SECURE_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.WWW_DEV_NONE_SECURE_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.CLOUDFRONT_URL.getValue());
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
 		configuration.setAllowCredentials(true);
