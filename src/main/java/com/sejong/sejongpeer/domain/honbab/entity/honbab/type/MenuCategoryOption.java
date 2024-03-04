@@ -11,10 +11,10 @@ public enum MenuCategoryOption {
 			return true;
 		}
 	},
-	SCHOOL("학식") {
+	CAFETERIA("학식") {
 		@Override
 		public boolean isMatch(MenuCategoryOption candidateOption) {
-			return candidateOption == NO_MATTER || candidateOption == SCHOOL;
+			return candidateOption == NO_MATTER || candidateOption == CAFETERIA;
 		}
 	},
 	KOREAN("한식") {
