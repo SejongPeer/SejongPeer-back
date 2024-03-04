@@ -94,6 +94,17 @@ public class HonbabService {
 		}
 		return selectedMatched.getOwner();
 	}
+
+	public void cancelHonbab(String memberId) {
+		Honbab latestHonbab = getLastestHonbabByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.HONBAB_NOT_FOUND));
+
+		if (latestHonbab.getStatus() != HonbabStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
+		}
+		latestHonbab.changeStatus(HonbabStatus.CANCEL);
+		honbabRepository.save(latestHonbab);
+	}
 }
 
 
