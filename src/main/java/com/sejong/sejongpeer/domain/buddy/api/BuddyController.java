@@ -4,6 +4,7 @@ import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,6 +62,13 @@ public class BuddyController {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return buddyService.getBuddyMatchedPartnerDetails(memberId);
+	}
+
+	@Operation(summary = "현재 버디를 신청한 이용자 수 요청", description = "IN_PROGRESS, FOUND_BUDDY 상태값인 버디의 수")
+	@GetMapping("/active-count")
+	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
+
+		return buddyService.getCurrentlyActiveBuddyCount();
 	}
 }
 

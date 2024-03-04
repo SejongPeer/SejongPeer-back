@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.honbab.api;
 
+import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
@@ -54,5 +55,12 @@ public class HonbabController {
 	public MatchingPartnerInfoResponse getFoundPartnerInfo() {
 		String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return honbabService.getPartnerInfo(memberId);
+	}
+
+	@Operation(summary = "혼밥 상대를 찾고있는 이용자 수 요청", description = "IN_PROGRESS인 상태인 혼밥 이용자")
+	@GetMapping("/active-count")
+	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
+
+		return honbabService.getCurrentlyActiveHonbabCount();
 	}
 }
