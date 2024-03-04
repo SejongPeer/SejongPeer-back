@@ -16,6 +16,7 @@ public final class WebSecurityURIs {
 			"/api/v1/member/check-phone-number",
 			"/api/v1/member/help/find-account",
 			"/api/v1/member/help/reset-password",
+			"/api/v1/buddy/active-count",
 			"/webjars/**",
 			"/swagger-ui/**",
 			"/favicon.ico/",
