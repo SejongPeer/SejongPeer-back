@@ -158,7 +158,7 @@ public class BuddyService {
 	}
 
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
-		Long totalBuddyCount = buddyRepository.countByStatusInProgressOrFoundBuddy();
-		return new ActiveCustomersCountResponse(totalBuddyCount);
+		Long activeBuddyCount = buddyRepository.countByStatusInProgressOrFoundBuddy();
+		return new ActiveCustomersCountResponse(activeBuddyCount);
 	}
 }
