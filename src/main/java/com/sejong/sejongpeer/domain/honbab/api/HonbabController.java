@@ -41,7 +41,13 @@ public class HonbabController {
 		return honbabService.getHonbabMatchingStatus(memberId);
 	}
 
-
+	@Operation(summary = "혼밥 중도 취소", description = "혼밥신청 후 취소")
+	@GetMapping("/cancel")
+	public void cancelHonbab() {
+		String memberId =
+			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		honbabService.cancelHonbab(memberId);
+	}
 
 	@Operation(summary = "혼밥짝꿍 찾은 후 상대방 정보 요청", description = "매칭 후 상대방의 정보 반환")
 	@GetMapping("/partner/information")
