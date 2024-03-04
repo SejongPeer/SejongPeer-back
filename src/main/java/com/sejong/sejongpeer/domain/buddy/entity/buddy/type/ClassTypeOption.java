@@ -23,7 +23,7 @@ public enum ClassTypeOption {
 		@Override
 		public boolean isMatch(
 			String myStudentId, ClassTypeOption candidateOption, String candidateStudentId) {
-			return candidateStudentId.compareTo(myStudentId) < 0
+			return (candidateStudentId.compareTo(myStudentId) > 0)
 				&& (candidateOption == SENIOR || candidateOption == NO_MATTER);
 		}
 	},
