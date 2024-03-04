@@ -15,4 +15,7 @@ public interface HonbabRepository extends JpaRepository<Honbab, Long> {
 
 	@Query("SELECT b FROM Honbab b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
 	Optional<Honbab> findLastHonbabByMemberId(@Param("memberId") String memberId);
+
+	@Query("SELECT COUNT(b) FROM Buddy b WHERE b.status = 'IN_PROGRESS'")
+	Long countByStatusInProgressHonbab();
 }
