@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
@@ -93,6 +94,11 @@ public class HonbabService {
 			return selectedMatched.getPartner();
 		}
 		return selectedMatched.getOwner();
+	}
+
+	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
+		Long activeHonbabCount = honbabRepository.countByStatusInProgressHonbab();
+		return new ActiveCustomersCountResponse(activeHonbabCount);
 	}
 }
 
