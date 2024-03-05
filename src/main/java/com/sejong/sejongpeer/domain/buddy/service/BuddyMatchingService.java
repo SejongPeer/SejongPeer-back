@@ -33,13 +33,13 @@ public class BuddyMatchingService {
 	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
 		Member owner = getMemberById(memberId);
 
-		Optional<Buddy> optionalOwnerLatestBuddy = buddyRepository.findTopByMemberAndStatusOrderByCreatedAtDesc(owner, BuddyStatus.IN_PROGRESS);
+		Optional<Buddy> optionalOwnerLatestBuddy = buddyRepository.findTopByMemberAndStatusOrderByCreatedAtDesc(owner, BuddyStatus.FOUND_BUDDY);
 		Buddy ownerLatestBuddy = optionalOwnerLatestBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (request.isAccept()) {
-			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
-		} else {
+		if (!request.isAccept()) {
 			ownerLatestBuddy.changeStatus(BuddyStatus.REJECT);
+		} else {
+			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
 		}
 
 		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
@@ -57,16 +57,23 @@ public class BuddyMatchingService {
 	}
 
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
-
 		// FOUND_BUDDY 일 경우, ownerBuddy는 ACCEPT, REJECT 선택만 가능
-		if (ownerBuddy.getStatus() != BuddyStatus.ACCEPT || targetBuddy.getStatus() != BuddyStatus.ACCEPT) {
+
+		// 어느 쪽이든 먼저 거절 했을 경우
+		if (ownerBuddy.getStatus() == BuddyStatus.REJECT) {
 			// 매칭에 필요한 조건을 만족하지 않으면 MATCHING_FAIL 처리
 			buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
 			ownerBuddy.changeStatus(BuddyStatus.REJECT);
 			targetBuddy.changeStatus(BuddyStatus.DENIED);
 			return;
 		}
-	
+
+		// 한쪽만 수락 했을 경우
+		if (ownerBuddy.getStatus() == BuddyStatus.ACCEPT && targetBuddy.getStatus() == BuddyStatus.FOUND_BUDDY) {
+			return;
+		}
+
+		// 둘 다 수락 했을 경우
 		handlerBuddyMatchedSuccess(buddyMatched, ownerBuddy, targetBuddy);
 	}
 
@@ -92,7 +99,7 @@ public class BuddyMatchingService {
 		return  (optionalBuddyMatched.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND)));
 	}
 
-	public   Buddy getOtherBuddyInBuddyMatched(BuddyMatched buddyMatched, Buddy ownerBuddy) {
+	public Buddy getOtherBuddyInBuddyMatched(BuddyMatched buddyMatched, Buddy ownerBuddy) {
 		if (buddyMatched.getOwner() == ownerBuddy) {
 			return buddyMatched.getPartner();
 		} else {
