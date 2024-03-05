@@ -1,5 +1,7 @@
 package com.sejong.sejongpeer.domain.honbab.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -46,6 +48,10 @@ public class HonbabService {
 			if (latestHonbab.getStatus() == HonbabStatus.IN_PROGRESS) {
 				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
 			}
+			if (latestHonbab.getStatus() == HonbabStatus.MATCHING_COMPLETED &&
+                Duration.between(latestHonbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() < 15) {
+            throw new CustomException(ErrorCode.HONBAB_REGISTRATION_LIMIT);
+        }
 		});
 	}
 
