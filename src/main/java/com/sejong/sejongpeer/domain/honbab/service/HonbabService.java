@@ -63,7 +63,7 @@ public class HonbabService {
 		return honbabRepository.findLastHonbabByMemberId(memberId);
 	}
 
-	@Transactional(readOnly = true) // 여기에 DONE 반환 및 업데이트 로직 추가
+	@Transactional(readOnly = true)
 	public HonbabMatchingStatusResponse getHonbabMatchingStatus(String memberId) {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 
@@ -74,7 +74,7 @@ public class HonbabService {
 				Duration.between(honbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() > 15) {
 				honbab.changeStatus(HonbabStatus.EXPIRED);
 			}
-				return HonbabMatchingStatusResponse.honbabFrom(honbab);
+			return HonbabMatchingStatusResponse.honbabFrom(honbab);
 		} else {
 			return null;
 		}
