@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
@@ -49,9 +51,8 @@ public class HonbabService {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 
 		optionalHonbab.ifPresent(latestHonbab -> {
-			if (latestHonbab.getStatus() == HonbabStatus.IN_PROGRESS) {
-				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
-			}
+			checkInProgressStatus(latestHonbab);
+
 			if (latestHonbab.getStatus() == HonbabStatus.MATCHING_COMPLETED &&
                 Duration.between(latestHonbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() < 15) {
             throw new CustomException(ErrorCode.HONBAB_REGISTRATION_LIMIT);
@@ -121,6 +122,12 @@ public class HonbabService {
 		}
 		latestHonbab.changeStatus(HonbabStatus.CANCEL);
 		honbabRepository.save(latestHonbab);
+	}
+
+	private void checkInProgressStatus(Honbab honbab) {
+		if (honbab.getStatus() == HonbabStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+		}
 	}
 }
 
