@@ -57,33 +57,28 @@ public class BuddyMatchingService {
 	}
 
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
-		// FOUND_BUDDY 일 경우, ownerBuddy는 ACCEPT, REJECT 선택만 가능
 
-		// 어느 쪽이든 먼저 거절 했을 경우
 		if (ownerBuddy.getStatus() == BuddyStatus.REJECT) {
-			// 매칭에 필요한 조건을 만족하지 않으면 MATCHING_FAIL 처리
 			buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
 			ownerBuddy.changeStatus(BuddyStatus.REJECT);
 			targetBuddy.changeStatus(BuddyStatus.DENIED);
+
+			sendFailurePenaltyMessage(ownerBuddy);
 			return;
 		}
 
-		// 한쪽만 수락 했을 경우
 		if (ownerBuddy.getStatus() == BuddyStatus.ACCEPT && targetBuddy.getStatus() == BuddyStatus.FOUND_BUDDY) {
 			return;
 		}
 
-		// 둘 다 수락 했을 경우
 		handlerBuddyMatchedSuccess(buddyMatched, ownerBuddy, targetBuddy);
 	}
 
 	private void handlerBuddyMatchedSuccess(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
-		// 매칭이 성공할 경우 처리
 		buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
 		ownerBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 
-		// ownerBuddy와 targetBuddy에게 버디 매칭 성공 문자 발송
 		sendMatchingMessage(ownerBuddy);
 		sendMatchingMessage(targetBuddy);
 	}
@@ -110,5 +105,10 @@ public class BuddyMatchingService {
 	private void sendMatchingMessage(Buddy matchingSuccessBuddy) {
 		String phoneNumber = matchingSuccessBuddy.getMember().getPhoneNumber();
 		smsService.sendSms(phoneNumber, SmsText.MATCHING_COMPLETE_BUDDY);
+	}
+
+	private void sendFailurePenaltyMessage(Buddy matchingRejectBuddy) {
+		String phoneNumber = matchingRejectBuddy.getMember().getPhoneNumber();
+		smsService.sendSms(phoneNumber, SmsText.MATCHING_FAILED);
 	}
 }
