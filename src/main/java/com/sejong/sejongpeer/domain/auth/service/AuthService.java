@@ -4,8 +4,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import com.sejong.sejongpeer.domain.auth.dto.request.SejongAuthRequest;
 import com.sejong.sejongpeer.domain.auth.dto.request.SignInRequest;
+import com.sejong.sejongpeer.domain.auth.dto.response.SejongAuthClientResponse;
+import com.sejong.sejongpeer.domain.auth.dto.response.SejongAuthResponse;
 import com.sejong.sejongpeer.domain.auth.dto.response.SignInResponse;
 import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
 import com.sejong.sejongpeer.domain.auth.repository.RefreshTokenRepository;
@@ -23,6 +27,8 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	private final MemberRepository memberRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
+	private static final String SEJONG_AUTH_BASE_URL = "https://auth.imsejong.com/auth?method=ClassicSession";
+	private final WebClient webClient;
 
 	public SignInResponse signIn(SignInRequest request) {
 		Member member =
@@ -56,5 +62,25 @@ public class AuthService {
 		RefreshToken refreshToken = RefreshToken.builder().member(member).token(token).build();
 
 		refreshTokenRepository.save(refreshToken);
+	}
+
+	public SejongAuthClientResponse sejongAuthLogin(SejongAuthRequest request) {
+
+		SejongAuthResponse authResponse = webClient.post()
+			.uri(SEJONG_AUTH_BASE_URL)
+			.bodyValue(request)
+			.retrieve()
+			.bodyToMono(SejongAuthResponse.class)
+			.block();
+		return SejongAuthClientResponse.of(
+			authResponse.msg(),
+			authResponse.result().body().grade(),
+			authResponse.result().body().major(),
+			authResponse.result().body().name(),
+			authResponse.result().body().status(),
+			authResponse.result().is_auth(),
+			authResponse.result().status_code(),
+			authResponse.result().success()
+		);
 	}
 }
