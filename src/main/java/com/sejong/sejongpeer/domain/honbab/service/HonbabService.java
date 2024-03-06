@@ -63,13 +63,18 @@ public class HonbabService {
 		return honbabRepository.findLastHonbabByMemberId(memberId);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true) // 여기에 DONE 반환 및 업데이트 로직 추가
 	public HonbabMatchingStatusResponse getHonbabMatchingStatus(String memberId) {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 
 		if (optionalHonbab.isPresent()) {
 			Honbab honbab = optionalHonbab.get();
-			return HonbabMatchingStatusResponse.honbabFrom(honbab);
+
+			if (honbab.getStatus() == HonbabStatus.MATCHING_COMPLETED &&
+				Duration.between(honbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() > 15) {
+				honbab.changeStatus(HonbabStatus.EXPIRED);
+			}
+				return HonbabMatchingStatusResponse.honbabFrom(honbab);
 		} else {
 			return null;
 		}
@@ -106,7 +111,7 @@ public class HonbabService {
 		Long activeHonbabCount = honbabRepository.countByStatusInProgressHonbab();
 		return new ActiveCustomersCountResponse(activeHonbabCount);
   }
-  
+
 	public void cancelHonbab(String memberId) {
 		Honbab latestHonbab = getLastestHonbabByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.HONBAB_NOT_FOUND));
