@@ -64,6 +64,7 @@ public class BuddyMatchingService {
 			targetBuddy.changeStatus(BuddyStatus.DENIED);
 
 			sendFailurePenaltyMessage(ownerBuddy);
+			sendFailurePenaltyMessage(targetBuddy);
 			return;
 		}
 
