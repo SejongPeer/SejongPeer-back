@@ -49,13 +49,8 @@ public class HonbabService {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 
 		optionalHonbab.ifPresent(latestHonbab -> {
-			if (latestHonbab.getStatus() == HonbabStatus.IN_PROGRESS) {
-				throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
-			}
-			if (latestHonbab.getStatus() == HonbabStatus.MATCHING_COMPLETED &&
-                Duration.between(latestHonbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() < 15) {
-            throw new CustomException(ErrorCode.HONBAB_REGISTRATION_LIMIT);
-        }
+			checkInProgressStatus(latestHonbab);
+			checkIfRegistrationTimeHasPassed(latestHonbab);
 		});
 	}
 
@@ -121,6 +116,23 @@ public class HonbabService {
 		}
 		latestHonbab.changeStatus(HonbabStatus.CANCEL);
 		honbabRepository.save(latestHonbab);
+	}
+
+	private void checkInProgressStatus(Honbab honbab) {
+		if (honbab.getStatus() == HonbabStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+		}
+	}
+
+	private void checkIfRegistrationTimeHasPassed(Honbab honbab) {
+		if (honbab.getStatus() == HonbabStatus.MATCHING_COMPLETED &&
+			isReRegistrationTimePassed(honbab)) {
+			throw new CustomException(ErrorCode.HONBAB_REGISTRATION_LIMIT);
+		}
+	}
+
+	private boolean isReRegistrationTimePassed(Honbab honbab) {
+		return (Duration.between(honbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() < 15);
 	}
 }
 
