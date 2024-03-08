@@ -39,7 +39,7 @@ class MemberControllerTest {
 	@Nested
 	class 회원가입 {
 		private static String DEFAULT_ACCOUNT = "test";
-		private static String DEFAULT_PASSWORD = "test1q2w34r!";
+		private static String DEFAULT_PASSWORD = "test123412341234";
 		private static String DEFAULT_NAME = "test";
 		private static String DEFAULT_STUDENT_ID = "test";
 		private static Gender DEFAULT_GENDER = Gender.FEMALE;
