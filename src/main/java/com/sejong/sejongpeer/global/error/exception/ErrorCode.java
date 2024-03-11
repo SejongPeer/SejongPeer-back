@@ -45,7 +45,7 @@ public enum ErrorCode {
     REGISTRATION_NOT_POSSIBLE(HttpStatus.CONFLICT, "신청을 할 수 없습니다."),
     TARGET_BUDDY_NOT_FOUND(HttpStatus.NOT_FOUND, "상대 버디를 찾을 수 없습니다."),
     BUDDY_NOT_MATCHED(HttpStatus.CONFLICT, "매칭 성사된 버디가 아닙니다."),
-
+    MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
     // Study
     STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 
