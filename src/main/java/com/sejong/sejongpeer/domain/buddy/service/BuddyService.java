@@ -63,7 +63,7 @@ public class BuddyService {
 	}
 
 	public void cancelBuddy(String memberId) {
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		if (latestBuddy.getStatus() != BuddyStatus.IN_PROGRESS) {
@@ -74,7 +74,7 @@ public class BuddyService {
 	}
 
 	private void checkPossibleRegistration(String memberId) {
-		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
 			checkInProgressStatus(latestBuddy);
@@ -102,19 +102,14 @@ public class BuddyService {
 		}
 	}
 
-	private Optional<Buddy> getLastBuddyByMemberId(String memberId) {
-		return buddyRepository.findLastBuddyByMemberId(memberId);
-	}
-
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
 		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.MATCH_BLOCK_HOUR);
-
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
 	@Transactional(readOnly = true)
 	public MatchingStatusResponse getMatchingStatus(String memberId) {
-		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		if (optionalBuddy.isPresent()) {
 			Buddy buddy = optionalBuddy.get();
@@ -126,14 +121,14 @@ public class BuddyService {
 
 	public MatchingPartnerInfoResponse getPartnerDetails(String memberId) {
 
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 		checkBuddyStatus(latestBuddy, BuddyStatus.FOUND_BUDDY);
 
 		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
 		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.IN_PROGRESS);
 
-		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
+		Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
 		return MatchingPartnerInfoResponse.memberFrom(partnerMember);
@@ -141,14 +136,14 @@ public class BuddyService {
 
 	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails(String memberId) {
 
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 		checkBuddyStatus(latestBuddy, BuddyStatus.MATCHING_COMPLETED);
 
 		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
 		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.MATCHING_COMPLETED);
 
-		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
+		Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
 		return CompletedPartnerInfoResponse.memberFrom(partnerMember);
