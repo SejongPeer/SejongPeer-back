@@ -2,9 +2,9 @@ name: SejongPeer - BackEnd - CI
 
 on:
   pull_request:
-    branches: ["main", "develop"]
+    branches: [ "main" ]
   push:
-    branches: ["develop"]
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -37,12 +37,14 @@ jobs:
           touch ./application-datasource.yml
           touch ./application-dev.yml
           touch ./application-security.yml
+          touch ./application-security.yml
           touch ./.env
           # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
           echo "$APPLICATION" > ./application.yml
           echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
           echo "$APPLICATION_DEV" > ./application-dev.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
+          echo "$APPLICATION_INFRA" > ./application-infra.yml
           echo "$ENV" >./.env
         env:
           APPLICATION: ${{ secrets.APPLICATION }}
