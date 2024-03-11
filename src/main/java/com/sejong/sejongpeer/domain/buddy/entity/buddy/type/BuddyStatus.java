@@ -12,6 +12,7 @@ public enum BuddyStatus {
     REJECT("거절"),
     DENIED("거절당함"),
     FOUND_BUDDY("상대 찾음"),
-    MATCHING_COMPLETED("매칭 성사");
+    MATCHING_COMPLETED("매칭 성사"),
+    DISCONNECT("매칭 후 취소");
     private final String value;
 }
