@@ -29,11 +29,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class BuddyService {
+	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
+
 	private final MatchingService matchingService;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
-	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
+
 	public void registerBuddy(RegisterRequest request, String memberId) {
 		Member member =
 			memberRepository
@@ -170,6 +172,6 @@ public class BuddyService {
 	}
 
 	private long countMatchingCompletedBuddies(String memberId) {
-		return buddyRepository.countByMemberAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+		return buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
 	}
 }
