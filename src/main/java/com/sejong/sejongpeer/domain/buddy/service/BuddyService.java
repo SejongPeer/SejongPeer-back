@@ -144,7 +144,7 @@ public class BuddyService {
 
 		return completedBuddies.stream()
 			.map(buddy -> {
-				BuddyMatched completedBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartnerAndStatus(buddy)
+				BuddyMatched completedBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartnerAndStatus(buddy, BuddyMatchedStatus.MATCHING_COMPLETED)
 					.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_MATCHED));
 				System.out.println(completedBuddyMatched.getId());
 
