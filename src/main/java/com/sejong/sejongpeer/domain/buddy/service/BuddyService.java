@@ -1,8 +1,10 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class BuddyService {
 	private final MatchingService matchingService;
+	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
@@ -130,19 +133,21 @@ public class BuddyService {
 		return MatchingPartnerInfoResponse.memberFrom(partnerMember);
 	}
 
-	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails(String memberId) {
+	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails(String memberId) {
 
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
-		checkBuddyStatus(latestBuddy, BuddyStatus.MATCHING_COMPLETED);
+		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED)
+			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
 
-		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
-		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.MATCHING_COMPLETED);
+		return completedBuddies.stream()
+			.map(buddy -> {
+				BuddyMatched completedBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartnerAndStatus(buddy)
+					.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_MATCHED));
 
-		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
-		Member partnerMember = partner.getMember();
-
-		return CompletedPartnerInfoResponse.memberFrom(partnerMember);
+				Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(completedBuddyMatched, buddy);
+				Member partnerMember = partner.getMember();
+				return CompletedPartnerInfoResponse.memberFrom(partnerMember);
+			})
+			.toList();
 	}
 
 	private void checkBuddyStatus(Buddy buddy, BuddyStatus status) {
