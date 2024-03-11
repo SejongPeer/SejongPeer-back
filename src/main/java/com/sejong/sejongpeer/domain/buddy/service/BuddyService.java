@@ -33,7 +33,7 @@ public class BuddyService {
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
-
+	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
 	public void registerBuddy(RegisterRequest request, String memberId) {
 		Member member =
 			memberRepository
@@ -78,6 +78,7 @@ public class BuddyService {
 			checkInProgressStatus(latestBuddy);
 			checkRejectPenaltyAndUpdateStatus(latestBuddy);
 		});
+		checkCountBuddyRegistrations(memberId);
 	}
 
 	private void checkInProgressStatus(Buddy buddy) {
@@ -90,6 +91,12 @@ public class BuddyService {
 		if (buddy.getStatus().equals(BuddyStatus.REJECT) &&
 			!isPossibleFromUpdateAt(buddy.getUpdatedAt())) {
 			throw new CustomException(ErrorCode.REJECT_PENALTY);
+		}
+	}
+
+	private void checkCountBuddyRegistrations(String memberId) {
+		if (countMatchingCompletedBuddies(memberId) >= MAX_MATCHING_COMPLETED_BUDDIES) {
+			throw new CustomException(ErrorCode.MAX_BUDDY_REGISTRATION_EXCEEDED);
 		}
 	}
 
@@ -160,5 +167,9 @@ public class BuddyService {
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
 		Long activeBuddyCount = buddyRepository.countByStatusInProgressOrFoundBuddy();
 		return new ActiveCustomersCountResponse(activeBuddyCount);
+	}
+
+	private long countMatchingCompletedBuddies(String memberId) {
+		return buddyRepository.countByMemberAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
 	}
 }
