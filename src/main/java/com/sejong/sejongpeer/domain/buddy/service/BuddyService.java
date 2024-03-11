@@ -136,8 +136,8 @@ public class BuddyService {
 	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails(String memberId) {
 
 		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
-		if (completedBuddies.isEmpty())
-			throw new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND);
+		checkCompletedBuddies(completedBuddies);
+
 		for (Buddy buddy : completedBuddies) { // 내가 신청한 버디
 			System.out.println(buddy.getId());
 		}
@@ -165,6 +165,11 @@ public class BuddyService {
 		if (buddyMatched.getStatus() != status) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
+	}
+
+	private void checkCompletedBuddies(List<Buddy> completedBuddies) {
+		if (completedBuddies.isEmpty())
+			throw new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND);
 	}
 
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
