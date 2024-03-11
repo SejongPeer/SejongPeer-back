@@ -4,13 +4,14 @@ name: SejongPeer - BackEnd - CD
 on:
   push:
     # main branch에 push(merge)될 경우 실행됩니다.
-    branches: ["main"]
+    branches: [ "main" ]
 
 permissions:
   contents: read
 
 jobs:
   build:
+    environment: DEV
     # build를 진행할 운영체제를 선택합니다.
     runs-on: ubuntu-latest
 
@@ -37,20 +38,25 @@ jobs:
           # 필요한 yml 파일들을 만들어줍니다.
           touch ./application.yml
           touch ./application-datasource.yml
+          touch ./application-infra.yml
           touch ./application-dev.yml
           touch ./application-security.yml
           touch ./.env
+          
           # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
           echo "$APPLICATION" > ./application.yml
           echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
           echo "$APPLICATION_DEV" > ./application-dev.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
+          echo "$APPLICATION_INFRA" > ./application-infra.yml
           echo "$ENV" >./.env
+
         env:
           APPLICATION: ${{ secrets.APPLICATION }}
           APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
+          APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
         shell: bash
 
       - name: Gradle 권한 부여
@@ -69,6 +75,7 @@ jobs:
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
+          chmod +x ./deploy/deploy.sh
           zip -r -qq -j ./sejongpeer-app.zip ./deploy
 
       # AWS에 연결해줍니다.
