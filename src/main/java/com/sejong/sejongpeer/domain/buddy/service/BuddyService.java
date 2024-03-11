@@ -138,15 +138,10 @@ public class BuddyService {
 		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
 		checkCompletedBuddies(completedBuddies);
 
-		for (Buddy buddy : completedBuddies) { // 내가 신청한 버디
-			System.out.println(buddy.getId());
-		}
-
 		return completedBuddies.stream()
 			.map(buddy -> {
 				BuddyMatched completedBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartnerAndStatus(buddy, BuddyMatchedStatus.MATCHING_COMPLETED)
 					.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_MATCHED));
-				System.out.println(completedBuddyMatched.getId());
 
 				Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(completedBuddyMatched, buddy);
 				Member partnerMember = partner.getMember();
