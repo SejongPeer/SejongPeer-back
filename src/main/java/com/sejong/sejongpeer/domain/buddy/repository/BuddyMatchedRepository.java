@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.repository;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
+import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
@@ -21,7 +22,7 @@ public interface BuddyMatchedRepository extends JpaRepository<BuddyMatched, Long
 
 	@Query("SELECT bm FROM BuddyMatched bm WHERE " +
 		"(:owner = bm.owner OR :owner = bm.partner) " +
-		"AND bm.status = 'MATCHING_COMPLETED' " +
+		"AND bm.status = :status " +
 		"ORDER BY bm.id DESC LIMIT 1")
-	Optional<BuddyMatched> findLatestByOwnerOrPartnerAndStatus(@Param("owner") Buddy owner);
+	Optional<BuddyMatched> findLatestByOwnerOrPartnerAndStatus(@Param("owner") Buddy owner, @Param("status") BuddyMatchedStatus status);
 }
