@@ -22,7 +22,6 @@ public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	@Query("SELECT COUNT(b) FROM Buddy b WHERE b.status = 'IN_PROGRESS' OR b.status = 'FOUND_BUDDY'")
 	Long countByStatusInProgressOrFoundBuddy();
 
-	@Query("SELECT COUNT(b) FROM Buddy b WHERE b.member.id = :memberId AND b.status = :status")
-	long countByMemberAndStatus(String memberId, BuddyStatus status);
+	long countByMemberIdAndStatus(String memberId, BuddyStatus status);
 
 }
