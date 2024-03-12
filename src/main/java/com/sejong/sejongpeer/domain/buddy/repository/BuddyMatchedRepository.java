@@ -22,7 +22,6 @@ public interface BuddyMatchedRepository extends JpaRepository<BuddyMatched, Long
 
 	@Query("SELECT bm FROM BuddyMatched bm WHERE " +
 		"(:owner = bm.owner OR :owner = bm.partner) " +
-		"AND bm.status = :status " +
-		"ORDER BY bm.id DESC LIMIT 1")
+		"AND bm.status = :status" )
 	Optional<BuddyMatched> findLatestByOwnerOrPartnerAndStatus(@Param("owner") Buddy owner, @Param("status") BuddyMatchedStatus status);
 }
