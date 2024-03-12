@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -162,7 +163,9 @@ public class BuddyService {
 	}
 
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
-		Long activeBuddyCount = buddyRepository.countByStatusInProgressOrFoundBuddy();
+		List<BuddyStatus> statuses = List.of(BuddyStatus.IN_PROGRESS, BuddyStatus.FOUND_BUDDY);
+		Long activeBuddyCount = buddyRepository.countByStatusIn(statuses);
+
 		return new ActiveCustomersCountResponse(activeBuddyCount);
 	}
 
