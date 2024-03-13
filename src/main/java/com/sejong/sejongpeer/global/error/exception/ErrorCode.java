@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+
 	SAMPLE_ERROR(HttpStatus.BAD_REQUEST, "Sample Error Message"),
 	// 서버 에러
 	METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "Enum Type이 일치하지 않아 Binding에 실패하였습니다."),
@@ -43,6 +44,7 @@ public enum ErrorCode {
 	REGISTRATION_NOT_POSSIBLE(HttpStatus.CONFLICT, "이미 최대횟수만큼 버디 찾기를 신청했습니다."),
 	TARGET_BUDDY_NOT_FOUND(HttpStatus.NOT_FOUND, "상대 버디를 찾을 수 없습니다."),
 	BUDDY_NOT_MATCHED(HttpStatus.CONFLICT, "매칭 성사된 버디가 아닙니다."),
+  MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
 
 	// Study
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
