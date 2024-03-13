@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.auth.service;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,8 @@ import com.sejong.sejongpeer.domain.auth.entity.RefreshToken;
 import com.sejong.sejongpeer.domain.auth.repository.RefreshTokenRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
+import com.sejong.sejongpeer.global.error.exception.CustomException;
+import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.security.util.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -34,10 +35,10 @@ public class AuthService {
 		Member member =
 			memberRepository
 				.findByAccount(request.account())
-				.orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
 		if (!passwordEncoder.matches(request.password(), member.getPassword())) {
-			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+			throw new CustomException(ErrorCode.INVALID_PASSWORD);
 		}
 
 		String accessToken = jwtProvider.generateAccessToken(member.getId());
