@@ -23,4 +23,6 @@ public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 
 	long countByMemberIdAndStatus(String memberId, BuddyStatus status);
 
+
+	List<Buddy> findAllByMemberIdAndStatus(String memberId, BuddyStatus status);
 }
