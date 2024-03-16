@@ -36,7 +36,7 @@ jobs:
 
       - name: Make appspec.yml
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/cicdtest" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
             cp appspec-staging.yml appspec.yml
           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             cp appspec.yml appspec.yml
