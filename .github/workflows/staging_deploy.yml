@@ -82,7 +82,7 @@ jobs:
 
       # AWS에 연결해줍니다.
       - name: AWS 연결
-        uses: aws-actions/configure-aws-credentials@v1s
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
