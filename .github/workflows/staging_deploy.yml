@@ -29,6 +29,17 @@ jobs:
           arguments: check
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }}
 
+      - name: Make appspec.yml
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/cicdtest" ]]; then
+            cp appspec-staging.yml appspec.yml
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            cp appspec.yml appspec.yml
+          else
+            echo "Unsupported branch for deployment"
+            exit 1
+          fi
+
       - name: Make application.yml
         run: |
           # src/main/resources 으로 경로를 이동합니다.
@@ -55,16 +66,6 @@ jobs:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
-        shell: bash
-
-      ## create application.properties
-      - name: make application-aws.properties
-        run: |
-          # spring의 resources 경로로 이동
-          cd ./src/main/resources
-          touch ./application.properties
-          # GitHub-Actions에서 설정한 값을 application.properties 파일에 쓰기
-          echo "${{ secrets.PROPERTIES }}" > ./application.properties
         shell: bash
 
       - name: Gradle 권한 부여
