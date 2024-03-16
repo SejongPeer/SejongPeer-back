@@ -59,7 +59,6 @@ jobs:
           echo "$APPLICATION_SECURITY" > ./application-security.yml
           echo "$APPLICATION_INFRA" > ./application-infra.yml
           echo "$ENV" >./.env
-
         env:
           APPLICATION: ${{ secrets.APPLICATION }}
           APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
@@ -67,6 +66,16 @@ jobs:
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
           ENV:  ${{ secrets.ENV }}
+        shell: bash
+
+      ## create application.properties
+      - name: make application-aws.properties
+        run: |
+          # spring의 resources 경로로 이동
+          cd ./src/main/resources
+          touch ./application.properties
+          # GitHub-Actions에서 설정한 값을 application.properties 파일에 쓰기
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties
         shell: bash
 
       - name: Gradle 권한 부여
