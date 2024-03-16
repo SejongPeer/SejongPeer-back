@@ -66,6 +66,7 @@ jobs:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
+          ENV:  ${{ secrets.ENV }}
         shell: bash
 
       - name: Gradle 권한 부여
