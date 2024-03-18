@@ -120,7 +120,7 @@ public class BuddyService {
 
 		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
-		checkBuddyStatus(latestBuddy, BuddyStatus.FOUND_BUDDY);
+		ensureBuddyStatusMatches(latestBuddy, BuddyStatus.FOUND_BUDDY, ErrorCode.BUDDY_NOT_MATCHED);
 
 		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
 		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.IN_PROGRESS);
@@ -148,12 +148,6 @@ public class BuddyService {
 			.toList();
 	}
 
-	private void checkBuddyStatus(Buddy buddy, BuddyStatus status) {
-		if (buddy.getStatus() != status) {
-			throw new CustomException(ErrorCode.BUDDY_NOT_MATCHED);
-		}
-	}
-
 	private void checkBuddyMatchedStatus(BuddyMatched buddyMatched, BuddyMatchedStatus status) {
 		if (buddyMatched.getStatus() != status) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
@@ -178,6 +172,12 @@ public class BuddyService {
 
 	private void validateBuddyStatusNotMatches(Buddy buddy, BuddyStatus buddyStatus, ErrorCode errorCode) {
 		if (buddy.getStatus() == buddyStatus) {
+			throw new CustomException(errorCode);
+		}
+	}
+
+	private void ensureBuddyStatusMatches(Buddy buddy, BuddyStatus buddyStatus, ErrorCode errorCode) {
+		if (buddy.getStatus() != buddyStatus) {
 			throw new CustomException(errorCode);
 		}
 	}
