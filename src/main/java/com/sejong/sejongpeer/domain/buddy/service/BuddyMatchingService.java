@@ -85,12 +85,6 @@ public class BuddyMatchingService {
 		sendMatchingSuccessMessage(targetBuddy);
 	}
 
-	private Buddy findTargetBuddy(Buddy ownerBuddy) {
-		BuddyMatched selectedBuddyMatched = getLatestBuddyMatched(ownerBuddy);
-
-		return getOtherBuddyInBuddyMatched(selectedBuddyMatched, ownerBuddy);
-	}
-
 	public BuddyMatched getLatestBuddyMatched(Buddy buddy) {
 		Optional<BuddyMatched> optionalBuddyMatched = buddyMatchedRepository.findLatestByOwnerOrPartner(buddy);
 		return  (optionalBuddyMatched.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND)));
