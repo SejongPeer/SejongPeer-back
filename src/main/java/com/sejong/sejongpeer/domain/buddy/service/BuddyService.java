@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class BuddyService {
 	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
 	private static final int MATCH_BLOCK_HOUR = 1;
+
 	private final MatchingService matchingService;
 	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
