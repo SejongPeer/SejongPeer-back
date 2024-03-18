@@ -55,7 +55,7 @@ public class BuddyController {
 	public MatchingPartnerInfoResponse getPartnerDetails() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return buddyService.getPartnerDetails(memberId);
+		return buddyService.getBuddyMatchingPartnerDetails(memberId);
 	}
 
 	@Operation(summary = "매칭 수락 완료 후 상대방 정보요청", description = "이름, 학년, 학과, 카카오톡 정보 리턴")

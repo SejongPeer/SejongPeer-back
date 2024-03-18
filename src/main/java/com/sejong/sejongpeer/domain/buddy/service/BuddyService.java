@@ -115,7 +115,7 @@ public class BuddyService {
 		}
 	}
 
-	public MatchingPartnerInfoResponse getPartnerDetails(String memberId) {
+	public MatchingPartnerInfoResponse getBuddyMatchingPartnerDetails(String memberId) {
 
 		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
