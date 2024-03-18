@@ -16,6 +16,8 @@ public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 
 	Optional<Buddy> findTopByMemberAndStatusOrderByCreatedAtDesc(Member member, BuddyStatus status);
 
+	Optional<Buddy> findTopByMemberIdAndStatusOrderByCreatedAtDesc(String memberId, BuddyStatus status);
+
 	@Query("SELECT b FROM Buddy b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
 	Optional<Buddy> findLastBuddyByMemberId(@Param("memberId") String memberId);
 
