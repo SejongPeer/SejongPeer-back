@@ -40,13 +40,14 @@ public class BuddyMatchingService {
 			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
 		}
 
-		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
+		BuddyMatched progressMatch = buddyMatchedRepository.findByOwnerOrPartnerAndStatus(ownerLatestBuddy, BuddyMatchedStatus.IN_PROGRESS)
+			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
 
-		BuddyMatched existingMatch = buddyMatchedRepository.findByOwnerAndPartner(ownerLatestBuddy, targetBuddy).orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+		Buddy partnerBuddy = getOtherBuddyInBuddyMatched(progressMatch, ownerLatestBuddy);
 
-		updateStatusBasedOnBuddies(existingMatch, ownerLatestBuddy, targetBuddy);
+		updateStatusBasedOnBuddies(progressMatch, ownerLatestBuddy, partnerBuddy);
 
-		buddyMatchedRepository.save(existingMatch);
+		buddyMatchedRepository.save(progressMatch);
 	}
 
 
