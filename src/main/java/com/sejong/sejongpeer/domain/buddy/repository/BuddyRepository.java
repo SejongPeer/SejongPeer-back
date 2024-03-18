@@ -14,8 +14,6 @@ import com.sejong.sejongpeer.domain.member.entity.Member;
 public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	List<Buddy> findAllByStatus(BuddyStatus buddyStatus);
 
-	Optional<Buddy> findTopByMemberAndStatusOrderByCreatedAtDesc(Member member, BuddyStatus status);
-
 	Optional<Buddy> findTopByMemberIdAndStatusOrderByCreatedAtDesc(String memberId, BuddyStatus status);
 
 	@Query("SELECT b FROM Buddy b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
