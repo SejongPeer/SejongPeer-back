@@ -80,16 +80,10 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			checkInProgressStatus(latestBuddy);
+			validateBuddyStatusNotMatches(latestBuddy, BuddyStatus.IN_PROGRESS, ErrorCode.REGISTRATION_NOT_POSSIBLE);
 			checkRejectPenaltyAndUpdateStatus(latestBuddy);
 		});
 		checkCountBuddyRegistrations(memberId);
-	}
-
-	private void checkInProgressStatus(Buddy buddy) {
-		if (buddy.getStatus() == BuddyStatus.IN_PROGRESS) {
-			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
-		}
 	}
 
 	private void checkRejectPenaltyAndUpdateStatus(Buddy buddy) {
@@ -180,5 +174,11 @@ public class BuddyService {
 
 	private long countMatchingCompletedBuddies(String memberId) {
 		return buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+	}
+
+	private void validateBuddyStatusNotMatches(Buddy buddy, BuddyStatus buddyStatus, ErrorCode errorCode) {
+		if (buddy.getStatus() == buddyStatus) {
+			throw new CustomException(errorCode);
+		}
 	}
 }
