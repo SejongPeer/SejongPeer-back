@@ -47,7 +47,7 @@ public class BuddyController {
 	public MatchingStatusResponse getMatchingStatus() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return buddyService.getMatchingStatus(memberId);
+		return buddyService.getBuddyMatchingStatus(memberId);
 	}
 
 	@Operation(summary = "버디 수락/거절 창에서의 상대방 정보 요청", description = "매칭 후 상대방의 학과, 학년 정보 리턴")
