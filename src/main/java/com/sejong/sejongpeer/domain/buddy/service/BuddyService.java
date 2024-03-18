@@ -2,14 +2,12 @@ package com.sejong.sejongpeer.domain.buddy.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.List;
 import java.util.Optional;
 
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sejong.sejongpeer.domain.buddy.constant.LimitTimeConstant;
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
@@ -33,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class BuddyService {
 	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
-
+	private static final int MATCH_BLOCK_HOUR = 1;
 	private final MatchingService matchingService;
 	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
@@ -107,7 +105,7 @@ public class BuddyService {
 	}
 
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
-		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.MATCH_BLOCK_HOUR);
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(MATCH_BLOCK_HOUR);
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
