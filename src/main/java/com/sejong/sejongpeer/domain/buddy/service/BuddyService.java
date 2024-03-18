@@ -104,7 +104,7 @@ public class BuddyService {
 	}
 
 	@Transactional(readOnly = true)
-	public MatchingStatusResponse getMatchingStatus(String memberId) {
+	public MatchingStatusResponse getBuddyMatchingStatus(String memberId) {
 		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		if (optionalBuddy.isPresent()) {
