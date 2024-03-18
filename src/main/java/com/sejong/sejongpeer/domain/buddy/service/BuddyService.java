@@ -69,9 +69,8 @@ public class BuddyService {
 		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (latestBuddy.getStatus() != BuddyStatus.IN_PROGRESS) {
-			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
-		}
+		ensureBuddyStatusMatches(latestBuddy, BuddyStatus.IN_PROGRESS, ErrorCode.NOT_IN_PROGRESS);
+
 		latestBuddy.changeStatus(BuddyStatus.CANCEL);
 		buddyRepository.save(latestBuddy);
 	}
