@@ -103,15 +103,23 @@ public class BuddyService {
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
-	@Transactional(readOnly = true)
 	public MatchingStatusResponse getBuddyMatchingStatus(String memberId) {
 		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		if (optionalBuddy.isPresent()) {
 			Buddy buddy = optionalBuddy.get();
+			checkAndUpdateRejectedBuddyStatus(buddy);
 			return MatchingStatusResponse.buddyFrom(buddy);
 		} else {
 			return null;
+		}
+	}
+
+	private void checkAndUpdateRejectedBuddyStatus(Buddy buddy) {
+		if (buddy.getStatus().equals(BuddyStatus.REJECT) &&
+			isPossibleFromUpdateAt(buddy.getUpdatedAt())) {
+			buddy.changeStatus(BuddyStatus.REACTIVATE);
+			buddyRepository.save(buddy);
 		}
 	}
 
