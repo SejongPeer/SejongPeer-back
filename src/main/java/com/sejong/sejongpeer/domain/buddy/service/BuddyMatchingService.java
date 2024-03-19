@@ -27,14 +27,12 @@ public class BuddyMatchingService {
 
 	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
-	private final MemberRepository memberRepository;
 	private final SmsService smsService;
 
 	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
-		Member owner = getMemberById(memberId);
 
-		Optional<Buddy> optionalOwnerLatestBuddy = buddyRepository.findTopByMemberAndStatusOrderByCreatedAtDesc(owner, BuddyStatus.FOUND_BUDDY);
-		Buddy ownerLatestBuddy = optionalOwnerLatestBuddy.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
+		Buddy ownerLatestBuddy = buddyRepository.findTopByMemberIdAndStatusOrderByCreatedAtDesc(memberId, BuddyStatus.FOUND_BUDDY)
+			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
 		if (!request.isAccept()) {
 			ownerLatestBuddy.changeStatus(BuddyStatus.REJECT);
@@ -42,29 +40,21 @@ public class BuddyMatchingService {
 			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
 		}
 
-		Buddy targetBuddy = findTargetBuddy(ownerLatestBuddy);
+		BuddyMatched progressMatch = buddyMatchedRepository.findByOwnerOrPartnerAndStatus(ownerLatestBuddy, BuddyMatchedStatus.IN_PROGRESS)
+			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
 
-		BuddyMatched existingMatch = buddyMatchedRepository.findByOwnerAndPartner(ownerLatestBuddy, targetBuddy).orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+		Buddy partnerBuddy = getOtherBuddyInBuddyMatched(progressMatch, ownerLatestBuddy);
 
-		updateStatusBasedOnBuddies(existingMatch, ownerLatestBuddy, targetBuddy);
+		updateStatusBasedOnBuddies(progressMatch, ownerLatestBuddy, partnerBuddy);
 
-		buddyMatchedRepository.save(existingMatch);
+		buddyMatchedRepository.save(progressMatch);
 	}
 
-	private Member getMemberById(String memberId) {
-		return memberRepository.findById(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-	}
 
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
 
 		if (ownerBuddy.getStatus() == BuddyStatus.REJECT) {
-			buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
-			ownerBuddy.changeStatus(BuddyStatus.REJECT);
-			targetBuddy.changeStatus(BuddyStatus.DENIED);
-
-			sendFailurePenaltyMessage(ownerBuddy);
-			sendFailurePenaltyMessage(targetBuddy);
+			handleBuddyMatchedReject(buddyMatched, ownerBuddy, targetBuddy);
 			return;
 		}
 
@@ -72,22 +62,27 @@ public class BuddyMatchingService {
 			return;
 		}
 
-		handlerBuddyMatchedSuccess(buddyMatched, ownerBuddy, targetBuddy);
+		if (ownerBuddy.getStatus() == BuddyStatus.ACCEPT && targetBuddy.getStatus() == BuddyStatus.ACCEPT) {
+			handleBuddyMatchedSuccess(buddyMatched, ownerBuddy, targetBuddy);
+		}
 	}
 
-	private void handlerBuddyMatchedSuccess(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
+	private void handleBuddyMatchedReject(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
+		buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
+		ownerBuddy.changeStatus(BuddyStatus.REJECT);
+		targetBuddy.changeStatus(BuddyStatus.DENIED);
+
+		sendMatchingFailurePenaltyMessage(ownerBuddy);
+		sendMatchingFailurePenaltyMessage(targetBuddy);
+	}
+
+	private void handleBuddyMatchedSuccess(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
 		buddyMatched.changeStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
 		ownerBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 
-		sendMatchingMessage(ownerBuddy);
-		sendMatchingMessage(targetBuddy);
-	}
-
-	private Buddy findTargetBuddy(Buddy ownerBuddy) {
-		BuddyMatched selectedBuddyMatched = getLatestBuddyMatched(ownerBuddy);
-
-		return getOtherBuddyInBuddyMatched(selectedBuddyMatched, ownerBuddy);
+		sendMatchingSuccessMessage(ownerBuddy);
+		sendMatchingSuccessMessage(targetBuddy);
 	}
 
 	public BuddyMatched getLatestBuddyMatched(Buddy buddy) {
@@ -103,12 +98,12 @@ public class BuddyMatchingService {
 		}
 	}
 
-	private void sendMatchingMessage(Buddy matchingSuccessBuddy) {
+	private void sendMatchingSuccessMessage(Buddy matchingSuccessBuddy) {
 		String phoneNumber = matchingSuccessBuddy.getMember().getPhoneNumber();
 		smsService.sendSms(phoneNumber, SmsText.MATCHING_COMPLETE_BUDDY);
 	}
 
-	private void sendFailurePenaltyMessage(Buddy matchingRejectBuddy) {
+	private void sendMatchingFailurePenaltyMessage(Buddy matchingRejectBuddy) {
 		String phoneNumber = matchingRejectBuddy.getMember().getPhoneNumber();
 		smsService.sendSms(phoneNumber, SmsText.MATCHING_FAILED);
 	}
