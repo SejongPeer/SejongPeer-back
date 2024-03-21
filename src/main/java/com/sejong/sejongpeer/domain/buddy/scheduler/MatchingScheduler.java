@@ -36,7 +36,7 @@ public class MatchingScheduler {
     }
 
 	@Scheduled(cron = "0 0 0 */1 * *")
-	public void autoRejectBuddyRequest() {
+	public void updateBuddyStatusAutomatically() {
 		List<Buddy> foundBuddies = buddyRepository.findAllByStatus(BuddyStatus.FOUND_BUDDY);
 		LocalDateTime currentTime = LocalDateTime.now();
 
