@@ -103,13 +103,14 @@ public class BuddyService {
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
-	public MatchingStatusResponse getBuddyMatchingStatus(String memberId) {
+	public MatchingStatusResponse getBuddyMatchingStatuAndCount(String memberId) {
 		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		if (optionalBuddy.isPresent()) {
 			Buddy buddy = optionalBuddy.get();
 			checkAndUpdateRejectedBuddyStatus(buddy);
-			return MatchingStatusResponse.buddyFrom(buddy);
+			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+			return MatchingStatusResponse.buddyFrom(buddy, matchingCompletedCount);
 		} else {
 			return null;
 		}
