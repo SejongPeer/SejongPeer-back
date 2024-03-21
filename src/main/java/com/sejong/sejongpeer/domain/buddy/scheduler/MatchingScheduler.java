@@ -41,8 +41,8 @@ public class MatchingScheduler {
 		LocalDateTime currentTime = LocalDateTime.now();
 
 		for (Buddy NoResposeBuddy : foundBuddies) {
-			LocalDateTime createdTime = NoResposeBuddy.getCreatedAt();
-			long hoursElapsed = ChronoUnit.HOURS.between(createdTime, currentTime);
+			LocalDateTime updatedTime = NoResposeBuddy.getUpdatedAt();
+			long hoursElapsed = ChronoUnit.HOURS.between(updatedTime, currentTime);
 
 			if (hoursElapsed >= 24) {
 				NoResposeBuddy.changeStatus(BuddyStatus.REJECT);
