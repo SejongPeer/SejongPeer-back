@@ -8,8 +8,6 @@ import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyMatchingService;
 import com.sejong.sejongpeer.domain.buddy.service.MatchingService;
-import com.sejong.sejongpeer.global.error.exception.CustomException;
-import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.infra.sms.service.SmsService;
 import com.sejong.sejongpeer.infra.sms.service.SmsText;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchingScheduler {
 	private final BuddyRepository buddyRepository;
-	private final BuddyMatchedRepository buddyMatchedRepository;
     private final MatchingService matchingService;
 	private final BuddyMatchingService buddyMatchingService;
-	private final SmsService smsService;
 
     // 매 1시간마다 실행
     @Scheduled(cron = "0 0 0/1 * * *")

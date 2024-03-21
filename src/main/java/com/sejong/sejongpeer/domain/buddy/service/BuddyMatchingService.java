@@ -7,8 +7,6 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
-import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.infra.sms.service.SmsService;
