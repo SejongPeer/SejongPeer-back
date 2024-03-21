@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
-import com.sejong.sejongpeer.domain.member.entity.Member;
 
 public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	List<Buddy> findAllByStatus(BuddyStatus buddyStatus);
