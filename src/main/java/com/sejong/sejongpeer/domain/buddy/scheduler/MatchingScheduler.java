@@ -54,7 +54,7 @@ public class MatchingScheduler {
 				partnerBuddy.changeStatus(BuddyStatus.DENIED);
 				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy, SmsText.MATCHING_AUTO_FAILED_DENIED);
 
-				progressMatch.changeStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
+				progressMatch.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
 
 
 			}
