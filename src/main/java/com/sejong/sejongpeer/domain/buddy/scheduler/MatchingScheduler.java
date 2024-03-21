@@ -46,16 +46,16 @@ public class MatchingScheduler {
 
 			if (hoursElapsed >= 24) {
 				NoResposeBuddy.changeStatus(BuddyStatus.REJECT);
-				String autoRejectBuddyPhoneNumber = NoResposeBuddy.getMember().getPhoneNumber();
-				smsService.sendSms(autoRejectBuddyPhoneNumber, SmsText.MATCHING_AUTO_FAILED_REJECT);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(NoResposeBuddy, SmsText.MATCHING_AUTO_FAILED_REJECT);
 
-				BuddyMatched progressMatch = buddyMatchedRepository.findByOwnerOrPartnerAndStatus(NoResposeBuddy, BuddyMatchedStatus.IN_PROGRESS)
-					.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+				BuddyMatched progressMatch = buddyMatchingService.getInProgressBuddyMatchedByBuddy(NoResposeBuddy);
 
 				Buddy partnerBuddy = buddyMatchingService.getOtherBuddyInBuddyMatched(progressMatch, NoResposeBuddy);
 				partnerBuddy.changeStatus(BuddyStatus.DENIED);
-				String autoDeniedBuddyPhoneNumber = partnerBuddy.getMember().getPhoneNumber();
-				smsService.sendSms(autoDeniedBuddyPhoneNumber, SmsText.MATCHING_AUTO_FAILED_DENIED);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy, SmsText.MATCHING_AUTO_FAILED_DENIED);
+
+				progressMatch.changeStatus(BuddyMatchedStatus.MATCHING_COMPLETED);
+
 
 			}
 		}
