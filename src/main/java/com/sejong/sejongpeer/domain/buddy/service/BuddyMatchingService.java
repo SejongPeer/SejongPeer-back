@@ -7,8 +7,6 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
-import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.infra.sms.service.SmsService;
@@ -40,8 +38,7 @@ public class BuddyMatchingService {
 			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
 		}
 
-		BuddyMatched progressMatch = buddyMatchedRepository.findByOwnerOrPartnerAndStatus(ownerLatestBuddy, BuddyMatchedStatus.IN_PROGRESS)
-			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+		BuddyMatched progressMatch = getInProgressBuddyMatchedByBuddy(ownerLatestBuddy);
 
 		Buddy partnerBuddy = getOtherBuddyInBuddyMatched(progressMatch, ownerLatestBuddy);
 
@@ -72,8 +69,8 @@ public class BuddyMatchingService {
 		ownerBuddy.changeStatus(BuddyStatus.REJECT);
 		targetBuddy.changeStatus(BuddyStatus.DENIED);
 
-		sendMatchingFailurePenaltyMessage(ownerBuddy);
-		sendMatchingFailurePenaltyMessage(targetBuddy);
+		sendMatchingFailurePenaltyMessage(ownerBuddy, SmsText.MATCHING_FAILED);
+		sendMatchingFailurePenaltyMessage(targetBuddy, SmsText.MATCHING_FAILED);
 	}
 
 	private void handleBuddyMatchedSuccess(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
@@ -90,6 +87,11 @@ public class BuddyMatchingService {
 		return  (optionalBuddyMatched.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND)));
 	}
 
+	public BuddyMatched getInProgressBuddyMatchedByBuddy(Buddy buddy) {
+		return buddyMatchedRepository.findByOwnerOrPartnerAndStatus(buddy, BuddyMatchedStatus.IN_PROGRESS)
+			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+	}
+
 	public Buddy getOtherBuddyInBuddyMatched(BuddyMatched buddyMatched, Buddy ownerBuddy) {
 		if (buddyMatched.getOwner() == ownerBuddy) {
 			return buddyMatched.getPartner();
@@ -103,8 +105,8 @@ public class BuddyMatchingService {
 		smsService.sendSms(phoneNumber, SmsText.MATCHING_COMPLETE_BUDDY);
 	}
 
-	private void sendMatchingFailurePenaltyMessage(Buddy matchingRejectBuddy) {
+	public void sendMatchingFailurePenaltyMessage(Buddy matchingRejectBuddy, SmsText smsMatchingFailText) {
 		String phoneNumber = matchingRejectBuddy.getMember().getPhoneNumber();
-		smsService.sendSms(phoneNumber, SmsText.MATCHING_FAILED);
+		smsService.sendSms(phoneNumber, smsMatchingFailText);
 	}
 }

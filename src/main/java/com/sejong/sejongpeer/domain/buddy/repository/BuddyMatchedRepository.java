@@ -8,7 +8,6 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BuddyMatchedRepository extends JpaRepository<BuddyMatched, Long> {
