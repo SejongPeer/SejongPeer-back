@@ -36,17 +36,17 @@ public class MatchingScheduler {
 		List<Buddy> foundBuddies = buddyRepository.findAllByStatus(BuddyStatus.FOUND_BUDDY);
 		LocalDateTime currentTime = LocalDateTime.now();
 
-		for (Buddy NoResposeBuddy : foundBuddies) {
-			LocalDateTime updatedTime = NoResposeBuddy.getUpdatedAt();
+		for (Buddy noResposeBuddy : foundBuddies) {
+			LocalDateTime updatedTime = noResposeBuddy.getUpdatedAt();
 			long hoursElapsed = ChronoUnit.HOURS.between(updatedTime, currentTime);
 
 			if (hoursElapsed >= NO_RESPONSE_HOUR_LIMIT) {
-				NoResposeBuddy.changeStatus(BuddyStatus.REJECT);
-				buddyMatchingService.sendMatchingFailurePenaltyMessage(NoResposeBuddy, SmsText.MATCHING_AUTO_FAILED_REJECT);
+				noResposeBuddy.changeStatus(BuddyStatus.REJECT);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(noResposeBuddy, SmsText.MATCHING_AUTO_FAILED_REJECT);
 
-				BuddyMatched progressMatch = buddyMatchingService.getBuddyMatchedByBuddy(NoResposeBuddy);
+				BuddyMatched progressMatch = buddyMatchingService.getBuddyMatchedByBuddy(noResposeBuddy);
 
-				Buddy partnerBuddy = buddyMatchingService.getOtherBuddyInBuddyMatched(progressMatch, NoResposeBuddy);
+				Buddy partnerBuddy = buddyMatchingService.getOtherBuddyInBuddyMatched(progressMatch, noResposeBuddy);
 				partnerBuddy.changeStatus(BuddyStatus.DENIED);
 				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy, SmsText.MATCHING_AUTO_FAILED_DENIED);
 
