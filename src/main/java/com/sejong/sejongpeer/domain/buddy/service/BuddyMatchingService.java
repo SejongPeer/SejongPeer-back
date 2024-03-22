@@ -88,8 +88,11 @@ public class BuddyMatchingService {
 	}
 
 	public BuddyMatched getBuddyMatchedByBuddy(Buddy buddy) {
-		return buddyMatchedRepository.findByOwnerOrPartner(buddy)
-			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+		if (buddy.getMatchedAsOwner() != null) {
+			return buddy.getMatchedAsOwner();
+		} else {
+			return buddy.getMatchedAsPartner();
+		}
 	}
 
 	public Buddy getOtherBuddyInBuddyMatched(BuddyMatched buddyMatched, Buddy ownerBuddy) {
