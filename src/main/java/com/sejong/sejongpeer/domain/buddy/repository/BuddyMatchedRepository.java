@@ -1,7 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.repository;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
-import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
