@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +35,6 @@ public class BuddyService {
 	private static final int MATCH_BLOCK_HOUR = 1;
 
 	private final MatchingService matchingService;
-	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
