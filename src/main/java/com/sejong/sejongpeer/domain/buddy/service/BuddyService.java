@@ -54,7 +54,7 @@ public class BuddyService {
 	}
 
 	private Buddy createBuddyEntity(RegisterRequest createBuddyRequest, Member member) {
-		return Buddy.createBuddy(
+		return Buddy.create(
 			member,
 			createBuddyRequest.genderOption(),
 			createBuddyRequest.classTypeOption(),

@@ -94,7 +94,7 @@ public class Buddy extends BaseAuditEntity {
 		this.isSubMajor = isSubMajor;
 	}
 
-	public static Buddy createBuddy(
+	public static Buddy create(
 		Member member,
 		GenderOption genderOption,
 		ClassTypeOption classTypeOption,
