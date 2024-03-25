@@ -46,7 +46,7 @@ public class HonbabService {
 	}
 
 	private void checkPossibleRegistration(String memberId) {
-		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
+		Optional<Honbab> optionalHonbab = getLastestHonbabByMemberId(memberId);
 
 		optionalHonbab.ifPresent(latestHonbab -> {
 			checkInProgressStatus(latestHonbab);
@@ -54,13 +54,9 @@ public class HonbabService {
 		});
 	}
 
-	private Optional<Honbab> getLastHonbabByMemberId(String memberId) {
-		return honbabRepository.findLastHonbabByMemberId(memberId);
-	}
-
 	@Transactional(readOnly = true)
 	public HonbabMatchingStatusResponse getHonbabMatchingStatus(String memberId) {
-		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
+		Optional<Honbab> optionalHonbab = getLastestHonbabByMemberId(memberId);
 
 		if (optionalHonbab.isPresent()) {
 			Honbab honbab = optionalHonbab.get();

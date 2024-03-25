@@ -43,8 +43,8 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "버디 매칭 상태 체크", description = "유저의 가장 최근 버디 상태값 리턴")
-	@GetMapping("/check-matching-status")
-	public MatchingStatusResponse getMatchingStatus() {
+	@GetMapping("/matching-status")
+	public MatchingStatusResponse getMatchingStatusAndCount() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return buddyService.getBuddyMatchingStatuAndCount(memberId);
@@ -59,7 +59,7 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "매칭 수락 완료 후 상대방 정보요청", description = "이름, 학년, 학과, 카카오톡 정보 리턴")
-	@GetMapping("/matched/partner/details")
+	@GetMapping("/matched-partner/details")
 	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

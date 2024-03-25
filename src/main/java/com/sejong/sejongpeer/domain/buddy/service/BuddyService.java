@@ -54,7 +54,7 @@ public class BuddyService {
 	}
 
 	private Buddy createBuddyEntity(RegisterRequest createBuddyRequest, Member member) {
-		return Buddy.createBuddy(
+		return Buddy.create(
 			member,
 			createBuddyRequest.genderOption(),
 			createBuddyRequest.classTypeOption(),
@@ -104,16 +104,15 @@ public class BuddyService {
 	}
 
 	public MatchingStatusResponse getBuddyMatchingStatuAndCount(String memberId) {
-		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
+		Buddy lastBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
+			.orElse(null);
 
-		if (optionalBuddy.isPresent()) {
-			Buddy buddy = optionalBuddy.get();
-			checkAndUpdateRejectedBuddyStatus(buddy);
-			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
-			return MatchingStatusResponse.buddyFrom(buddy, matchingCompletedCount);
-		} else {
+		if (lastBuddy == null)
 			return null;
-		}
+
+		checkAndUpdateRejectedBuddyStatus(lastBuddy);
+		Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+		return MatchingStatusResponse.of(lastBuddy, matchingCompletedCount);
 	}
 
 	private void checkAndUpdateRejectedBuddyStatus(Buddy buddy) {
