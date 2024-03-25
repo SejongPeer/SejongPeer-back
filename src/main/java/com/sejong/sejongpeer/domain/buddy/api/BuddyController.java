@@ -67,7 +67,7 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "현재 버디를 신청한 이용자 수 요청", description = "IN_PROGRESS, FOUND_BUDDY 상태값인 버디의 수")
-	@GetMapping("/active-count")
+	@GetMapping("/current-count")
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
 
 		return buddyService.getCurrentlyActiveBuddyCount();
