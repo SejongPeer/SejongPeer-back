@@ -44,7 +44,7 @@ public class BuddyController {
 
 	@Operation(summary = "버디 매칭 상태 체크", description = "유저의 가장 최근 버디 상태값 리턴")
 	@GetMapping("/matching-status")
-	public MatchingStatusResponse getMatchingStatus() {
+	public MatchingStatusResponse getMatchingStatusAndCount() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return buddyService.getBuddyMatchingStatuAndCount(memberId);
@@ -67,7 +67,7 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "현재 버디를 신청한 이용자 수 요청", description = "IN_PROGRESS, FOUND_BUDDY 상태값인 버디의 수")
-	@GetMapping("/current-count")
+	@GetMapping("/active-count")
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
 
 		return buddyService.getCurrentlyActiveBuddyCount();
