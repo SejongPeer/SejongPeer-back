@@ -59,7 +59,7 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "매칭 수락 완료 후 상대방 정보요청", description = "이름, 학년, 학과, 카카오톡 정보 리턴")
-	@GetMapping("/matched/partner/details")
+	@GetMapping("/matched-partner/details")
 	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
