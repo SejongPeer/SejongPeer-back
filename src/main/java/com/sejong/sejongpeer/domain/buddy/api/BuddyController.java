@@ -43,7 +43,7 @@ public class BuddyController {
 	}
 
 	@Operation(summary = "버디 매칭 상태 체크", description = "유저의 가장 최근 버디 상태값 리턴")
-	@GetMapping("/check-matching-status")
+	@GetMapping("/matching-status")
 	public MatchingStatusResponse getMatchingStatus() {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
