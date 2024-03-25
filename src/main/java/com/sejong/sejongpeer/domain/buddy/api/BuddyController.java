@@ -80,7 +80,7 @@ public class BuddyController {
 	@PostMapping("/matching/status")
 	public void checkBuddyMatching(@Valid @RequestBody MatchingResultRequest request) {
 		String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		buddyMatchingService.updateBuddyMatchingStatus(memberId, request);
+		buddyMatchingService.updateBuddyMatchedStatus(memberId, request);
 	}
 }
 
