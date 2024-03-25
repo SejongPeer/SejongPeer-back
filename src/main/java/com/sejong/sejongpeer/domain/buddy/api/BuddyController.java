@@ -78,7 +78,7 @@ public class BuddyController {
 
 	@Operation(summary = "버디 매칭 이후 수락/거절 선택", description = "버디 최종 매칭 상태 등록")
 	@PostMapping("/matching/status")
-	public void checkBuddyMatching(@Valid @RequestBody MatchingResultRequest request) {
+	public void processBuddyMatchingDecision(@Valid @RequestBody MatchingResultRequest request) {
 		String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		buddyMatchingService.updateBuddyMatchedStatus(memberId, request);
 	}
