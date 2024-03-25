@@ -110,7 +110,7 @@ public class BuddyService {
 			Buddy buddy = optionalBuddy.get();
 			checkAndUpdateRejectedBuddyStatus(buddy);
 			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
-			return MatchingStatusResponse.buddyFrom(buddy, matchingCompletedCount);
+			return MatchingStatusResponse.of(buddy, matchingCompletedCount);
 		} else {
 			return null;
 		}
