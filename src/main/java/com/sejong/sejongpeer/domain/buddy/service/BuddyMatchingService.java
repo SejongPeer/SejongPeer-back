@@ -74,8 +74,8 @@ public class BuddyMatchingService {
 		ownerBuddy.changeStatus(BuddyStatus.REJECT);
 		targetBuddy.changeStatus(BuddyStatus.DENIED);
 
-		sendMatchingFailurePenaltyMessage(ownerBuddy, SmsText.MATCHING_FAILED);
-		sendMatchingFailurePenaltyMessage(targetBuddy, SmsText.MATCHING_FAILED);
+		sendMatchingFailurePenaltyMessage(ownerBuddy.getMember().getPhoneNumber(), SmsText.MATCHING_FAILED);
+		sendMatchingFailurePenaltyMessage(targetBuddy.getMember().getPhoneNumber(), SmsText.MATCHING_FAILED);
 	}
 
 	private void handleBuddyMatchedSuccess(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
@@ -83,8 +83,8 @@ public class BuddyMatchingService {
 		ownerBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 		targetBuddy.changeStatus(BuddyStatus.MATCHING_COMPLETED);
 
-		sendMatchingSuccessMessage(ownerBuddy);
-		sendMatchingSuccessMessage(targetBuddy);
+		sendMatchingSuccessMessage(ownerBuddy.getMember().getPhoneNumber());
+		sendMatchingSuccessMessage(targetBuddy.getMember().getPhoneNumber());
 	}
 
 	public BuddyMatched getLatestBuddyMatched(Buddy buddy) {
@@ -108,13 +108,11 @@ public class BuddyMatchingService {
 		}
 	}
 
-	private void sendMatchingSuccessMessage(Buddy matchingSuccessBuddy) {
-		String phoneNumber = matchingSuccessBuddy.getMember().getPhoneNumber();
+	private void sendMatchingSuccessMessage(String phoneNumber) {
 		smsService.sendSms(phoneNumber, SmsText.MATCHING_COMPLETE_BUDDY);
 	}
 
-	public void sendMatchingFailurePenaltyMessage(Buddy matchingRejectBuddy, SmsText smsMatchingFailText) {
-		String phoneNumber = matchingRejectBuddy.getMember().getPhoneNumber();
+	public void sendMatchingFailurePenaltyMessage(String phoneNumber, SmsText smsMatchingFailText) {
 		smsService.sendSms(phoneNumber, smsMatchingFailText);
 	}
 }
