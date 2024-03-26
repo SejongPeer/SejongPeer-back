@@ -83,18 +83,18 @@ public class HonbabService {
 		Honbab latestHonbab = getLastestHonbabByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.HONBAB_NOT_FOUND));
 
-		verifyInProgressStatus(latestHonbab);
+		ensureInProgressStatus(latestHonbab);
 		latestHonbab.changeStatus(HonbabStatus.CANCEL);
 		honbabRepository.save(latestHonbab);
 	}
 
-	private void checkInProgressStatus(Honbab honbab) {
+	private void validateInProgressStatus(Honbab honbab) {
 		if (honbab.getStatus() == HonbabStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
 		}
 	}
 
-	private void verifyInProgressStatus(Honbab honbab) {
+	private void ensureInProgressStatus(Honbab honbab) {
 		if (honbab.getStatus() != HonbabStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
@@ -115,7 +115,7 @@ public class HonbabService {
 		Optional<Honbab> optionalHonbab = getLastHonbabByMemberId(memberId);
 
 		optionalHonbab.ifPresent(latestHonbab -> {
-			checkInProgressStatus(latestHonbab);
+			validateInProgressStatus(latestHonbab);
 			checkIfRegistrationTimeHasPassed(latestHonbab);
 		});
 	}

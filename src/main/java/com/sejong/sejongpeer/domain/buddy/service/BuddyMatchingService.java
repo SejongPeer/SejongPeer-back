@@ -14,6 +14,7 @@ import com.sejong.sejongpeer.infra.sms.service.SmsText;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,14 +30,11 @@ public class BuddyMatchingService {
 
 	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
 
-		Buddy ownerLatestBuddy = buddyRepository.findTopByMemberIdAndStatusOrderByCreatedAtDesc(memberId, BuddyStatus.FOUND_BUDDY)
+		Buddy ownerLatestBuddy = buddyRepository.findTopByMemberIdAndStatusOrderByCreatedAtDesc(memberId,
+				BuddyStatus.FOUND_BUDDY)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (!request.isAccept()) {
-			ownerLatestBuddy.changeStatus(BuddyStatus.REJECT);
-		} else {
-			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
-		}
+		changeOwnerLatestBuddyStatusByIsAccept(ownerLatestBuddy, request.isAccept());
 
 		BuddyMatched progressMatch = getBuddyMatchedByBuddy(ownerLatestBuddy);
 
@@ -47,6 +45,13 @@ public class BuddyMatchingService {
 		buddyMatchedRepository.save(progressMatch);
 	}
 
+	private void changeOwnerLatestBuddyStatusByIsAccept(Buddy ownerLatestBuddy, boolean accept) {
+		if (!accept) {
+			ownerLatestBuddy.changeStatus(BuddyStatus.REJECT);
+		} else {
+			ownerLatestBuddy.changeStatus(BuddyStatus.ACCEPT);
+		}
+	}
 
 	private void updateStatusBasedOnBuddies(BuddyMatched buddyMatched, Buddy ownerBuddy, Buddy targetBuddy) {
 
