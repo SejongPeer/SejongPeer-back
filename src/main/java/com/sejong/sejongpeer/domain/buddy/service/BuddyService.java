@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,6 @@ import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,7 +34,6 @@ public class BuddyService {
 	private static final int MATCH_BLOCK_HOUR = 1;
 
 	private final MatchingService matchingService;
-	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
@@ -109,7 +108,8 @@ public class BuddyService {
 		if (optionalBuddy.isPresent()) {
 			Buddy buddy = optionalBuddy.get();
 			checkAndUpdateRejectedBuddyStatus(buddy);
-			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId,
+				BuddyStatus.MATCHING_COMPLETED);
 			return MatchingStatusResponse.buddyFrom(buddy, matchingCompletedCount);
 		} else {
 			return null;
@@ -141,7 +141,8 @@ public class BuddyService {
 
 	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails(String memberId) {
 
-		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId,
+			BuddyStatus.MATCHING_COMPLETED);
 		checkCompletedBuddies(completedBuddies);
 
 		return completedBuddies.stream()
