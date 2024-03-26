@@ -59,10 +59,6 @@ public class MemberService {
 		if (existsPhoneNumber(phoneNumber)) {
 			throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
 		}
-
-		if (phoneNumber == null) {
-			throw new CustomException(ErrorCode.PHONE_NUMBER_IS_NULL);
-		}
 	}
 
 	private void verifyPassword(String password, String passwordCheck) {
@@ -111,10 +107,7 @@ public class MemberService {
 	}
 
 	private void updateMember(Member member, MemberUpdateRequest request) {
-		verifyNickname(request.nickname());
-		verifyPhoneNumber(request.phoneNumber());
-		verifyKakaoAccount(request.kakaoAccount());
-
+		verifyUpdatable(request);
 		MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
 		MemberInfo.PHONE_NUMBER.executeUpdate(member, request.phoneNumber());
 		MemberInfo.KAKAO_ACCOUNT.executeUpdate(member, request.kakaoAccount());
@@ -123,19 +116,19 @@ public class MemberService {
 	}
 
 	// 원자성 보장을 위해 하나라도 잘못되거나 중복된 정보가 있으면 업데이트 되어서는 안됨
-	// private void verifyUpdatable(MemberUpdateRequest request) {
-	// 	if (request.nickname() != null && existsNickname(request.nickname())) {
-	// 		throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
-	// 	}
-	//
-	// 	if (request.phoneNumber() != null && existsPhoneNumber(request.phoneNumber())) {
-	// 		throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
-	// 	}
-	//
-	// 	if (request.kakaoAccount() != null && existsKakaoAccount(request.kakaoAccount())) {
-	// 		throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
-	// 	}
-	// }
+	private void verifyUpdatable(MemberUpdateRequest request) {
+		if (request.nickname() != null && existsNickname(request.nickname())) {
+			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+		}
+
+		if (request.phoneNumber() != null && existsPhoneNumber(request.phoneNumber())) {
+			throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
+		}
+
+		if (request.kakaoAccount() != null && existsKakaoAccount(request.kakaoAccount())) {
+			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
+		}
+	}
 
 	@Transactional(readOnly = true)
 	public AccountFindResponse findMemberAccount(AccountFindRequest request) {
@@ -225,17 +218,11 @@ public class MemberService {
 		if (existsKakaoAccount(kakaoAccount)) {
 			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
 		}
-		if (kakaoAccount == null) {
-			throw new CustomException(ErrorCode.KAKAO_ACCOUNT_IS_NULL);
-		}
 	}
 
 	private void verifyNickname(String nickname) {
 		if (existsNickname(nickname)) {
 			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
-		}
-		if (nickname == null) {
-			throw new CustomException(ErrorCode.NICKNAME_IS_NULL);
 		}
 	}
 }
