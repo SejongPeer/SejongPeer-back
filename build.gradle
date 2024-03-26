@@ -44,6 +44,9 @@ dependencies {
 	// Querydsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	implementation 'org.springframework:spring-webflux:6.0.11'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
@@ -76,4 +79,10 @@ tasks.withType(Checkstyle) {
 checkstyle {
 	configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
 	configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppression.xml"]
+}
+
+def generatedDir = 'src/main/generated'
+
+clean {
+	delete file(generatedDir)
 }
