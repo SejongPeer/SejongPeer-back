@@ -100,7 +100,6 @@ public class Buddy extends BaseAuditEntity {
 		ClassTypeOption classTypeOption,
 		CollegeMajorOption collegeMajorOption,
 		GradeOption gradeOption,
-		BuddyStatus status,
 		boolean isSubMajor) {
 		return Buddy.builder()
 			.member(member)
@@ -108,7 +107,7 @@ public class Buddy extends BaseAuditEntity {
 			.classTypeOption(classTypeOption)
 			.collegeMajorOption(collegeMajorOption)
 			.gradeOption(gradeOption)
-			.status(status)
+			.status(BuddyStatus.IN_PROGRESS)
 			.isSubMajor(isSubMajor)
 			.build();
 	}
