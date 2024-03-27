@@ -107,7 +107,7 @@ public class BuddyService {
 			checkAndUpdateRejectedBuddyStatus(buddy);
 			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId,
 				BuddyStatus.MATCHING_COMPLETED);
-			return MatchingStatusResponse.buddyFrom(buddy, matchingCompletedCount);
+			return MatchingStatusResponse.of(buddy, matchingCompletedCount);
 		} else {
 			return null;
 		}
@@ -148,7 +148,7 @@ public class BuddyService {
 
 				Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(completedBuddyMatched, buddy);
 				Member partnerMember = partner.getMember();
-				return CompletedPartnerInfoResponse.memberFrom(partnerMember);
+				return CompletedPartnerInfoResponse.from(partnerMember);
 			})
 			.toList();
 	}
@@ -168,7 +168,7 @@ public class BuddyService {
 		List<BuddyStatus> statuses = List.of(BuddyStatus.IN_PROGRESS, BuddyStatus.FOUND_BUDDY);
 		Long activeBuddyCount = buddyRepository.countByStatusIn(statuses);
 
-		return new ActiveCustomersCountResponse(activeBuddyCount);
+		return ActiveCustomersCountResponse.of(activeBuddyCount);
 	}
 
 	private long countMatchingCompletedBuddies(String memberId) {

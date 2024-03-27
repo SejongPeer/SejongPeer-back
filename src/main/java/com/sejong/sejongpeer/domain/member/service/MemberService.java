@@ -74,7 +74,7 @@ public class MemberService {
 				.findById(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-		return MemberInfoResponse.of(member);
+		return MemberInfoResponse.from(member);
 	}
 
 	private boolean existsStudentId(String studentId) {
@@ -168,22 +168,22 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkAccountExists(String account) {
-		return new ExistsCheckResponse(memberRepository.existsByAccount(account));
+		return ExistsCheckResponse.of(memberRepository.existsByAccount(account));
 	}
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkNicknameExists(String nickname) {
-		return new ExistsCheckResponse(memberRepository.existsByNickname(nickname));
+		return ExistsCheckResponse.of(memberRepository.existsByNickname(nickname));
 	}
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkPhoneNumberExists(String phoneNumber) {
-		return new ExistsCheckResponse(memberRepository.existsByPhoneNumber(phoneNumber));
+		return ExistsCheckResponse.of(memberRepository.existsByPhoneNumber(phoneNumber));
 	}
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkKakaoAccountExists(String kakaoAccount) {
-		return new ExistsCheckResponse(memberRepository.existsByKakaoAccount(kakaoAccount));
+		return ExistsCheckResponse.of(memberRepository.existsByKakaoAccount(kakaoAccount));
 	}
 
 	private Member createMember(SignUpRequest request) {

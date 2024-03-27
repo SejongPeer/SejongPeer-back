@@ -57,7 +57,7 @@ public class HonbabService {
 				Duration.between(honbab.getUpdatedAt(), LocalDateTime.now()).toMinutes() > 15) {
 				honbab.changeStatus(HonbabStatus.EXPIRED);
 			}
-			return HonbabMatchingStatusResponse.honbabFrom(honbab);
+			return HonbabMatchingStatusResponse.from(honbab);
 		} else {
 			return null;
 		}
@@ -76,7 +76,7 @@ public class HonbabService {
 
 	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
 		Long activeHonbabCount = honbabRepository.countByStatusInProgressHonbab();
-		return new ActiveCustomersCountResponse(activeHonbabCount);
+		return ActiveCustomersCountResponse.of(activeHonbabCount);
 	}
 
 	public void cancelHonbab(String memberId) {
