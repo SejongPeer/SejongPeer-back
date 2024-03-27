@@ -14,7 +14,7 @@ public record MemberInfoResponse(
 	String account,
 	String studentId,
 	Gender gender) {
-	public static MemberInfoResponse of(Member member) {
+	public static MemberInfoResponse from(Member member) {
 		return new MemberInfoResponse(
 			member.getName(),
 			member.getGrade(),
