@@ -1,8 +1,10 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,12 +147,12 @@ public class BuddyService {
 		return completedBuddies.stream()
 			.map(buddy -> {
 				BuddyMatched completedBuddyMatched = buddyMatchingService.getBuddyMatchedByBuddy(buddy);
-
 				Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(completedBuddyMatched, buddy);
 				Member partnerMember = partner.getMember();
 				return CompletedPartnerInfoResponse.from(partnerMember);
 			})
-			.toList();
+			.collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+
 	}
 
 	private void checkBuddyMatchedStatus(BuddyMatched buddyMatched) {
