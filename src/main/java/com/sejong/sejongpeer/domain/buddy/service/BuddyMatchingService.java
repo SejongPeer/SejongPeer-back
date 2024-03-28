@@ -28,7 +28,7 @@ public class BuddyMatchingService {
 	private final BuddyRepository buddyRepository;
 	private final SmsService smsService;
 
-	public void updateBuddyMatchingStatus(String memberId, MatchingResultRequest request) {
+	public void updateBuddyMatchedStatus(String memberId, MatchingResultRequest request) {
 
 		Buddy ownerLatestBuddy = buddyRepository.findTopByMemberIdAndStatusOrderByCreatedAtDesc(memberId,
 				BuddyStatus.FOUND_BUDDY)
