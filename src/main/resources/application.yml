@@ -1,8 +1,8 @@
 spring:
   profiles:
     group:
-      dev: "dev, datasource"
-      prod: "prod, datasource"
+      dev: "dev, datasource, storage"
+      prod: "prod, datasource, storage"
     include:
       - security
       - infra
