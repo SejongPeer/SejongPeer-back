@@ -51,44 +51,34 @@ public class HonbabMatchingService {
 
 	public HonbabMatched matchHonbabWhenRegister(Honbab me) {
 		List<Honbab> candidates = honbabRepository.findAllByStatus(HonbabStatus.IN_PROGRESS);
-		Honbab partner = findSuitableHonbab(candidates, me);
-
-		if (partner == null) {
-			return null;
-		}
-
-		HonbabMatched honbabMatched = HonbabMatched.registerMatchingPair(me, partner);
-
-		partner.changeStatus(HonbabStatus.MATCHING_COMPLETED);
-		me.changeStatus(HonbabStatus.MATCHING_COMPLETED);
-
-		sendMatchingMessage(me);
-		sendMatchingMessage(partner);
-
-		return honbabMatchedRepository.save(honbabMatched);
+		return matchHonbabByCandidates(candidates, me);
 	}
 
 	public HonbabMatched matchHonbab(List<Honbab> candidates, Honbab me) {
-		Honbab partner = findSuitableHonbab(candidates, me);
+		return matchHonbabByCandidates(candidates, me);
+	}
 
+	private HonbabMatched matchHonbabByCandidates(List<Honbab> candidates, Honbab me) {
+		Honbab partner = findSuitableHonbab(candidates, me);
 		if (partner == null) {
 			return null;
 		}
 
 		HonbabMatched honbabMatched = HonbabMatched.registerMatchingPair(me, partner);
+		completeMatching(partner, me);
+		return honbabMatched;
+	}
 
+	private void completeMatching(Honbab partner, Honbab me) {
 		partner.changeStatus(HonbabStatus.MATCHING_COMPLETED);
 		me.changeStatus(HonbabStatus.MATCHING_COMPLETED);
-
 		sendMatchingMessage(me);
 		sendMatchingMessage(partner);
-
-		return honbabMatched;
 	}
 
 	private Honbab findSuitableHonbab(List<Honbab> candidates, Honbab me) {
 		return candidates.stream()
-			.filter(candidate -> candidate.getId() != me.getId())
+			.filter(candidate -> !candidate.getId().equals(me.getId()))
 			.filter(candidate -> candidate.getStatus() == HonbabStatus.IN_PROGRESS)
 			.filter(candidate -> HonbabFilter.filterSutiableGender(candidate, me))
 			.filter(candidate -> HonbabFilter.filterSuitableMenuCategory(candidate, me))
