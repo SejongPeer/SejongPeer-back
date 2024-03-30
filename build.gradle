@@ -81,8 +81,23 @@ checkstyle {
 	configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppression.xml"]
 }
 
-def generatedDir = 'src/main/generated'
+def querydslSrcDir = 'src/main/generated'
+sourceSets {
+	main {
+		java {
+			srcDirs += [querydslSrcDir]
+		}
+	}
+}
+
+compileJava {
+	options.compilerArgs << '-Aquerydsl.generatedAnnotationClass=javax.annotation.Generated'
+}
+
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}
 
 clean {
-	delete file(generatedDir)
+	delete file(querydslSrcDir)
 }
