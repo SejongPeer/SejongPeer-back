@@ -1,11 +1,13 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sejong.sejongpeer.domain.buddy.dto.request.MatchingResultRequest;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
+import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepositoryImpl;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class BuddyMatchingService {
 
 	private final BuddyMatchedRepository buddyMatchedRepository;
+	private final BuddyMatchedRepositoryImpl buddyMatchedRepositoryImpl;
 	private final BuddyRepository buddyRepository;
 	private final SmsService smsService;
 
@@ -88,11 +91,10 @@ public class BuddyMatchingService {
 	}
 
 	public BuddyMatched getBuddyMatchedByBuddy(Buddy buddy) {
-		if (buddy.getMatchedAsOwner() != null) {
-			return buddy.getMatchedAsOwner();
-		} else {
-			return buddy.getMatchedAsPartner();
-		}
+
+		return buddyMatchedRepositoryImpl.findByOwnerOrPartner(buddy)
+			.orElseThrow(() -> new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND));
+
 	}
 
 	public Buddy getOtherBuddyInBuddyMatched(BuddyMatched buddyMatched, Buddy ownerBuddy) {
