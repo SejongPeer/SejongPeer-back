@@ -36,10 +36,12 @@ public class ImageService {
 	private final AmazonS3 amazonS3;
 	private final ImageRepository imageRepository;
 
+	// 스터디 이미지 Presigned Url 생성
 	public PresignedUrlResponse createStudyPresignedUrl(StudyImageCreateRequest request) {
 		return null;
 	}
 
+	// 스터디 이미지 업로드
 	public void uploadCompleteStudyImage(StudyImageUploadCompleteRequest request) {
 
 	}
