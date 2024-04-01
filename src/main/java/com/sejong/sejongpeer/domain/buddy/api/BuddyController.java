@@ -1,6 +1,6 @@
 package com.sejong.sejongpeer.domain.buddy.api;
 
-import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
+import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyRegistrationRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
@@ -28,7 +28,7 @@ public class BuddyController {
 
 	@Operation(summary = "버디등록", description = "유저가 버디에 등록")
 	@PostMapping("/register")
-	public void registerBuddy(@Valid @RequestBody RegisterRequest request) {
+	public void registerBuddy(@Valid @RequestBody BuddyRegistrationRequest request) {
 		String memberId =
 			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		buddyService.registerBuddy(request, memberId);
