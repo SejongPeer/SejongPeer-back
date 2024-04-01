@@ -8,7 +8,7 @@ import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
+import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyRegistrationRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
@@ -39,7 +39,7 @@ public class BuddyService {
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
 
-	public void registerBuddy(RegisterRequest request, String memberId) {
+	public void registerBuddy(BuddyRegistrationRequest request, String memberId) {
 		Member member =
 			memberRepository
 				.findById(memberId)
@@ -53,7 +53,7 @@ public class BuddyService {
 		matchingService.matchBuddyWhenRegister(buddy);
 	}
 
-	private Buddy createBuddyEntity(RegisterRequest createBuddyRequest, Member member) {
+	private Buddy createBuddyEntity(BuddyRegistrationRequest createBuddyRequest, Member member) {
 		return Buddy.create(
 			member,
 			createBuddyRequest.genderOption(),
