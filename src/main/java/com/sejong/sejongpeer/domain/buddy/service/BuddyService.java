@@ -47,22 +47,10 @@ public class BuddyService {
 
 		checkPossibleRegistration(memberId);
 
-		Buddy buddy = createBuddyEntity(request, member);
+		Buddy buddy = Buddy.create(request, member);
 		buddyRepository.save(buddy);
 
 		matchingService.matchBuddyWhenRegister(buddy);
-	}
-
-	private Buddy createBuddyEntity(BuddyRegistrationRequest createBuddyRequest, Member member) {
-		return Buddy.create(
-			member,
-			createBuddyRequest.genderOption(),
-			createBuddyRequest.classTypeOption(),
-			createBuddyRequest.collegeMajorOption(),
-			createBuddyRequest.gradeOption(),
-			BuddyStatus.IN_PROGRESS,
-			createBuddyRequest.isSubMajor()
-		);
 	}
 
 	public void cancelBuddy(String memberId) {
