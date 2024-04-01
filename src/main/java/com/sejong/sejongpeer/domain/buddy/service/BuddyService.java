@@ -1,10 +1,11 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,6 @@ import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,7 +34,6 @@ public class BuddyService {
 	private static final int MATCH_BLOCK_HOUR = 1;
 
 	private final MatchingService matchingService;
-	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
@@ -67,7 +66,7 @@ public class BuddyService {
 		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			validateBuddyStatusNotMatches(latestBuddy, BuddyStatus.IN_PROGRESS, ErrorCode.REGISTRATION_NOT_POSSIBLE);
+			validateBuddyStatusNotMatches(latestBuddy);
 			checkRejectPenaltyAndUpdateStatus(latestBuddy);
 		});
 		checkCountBuddyRegistrations(memberId);
@@ -118,7 +117,7 @@ public class BuddyService {
 		ensureBuddyStatusMatches(latestBuddy, BuddyStatus.FOUND_BUDDY, ErrorCode.BUDDY_NOT_MATCHED);
 
 		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
-		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.IN_PROGRESS);
+		checkBuddyMatchedStatus(latestBuddyMatched);
 
 		Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
@@ -128,22 +127,23 @@ public class BuddyService {
 
 	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails(String memberId) {
 
-		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId,
+			BuddyStatus.MATCHING_COMPLETED);
 		checkCompletedBuddies(completedBuddies);
 
 		return completedBuddies.stream()
 			.map(buddy -> {
 				BuddyMatched completedBuddyMatched = buddyMatchingService.getBuddyMatchedByBuddy(buddy);
-
 				Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(completedBuddyMatched, buddy);
 				Member partnerMember = partner.getMember();
-				return CompletedPartnerInfoResponse.memberFrom(partnerMember);
+				return CompletedPartnerInfoResponse.from(partnerMember);
 			})
-			.toList();
+			.collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+
 	}
 
-	private void checkBuddyMatchedStatus(BuddyMatched buddyMatched, BuddyMatchedStatus status) {
-		if (buddyMatched.getStatus() != status) {
+	private void checkBuddyMatchedStatus(BuddyMatched buddyMatched) {
+		if (buddyMatched.getStatus() != BuddyMatchedStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
 	}
@@ -157,16 +157,16 @@ public class BuddyService {
 		List<BuddyStatus> statuses = List.of(BuddyStatus.IN_PROGRESS, BuddyStatus.FOUND_BUDDY);
 		Long activeBuddyCount = buddyRepository.countByStatusIn(statuses);
 
-		return new ActiveCustomersCountResponse(activeBuddyCount);
+		return ActiveCustomersCountResponse.of(activeBuddyCount);
 	}
 
 	private long countMatchingCompletedBuddies(String memberId) {
 		return buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
 	}
 
-	private void validateBuddyStatusNotMatches(Buddy buddy, BuddyStatus buddyStatus, ErrorCode errorCode) {
-		if (buddy.getStatus() == buddyStatus) {
-			throw new CustomException(errorCode);
+	private void validateBuddyStatusNotMatches(Buddy buddy) {
+		if (buddy.getStatus() == BuddyStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
 		}
 	}
 
