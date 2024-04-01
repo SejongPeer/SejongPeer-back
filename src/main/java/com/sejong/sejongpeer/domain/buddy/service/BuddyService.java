@@ -90,7 +90,7 @@ public class BuddyService {
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
-	public MatchingStatusResponse getBuddyMatchingStatuAndCount(String memberId) {
+	public MatchingStatusResponse getBuddyMatchingStatusAndCount(String memberId) {
 		Buddy lastBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElse(null);
 
