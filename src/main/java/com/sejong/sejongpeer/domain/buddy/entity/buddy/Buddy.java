@@ -109,7 +109,6 @@ public class Buddy extends BaseAuditEntity {
 			.build();
 	}
 
-
 	public void changeStatus(BuddyStatus status) {
 		this.status = status;
 	}

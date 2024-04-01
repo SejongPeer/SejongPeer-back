@@ -34,6 +34,9 @@ public enum ErrorCode {
 
 	// 조회 에러
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+	NICKNAME_IS_NULL(HttpStatus.BAD_REQUEST, "닉네임이 존재하지 않습니다."),
+	PHONE_NUMBER_IS_NULL(HttpStatus.BAD_REQUEST, "전화번호가 존재하지 않습니다."),
+	KAKAO_ACCOUNT_IS_NULL(HttpStatus.BAD_REQUEST, "카카오 ID가 존재하지 않습니다."),
 
 	// ID/PW 찾기 에러
 	ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 정보로 가입된 계정이 존재하지 않습니다."),
@@ -44,7 +47,7 @@ public enum ErrorCode {
 	REGISTRATION_NOT_POSSIBLE(HttpStatus.CONFLICT, "이미 최대횟수만큼 버디 찾기를 신청했습니다."),
 	TARGET_BUDDY_NOT_FOUND(HttpStatus.NOT_FOUND, "상대 버디를 찾을 수 없습니다."),
 	BUDDY_NOT_MATCHED(HttpStatus.CONFLICT, "매칭 성사된 버디가 아닙니다."),
-  MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
+	MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
 
 	// Study
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
