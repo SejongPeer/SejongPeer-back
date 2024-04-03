@@ -1,23 +1,22 @@
 package com.sejong.sejongpeer.domain.honbab.api;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.service.HonbabService;
+import com.sejong.sejongpeer.security.util.SecurityContextUtil;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "6. [혼밥]", description = "세종혼밥짝꿍 API")
 @RestController
@@ -29,31 +28,28 @@ public class HonbabController {
 	@Operation(summary = "혼밥등록", description = "유저가 혼밥 등록")
 	@PostMapping("/register")
 	public void registerHonbab(@Valid @RequestBody RegisterHonbabRequest request) {
-		String memberId =
-			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 		honbabService.registerHonbab(request, memberId);
 	}
 
 	@Operation(summary = "혼밥 매칭 상태 체크", description = "유저의 가장 최근 혼밥 상태값 리턴")
 	@GetMapping("/check-matching-status")
 	public HonbabMatchingStatusResponse getHonbabMatchingStatus() {
-		String memberId =
-			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 		return honbabService.getHonbabMatchingStatus(memberId);
 	}
 
 	@Operation(summary = "혼밥 중도 취소", description = "혼밥신청 후 취소")
 	@GetMapping("/cancel")
 	public void cancelHonbab() {
-		String memberId =
-			(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 		honbabService.cancelHonbab(memberId);
 	}
 
 	@Operation(summary = "혼밥짝꿍 찾은 후 상대방 정보 요청", description = "매칭 후 상대방의 정보 반환")
 	@GetMapping("/partner/information")
 	public MatchingPartnerInfoResponse getFoundPartnerInfo() {
-		String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 		return honbabService.getPartnerInfo(memberId);
 	}
 
