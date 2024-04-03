@@ -1,12 +1,14 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sejong.sejongpeer.domain.buddy.constant.LimitTimeConstant;
 import com.sejong.sejongpeer.domain.buddy.dto.request.RegisterRequest;
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
@@ -24,11 +26,13 @@ import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BuddyService {
+	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
+	private static final int MATCH_BLOCK_HOUR = 1;
+
 	private final MatchingService matchingService;
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
@@ -55,35 +59,28 @@ public class BuddyService {
 			createBuddyRequest.classTypeOption(),
 			createBuddyRequest.collegeMajorOption(),
 			createBuddyRequest.gradeOption(),
-			BuddyStatus.IN_PROGRESS,
 			createBuddyRequest.isSubMajor()
 		);
 	}
 
 	public void cancelBuddy(String memberId) {
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
-		if (latestBuddy.getStatus() != BuddyStatus.IN_PROGRESS) {
-			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
-		}
+		ensureBuddyStatusMatches(latestBuddy, BuddyStatus.IN_PROGRESS, ErrorCode.NOT_IN_PROGRESS);
+
 		latestBuddy.changeStatus(BuddyStatus.CANCEL);
 		buddyRepository.save(latestBuddy);
 	}
 
 	private void checkPossibleRegistration(String memberId) {
-		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		optionalBuddy.ifPresent(latestBuddy -> {
-			checkInProgressStatus(latestBuddy);
+			validateBuddyStatusNotMatches(latestBuddy);
 			checkRejectPenaltyAndUpdateStatus(latestBuddy);
 		});
-	}
-
-	private void checkInProgressStatus(Buddy buddy) {
-		if (buddy.getStatus() == BuddyStatus.IN_PROGRESS) {
-			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
-		}
+		checkCountBuddyRegistrations(memberId);
 	}
 
 	private void checkRejectPenaltyAndUpdateStatus(Buddy buddy) {
@@ -93,72 +90,102 @@ public class BuddyService {
 		}
 	}
 
-	private Optional<Buddy> getLastBuddyByMemberId(String memberId) {
-		return buddyRepository.findLastBuddyByMemberId(memberId);
+	private void checkCountBuddyRegistrations(String memberId) {
+		if (countMatchingCompletedBuddies(memberId) >= MAX_MATCHING_COMPLETED_BUDDIES) {
+			throw new CustomException(ErrorCode.MAX_BUDDY_REGISTRATION_EXCEEDED);
+		}
 	}
 
 	private boolean isPossibleFromUpdateAt(LocalDateTime updatedAt) {
-		LocalDateTime oneHourAfterTime = updatedAt.plusHours(LimitTimeConstant.MATCH_BLOCK_HOUR);
-
+		LocalDateTime oneHourAfterTime = updatedAt.plusHours(MATCH_BLOCK_HOUR);
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
-	@Transactional(readOnly = true)
-	public MatchingStatusResponse getMatchingStatus(String memberId) {
-		Optional<Buddy> optionalBuddy = getLastBuddyByMemberId(memberId);
+	public MatchingStatusResponse getBuddyMatchingStatusAndCount(String memberId) {
+		Optional<Buddy> optionalBuddy = buddyRepository.findLastBuddyByMemberId(memberId);
 
 		if (optionalBuddy.isPresent()) {
 			Buddy buddy = optionalBuddy.get();
-			return MatchingStatusResponse.buddyFrom(buddy);
+			checkAndUpdateRejectedBuddyStatus(buddy);
+			Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId,
+				BuddyStatus.MATCHING_COMPLETED);
+			return MatchingStatusResponse.of(buddy, matchingCompletedCount);
 		} else {
 			return null;
 		}
 	}
 
-	public MatchingPartnerInfoResponse getPartnerDetails(String memberId) {
+	private void checkAndUpdateRejectedBuddyStatus(Buddy buddy) {
+		if (buddy.getStatus().equals(BuddyStatus.REJECT) &&
+			isPossibleFromUpdateAt(buddy.getUpdatedAt())) {
+			buddy.changeStatus(BuddyStatus.REACTIVATE);
+			buddyRepository.save(buddy);
+		}
+	}
 
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
+	public MatchingPartnerInfoResponse getBuddyMatchingPartnerDetails(String memberId) {
+
+		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
-		checkBuddyStatus(latestBuddy, BuddyStatus.FOUND_BUDDY);
+		ensureBuddyStatusMatches(latestBuddy, BuddyStatus.FOUND_BUDDY, ErrorCode.BUDDY_NOT_MATCHED);
 
 		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
-		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.IN_PROGRESS);
+		checkBuddyMatchedStatus(latestBuddyMatched);
 
-		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
+		Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
 		Member partnerMember = partner.getMember();
 
 		return MatchingPartnerInfoResponse.memberFrom(partnerMember);
 	}
 
-	public CompletedPartnerInfoResponse getBuddyMatchedPartnerDetails(String memberId) {
+	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails(String memberId) {
 
-		Buddy latestBuddy = getLastBuddyByMemberId(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
-		checkBuddyStatus(latestBuddy, BuddyStatus.MATCHING_COMPLETED);
+		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId,
+			BuddyStatus.MATCHING_COMPLETED);
+		checkCompletedBuddies(completedBuddies);
 
-		BuddyMatched latestBuddyMatched = buddyMatchingService.getLatestBuddyMatched(latestBuddy);
-		checkBuddyMatchedStatus(latestBuddyMatched, BuddyMatchedStatus.MATCHING_COMPLETED);
+		return completedBuddies.stream()
+			.map(buddy -> {
+				BuddyMatched completedBuddyMatched = buddyMatchingService.getBuddyMatchedByBuddy(buddy);
+				Buddy partner = buddyMatchingService.getOtherBuddyInBuddyMatched(completedBuddyMatched, buddy);
+				Member partnerMember = partner.getMember();
+				return CompletedPartnerInfoResponse.from(partnerMember);
+			})
+			.collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
 
-		Buddy partner =  buddyMatchingService.getOtherBuddyInBuddyMatched(latestBuddyMatched, latestBuddy);
-		Member partnerMember = partner.getMember();
-
-		return CompletedPartnerInfoResponse.memberFrom(partnerMember);
 	}
 
-	private void checkBuddyStatus(Buddy buddy, BuddyStatus status) {
-		if (buddy.getStatus() != status) {
-			throw new CustomException(ErrorCode.BUDDY_NOT_MATCHED);
-		}
-	}
-
-	private void checkBuddyMatchedStatus(BuddyMatched buddyMatched, BuddyMatchedStatus status) {
-		if (buddyMatched.getStatus() != status) {
+	private void checkBuddyMatchedStatus(BuddyMatched buddyMatched) {
+		if (buddyMatched.getStatus() != BuddyMatchedStatus.IN_PROGRESS) {
 			throw new CustomException(ErrorCode.NOT_IN_PROGRESS);
 		}
 	}
 
+	private void checkCompletedBuddies(List<Buddy> completedBuddies) {
+		if (completedBuddies.isEmpty())
+			throw new CustomException(ErrorCode.TARGET_BUDDY_NOT_FOUND);
+	}
+
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
-		Long activeBuddyCount = buddyRepository.countByStatusInProgressOrFoundBuddy();
-		return new ActiveCustomersCountResponse(activeBuddyCount);
+		List<BuddyStatus> statuses = List.of(BuddyStatus.IN_PROGRESS, BuddyStatus.FOUND_BUDDY);
+		Long activeBuddyCount = buddyRepository.countByStatusIn(statuses);
+
+		return ActiveCustomersCountResponse.of(activeBuddyCount);
+	}
+
+	private long countMatchingCompletedBuddies(String memberId) {
+		return buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+	}
+
+	private void validateBuddyStatusNotMatches(Buddy buddy) {
+		if (buddy.getStatus() == BuddyStatus.IN_PROGRESS) {
+			throw new CustomException(ErrorCode.REGISTRATION_NOT_POSSIBLE);
+		}
+	}
+
+	private void ensureBuddyStatusMatches(Buddy buddy, BuddyStatus buddyStatus, ErrorCode errorCode) {
+		if (buddy.getStatus() != buddyStatus) {
+			throw new CustomException(errorCode);
+		}
 	}
 }

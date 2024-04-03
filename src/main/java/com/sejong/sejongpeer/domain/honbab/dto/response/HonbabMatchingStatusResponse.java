@@ -4,7 +4,7 @@ import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.HonbabStatus;
 
 public record HonbabMatchingStatusResponse(HonbabStatus status) {
-	public static HonbabMatchingStatusResponse honbabFrom(Honbab honbab) {
+	public static HonbabMatchingStatusResponse from(Honbab honbab) {
 		return new HonbabMatchingStatusResponse(honbab.getStatus());
 	}
 }
