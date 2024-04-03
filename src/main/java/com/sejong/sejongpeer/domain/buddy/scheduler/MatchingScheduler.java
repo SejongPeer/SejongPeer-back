@@ -8,7 +8,9 @@ import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyMatchingService;
 import com.sejong.sejongpeer.domain.buddy.service.MatchingService;
 import com.sejong.sejongpeer.infra.sms.service.SmsText;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -42,16 +44,17 @@ public class MatchingScheduler {
 
 			if (hoursElapsed >= NO_RESPONSE_HOUR_LIMIT) {
 				noResposeBuddy.changeStatus(BuddyStatus.REJECT);
-				buddyMatchingService.sendMatchingFailurePenaltyMessage(noResposeBuddy, SmsText.MATCHING_AUTO_FAILED_REJECT);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(noResposeBuddy.getMember().getPhoneNumber(),
+					SmsText.MATCHING_AUTO_FAILED_REJECT);
 
 				BuddyMatched progressMatch = buddyMatchingService.getBuddyMatchedByBuddy(noResposeBuddy);
 
 				Buddy partnerBuddy = buddyMatchingService.getOtherBuddyInBuddyMatched(progressMatch, noResposeBuddy);
 				partnerBuddy.changeStatus(BuddyStatus.DENIED);
-				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy, SmsText.MATCHING_AUTO_FAILED_DENIED);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy.getMember().getPhoneNumber(),
+					SmsText.MATCHING_AUTO_FAILED_DENIED);
 
 				progressMatch.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
-
 
 			}
 		}
