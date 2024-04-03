@@ -9,16 +9,18 @@ import org.springframework.data.repository.query.Param;
 
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
-import com.sejong.sejongpeer.domain.member.entity.Member;
 
 public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	List<Buddy> findAllByStatus(BuddyStatus buddyStatus);
 
-	Optional<Buddy> findTopByMemberAndStatusOrderByCreatedAtDesc(Member member, BuddyStatus status);
+	Optional<Buddy> findTopByMemberIdAndStatusOrderByCreatedAtDesc(String memberId, BuddyStatus status);
 
 	@Query("SELECT b FROM Buddy b WHERE b.member.id = :memberId ORDER BY b.id DESC LIMIT 1")
 	Optional<Buddy> findLastBuddyByMemberId(@Param("memberId") String memberId);
 
-	@Query("SELECT COUNT(b) FROM Buddy b WHERE b.status = 'IN_PROGRESS' OR b.status = 'FOUND_BUDDY'")
-	Long countByStatusInProgressOrFoundBuddy();
+	Long countByStatusIn(List<BuddyStatus> statuses);
+
+	long countByMemberIdAndStatus(String memberId, BuddyStatus status);
+
+	List<Buddy> findAllByMemberIdAndStatus(String memberId, BuddyStatus status);
 }
