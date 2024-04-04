@@ -94,8 +94,9 @@ public class BuddyService {
 		Buddy lastBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElse(null);
 
-		if (lastBuddy == null)
+		if (lastBuddy == null) {
 			return null;
+		}
 
 		checkAndUpdateRejectedBuddyStatus(lastBuddy);
 		Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
