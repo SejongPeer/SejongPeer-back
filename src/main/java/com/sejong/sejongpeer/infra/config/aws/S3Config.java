@@ -1,8 +1,5 @@
 package com.sejong.sejongpeer.infra.config.aws;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -12,6 +9,9 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,13 +24,10 @@ public class S3Config {
 		AWSCredentials credentials =
 			new BasicAWSCredentials(
 				s3Properties.accessKey(), s3Properties.secretKey());
-		AwsClientBuilder.EndpointConfiguration endpointConfiguration =
-			new AwsClientBuilder.EndpointConfiguration(
-				s3Properties.endpoint(), s3Properties.region());
 
 		return AmazonS3ClientBuilder.standard()
-			.withEndpointConfiguration(endpointConfiguration)
 			.withCredentials(new AWSStaticCredentialsProvider(credentials))
+			.withRegion(s3Properties.region())
 			.build();
 	}
 }
