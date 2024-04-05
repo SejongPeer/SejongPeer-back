@@ -43,7 +43,7 @@ public class ImageService {
 	private final MemberRepository memberRepository;
 
 	// 스터디 이미지 Presigned Url 생성
-	public PresignedUrlResponse createStudyPresignedUrl(String memberId, StudyImageCreateRequest request) {
+	public PresignedUrlResponse createStudyPresignedUrl(final String memberId, final StudyImageCreateRequest request) {
 		Member member = memberRepository
 			.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -82,7 +82,7 @@ public class ImageService {
 	}
 
 	// 스터디 이미지 업로드
-	public void uploadCompleteStudyImage(String memberId, StudyImageUploadCompleteRequest request) {
+	public void uploadCompleteStudyImage(final String memberId, final StudyImageUploadCompleteRequest request) {
 		Member member = memberRepository
 			.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -105,13 +105,13 @@ public class ImageService {
 		study.updateUploadStatusComplete(imageUrl);
 	}
 
-	private Study findStudyById(Long studyId) {
+	private Study findStudyById(final Long studyId) {
 		return studyRepository
 			.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 	}
 
-	private void validateStudyUserMismatch(Study study, Member member) {
+	private void validateStudyUserMismatch(final Study study, final Member member) {
 		if (!study.getMember().getId().equals(member.getId())) {
 			throw new CustomException(ErrorCode.STUDY_USER_MISMATCH);
 		}

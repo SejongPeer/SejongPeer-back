@@ -11,15 +11,12 @@ import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.service.HonbabService;
-
 import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "6. [혼밥]", description = "세종혼밥짝꿍 API")
 @RestController
