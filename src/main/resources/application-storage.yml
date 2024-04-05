@@ -7,4 +7,4 @@ storage:
   secretKey: ${AWS_SECRET_KEY:}
   bucket: ${AWS_SEJONG_PEER_BUCKET:}
   region: ${AWS_REGION:}
-  endpoint: ${STORAGE_ENDPOINT:}
+  endpoint: ${AWS_S3_ENDPOINT:}
