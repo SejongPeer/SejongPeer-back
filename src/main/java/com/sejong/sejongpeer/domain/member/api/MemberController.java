@@ -20,6 +20,7 @@ import com.sejong.sejongpeer.domain.member.dto.response.AccountFindResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.ExistsCheckResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.MemberInfoResponse;
 import com.sejong.sejongpeer.domain.member.service.MemberService;
+import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -87,8 +88,7 @@ public class MemberController {
 	@Operation(summary = "회원정보 조회", description = "회원정보를 조회합니다.")
 	@GetMapping("/my-page")
 	public MemberInfoResponse getMemberInfo() {
-		String memberId =
-			(String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 
 		System.out.println(SecurityContextHolder.getContext().getAuthentication());
 		return memberService.getMemberInfo(memberId);
@@ -97,8 +97,7 @@ public class MemberController {
 	@Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
 	@PatchMapping("/my-page")
 	public void updateMemberInfo(@Valid @RequestBody MemberUpdateRequest request) {
-		String memberId =
-			(String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 
 		memberService.updateMemberInfo(memberId, request);
 	}
@@ -106,8 +105,7 @@ public class MemberController {
 	@Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
 	@DeleteMapping("/my-page")
 	public void deleteMember() {
-		String memberId =
-			(String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String memberId = SecurityContextUtil.extractMemberId();
 
 		memberService.deleteMember(memberId);
 	}
