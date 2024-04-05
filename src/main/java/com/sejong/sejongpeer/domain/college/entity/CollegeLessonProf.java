@@ -18,18 +18,17 @@ public class CollegeLessonProf {
 	private Long id;
 
 	@Comment("단과대 이름")
-	@Column(length = 30, nullable = false)
+	@Column(nullable = false)
 	private String college;
 
 	@Comment("수업 이름")
-	@Column(length = 30, nullable = false)
+	@Column(nullable = false)
 	private String lesson;
 
 	@Comment("교수님 존함")
-	@Column(length = 30, nullable = false)
 	private String prof;
 
-	@Builder
+	@Builder(access = AccessLevel.PRIVATE)
 	private CollegeLessonProf(String college, String lesson, String prof) {
 		this.college = college;
 		this.lesson = lesson;
