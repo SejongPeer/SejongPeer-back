@@ -80,6 +80,7 @@ public class Study extends BaseAuditEntity {
 		StudyType type,
 		RecruitmentStatus recruitmentStatus,
 		String imageUrl,
+		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {
@@ -87,6 +88,8 @@ public class Study extends BaseAuditEntity {
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;
 		this.type = type;
+		this.imageUrl = imageUrl;
+		this.uploadStatus = uploadStatus;
 		this.recruitmentStatus = recruitmentStatus;
 		this.imageUrl = imageUrl;
 		this.recruitmentStartAt = recruitmentStartAt;
@@ -107,6 +110,7 @@ public class Study extends BaseAuditEntity {
 			.content(content)
 			.recruitmentCount(recruitmentCount)
 			.type(type)
+			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(recruitmentStartAt)
 			.recruitmentEndAt(recruitmentEndAt)
@@ -131,7 +135,7 @@ public class Study extends BaseAuditEntity {
 
 	public void updateUploadStatusPending() {
 		if (this.uploadStatus != ImageUploadStatus.NONE) {
-			throw new CustomException(ErrorCode.STUDY__UPLOAD_STATUS_IS_NOT_NONE);
+			throw new CustomException(ErrorCode.STUDY_UPLOAD_STATUS_IS_NOT_NONE);
 		}
 		this.uploadStatus = ImageUploadStatus.PENDING;
 	}
