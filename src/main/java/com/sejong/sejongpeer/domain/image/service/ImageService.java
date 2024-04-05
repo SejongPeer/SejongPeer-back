@@ -18,6 +18,10 @@ import com.sejong.sejongpeer.domain.image.entity.Image;
 import com.sejong.sejongpeer.domain.image.entity.type.ImageFileExtension;
 import com.sejong.sejongpeer.domain.image.entity.type.ImageType;
 import com.sejong.sejongpeer.domain.image.repository.ImageRepository;
+import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
+import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.global.common.constants.UrlConstants;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
@@ -35,15 +39,82 @@ public class ImageService {
 	private final S3Properties s3Properties;
 	private final AmazonS3 amazonS3;
 	private final ImageRepository imageRepository;
+	private final StudyRepository studyRepository;
+	private final MemberRepository memberRepository;
 
 	// 스터디 이미지 Presigned Url 생성
-	public PresignedUrlResponse createStudyPresignedUrl(StudyImageCreateRequest request) {
-		return null;
+	public PresignedUrlResponse createStudyPresignedUrl(String memberId, StudyImageCreateRequest request) {
+		Member member = memberRepository
+			.findById(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+		Study study = findStudyById(request.studyId());
+
+		validateStudyUserMismatch(study, member);
+
+		String imageKey = generateUUID();
+		String fileName =
+			createFileName(
+				ImageType.STUDY,
+				request.studyId(),
+				imageKey,
+				request.imageFileExtension()
+			);
+
+		GeneratePresignedUrlRequest generatePresignedUrlRequest =
+			createGeneratePreSignedUrlRequest(
+				s3Properties.bucket(),
+				fileName,
+				request.imageFileExtension().getUploadExtension()
+			);
+
+		String presignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
+		study.updateUploadStatusPending();
+
+		imageRepository.save(
+			Image.createImage(
+				ImageType.STUDY,
+				request.studyId(),
+				imageKey,
+				request.imageFileExtension()
+			)
+		);
+		return PresignedUrlResponse.from(presignedUrl);
 	}
 
 	// 스터디 이미지 업로드
-	public void uploadCompleteStudyImage(StudyImageUploadCompleteRequest request) {
+	public void uploadCompleteStudyImage(String memberId, StudyImageUploadCompleteRequest request) {
+		Member member = memberRepository
+			.findById(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+		Study study = findStudyById(request.studyId());
 
+		validateStudyUserMismatch(study, member);
+
+		Image image = findImage(
+			ImageType.STUDY,
+			request.studyId(),
+			request.imageFileExtension()
+		);
+		String imageUrl =
+			createReadImageUrl(
+				ImageType.STUDY,
+				request.studyId(),
+				image.getImageKey(),
+				request.imageFileExtension()
+			);
+		study.updateUploadStatusComplete(imageUrl);
+	}
+
+	private Study findStudyById(Long studyId) {
+		return studyRepository
+			.findById(studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+	}
+
+	private void validateStudyUserMismatch(Study study, Member member) {
+		if (!study.getMember().getId().equals(member.getId())) {
+			throw new CustomException(ErrorCode.STUDY_USER_MISMATCH);
+		}
 	}
 
 	private GeneratePresignedUrlRequest createGeneratePreSignedUrlRequest(

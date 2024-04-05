@@ -2,8 +2,11 @@ package com.sejong.sejongpeer.domain.study.entity;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
+import com.sejong.sejongpeer.global.error.exception.CustomException;
+import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,6 +58,9 @@ public class Study extends BaseAuditEntity {
 
 	@Comment("스터디 이미지")
 	private String imageUrl;
+
+	@Enumerated(EnumType.STRING)
+	private ImageUploadStatus uploadStatus;
 
 	@Comment("모집 시작 기간")
 	private LocalDateTime recruitmentStartAt;
@@ -121,5 +127,20 @@ public class Study extends BaseAuditEntity {
 		this.type = type;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
+	}
+
+	public void updateUploadStatusPending() {
+		if (this.uploadStatus != ImageUploadStatus.NONE) {
+			throw new CustomException(ErrorCode.STUDY__UPLOAD_STATUS_IS_NOT_NONE);
+		}
+		this.uploadStatus = ImageUploadStatus.PENDING;
+	}
+
+	public void updateUploadStatusComplete(String imageUrl) {
+		if (this.uploadStatus != ImageUploadStatus.PENDING) {
+			throw new CustomException(ErrorCode.STUDY_UPLOAD_STATUS_IS_NOT_PENDING);
+		}
+		this.uploadStatus = ImageUploadStatus.COMPLETE;
+		this.imageUrl = imageUrl;
 	}
 }
