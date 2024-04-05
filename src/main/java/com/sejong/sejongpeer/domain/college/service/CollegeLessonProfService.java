@@ -18,7 +18,7 @@ public class CollegeLessonProfService {
 
 	public List<CollegeLessonProfResponse> getLessonInfoByColleage(String college) {
 		return collegeLessonProfRepository.findAllByCollege(college).stream()
-			.map(collegeLessonProf -> new CollegeLessonProfResponse(collegeLessonProf.getLesson(), collegeLessonProf.getProf()))
+			.map(CollegeLessonProfResponse::from)
 			.collect(Collectors.toList());
 	}
 }
