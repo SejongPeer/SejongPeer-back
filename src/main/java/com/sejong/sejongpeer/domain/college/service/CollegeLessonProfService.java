@@ -17,6 +17,7 @@ public class CollegeLessonProfService {
 
 	private final CollegeLessonProfRepository collegeLessonProfRepository;
 
+	@Transactional(readOnly = true)
 	public List<CollegeLessonProfResponse> getLessonInfoByColleage(String college) {
 		List<CollegeLessonProfResponse> lessonInfo = collegeLessonProfRepository.findAllByCollege(college).stream()
 			.map(CollegeLessonProfResponse::from)
