@@ -1,8 +1,11 @@
-package com.sejong.sejongpeer.domain.studyRelations.domain;
+package com.sejong.sejongpeer.domain.studyrelation.entity;
 
-import com.sejong.sejongpeer.domain.common.BaseEntity;
+import org.hibernate.annotations.Comment;
+
+import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,18 +22,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.UuidGenerator;
-
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyRelation extends BaseEntity {
+public class StudyRelation extends BaseAuditEntity {
 
 	@Id
-	@UuidGenerator
-	@Column(name = "id", columnDefinition = "char(36)")
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -42,10 +42,10 @@ public class StudyRelation extends BaseEntity {
 
 	@Comment("스터디 신청 현황")
 	@Enumerated(EnumType.STRING)
-	private RelationStatus status;
+	private StudyMatchingStatus status;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private StudyRelation(Member member, Study study, RelationStatus status) {
+	private StudyRelation(Member member, Study study, StudyMatchingStatus status) {
 		this.member = member;
 		this.study = study;
 		this.status = status;
@@ -55,7 +55,7 @@ public class StudyRelation extends BaseEntity {
 		return StudyRelation.builder()
 			.member(member)
 			.study(study)
-			.status(RelationStatus.PENDING)
+			.status(StudyMatchingStatus.PENDING)
 			.build();
 	}
 }

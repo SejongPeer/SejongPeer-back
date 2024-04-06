@@ -1,6 +1,6 @@
-package com.sejong.sejongpeer.domain.studyRelations.dto.response;
+package com.sejong.sejongpeer.domain.studyrelation.dto.response;
 
-import com.sejong.sejongpeer.domain.studyRelations.domain.StudyRelation;
+import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -1,10 +1,4 @@
-package com.sejong.sejongpeer.domain.studyRelations.api;
-
-import com.sejong.sejongpeer.domain.studyRelations.service.StudyRelationService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+package com.sejong.sejongpeer.domain.studyrelation.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +8,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sejong.sejongpeer.domain.studyrelation.service.StudyRelationService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "3. [스터디 신청현황]", description = "스터디 신청 현황 API입니다.")
 @RestController
