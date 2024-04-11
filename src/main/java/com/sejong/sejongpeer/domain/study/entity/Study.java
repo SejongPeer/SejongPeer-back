@@ -88,7 +88,6 @@ public class Study extends BaseAuditEntity {
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;
 		this.type = type;
-		this.imageUrl = imageUrl;
 		this.uploadStatus = uploadStatus;
 		this.recruitmentStatus = recruitmentStatus;
 		this.imageUrl = imageUrl;
