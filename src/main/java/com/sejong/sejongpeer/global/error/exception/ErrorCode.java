@@ -58,7 +58,18 @@ public enum ErrorCode {
 	// 혼밥 에러
 	HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 혼밥이 없습니다"),
 	TARGET_HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "혼밥 짝꿍을 찾을 수 없습니다."),
-	HONBAB_REGISTRATION_LIMIT(HttpStatus.CONFLICT, "혼밥 매칭 후 일정시간 동안 재신청을 할 수 없습니다.");
+	HONBAB_REGISTRATION_LIMIT(HttpStatus.CONFLICT, "혼밥 매칭 후 일정시간 동안 재신청을 할 수 없습니다."),
+
+	// 이미지 에러
+	IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지 파일 형식을 찾을 수 없습니다."),
+	IMAGE_KEY_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지 키를 찾을 수 없습니다."),
+	STUDY_USER_MISMATCH(HttpStatus.FORBIDDEN, "스터디를 생성한 유저와 로그인한 계정이 일치하지 않습니다."),
+
+	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
+	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
+
+	;
+
 	private final HttpStatus status;
 	private final String message;
 
