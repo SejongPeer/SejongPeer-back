@@ -1,5 +1,9 @@
 package com.sejong.sejongpeer.domain.study.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.Comment;
+
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
