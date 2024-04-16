@@ -20,7 +20,6 @@ import com.sejong.sejongpeer.domain.member.dto.response.AccountFindResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.ExistsCheckResponse;
 import com.sejong.sejongpeer.domain.member.dto.response.MemberInfoResponse;
 import com.sejong.sejongpeer.domain.member.service.MemberService;
-import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -94,17 +93,17 @@ public class MemberController {
 	@Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
 	@PatchMapping("/my-page")
 	public void updateMemberInfo(@Valid @RequestBody MemberUpdateRequest request) {
-		String memberId = SecurityContextUtil.extractMemberId();
+		// String memberId = SecurityContextUtil.extractMemberId();
 
-		memberService.updateMemberInfo(memberId, request);
+		memberService.updateMemberInfo(request);
 	}
 
 	@Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
 	@DeleteMapping("/my-page")
 	public void deleteMember() {
-		String memberId = SecurityContextUtil.extractMemberId();
+		// String memberId = SecurityContextUtil.extractMemberId();
 
-		memberService.deleteMember(memberId);
+		memberService.deleteMember();
 	}
 
 	@Operation(summary = "아이디 찾기", description = "학번과 이름 및 전화번호로 아이디를 찾습니다.")
