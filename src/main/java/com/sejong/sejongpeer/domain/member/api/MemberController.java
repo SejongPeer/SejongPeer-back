@@ -88,10 +88,7 @@ public class MemberController {
 	@Operation(summary = "회원정보 조회", description = "회원정보를 조회합니다.")
 	@GetMapping("/my-page")
 	public MemberInfoResponse getMemberInfo() {
-		String memberId = SecurityContextUtil.extractMemberId();
-
-		System.out.println(SecurityContextHolder.getContext().getAuthentication());
-		return memberService.getMemberInfo(memberId);
+		return memberService.getMemberInfo();
 	}
 
 	@Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
