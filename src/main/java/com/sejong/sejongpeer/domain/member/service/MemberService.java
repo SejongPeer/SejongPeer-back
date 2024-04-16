@@ -20,6 +20,7 @@ import com.sejong.sejongpeer.domain.member.entity.type.MemberInfo;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.MemberUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class MemberService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final CollegeMajorRepository collegeMajorRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final MemberUtil memberUtil;
 
 	public void signUp(SignUpRequest request) {
 		verifySignUp(request);
@@ -68,13 +70,9 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public MemberInfoResponse getMemberInfo(String memberId) {
-		Member member =
-			memberRepository
-				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-		return MemberInfoResponse.from(member);
+	public MemberInfoResponse getMemberInfo() {
+		final Member currentMember = memberUtil.getCurrentMember();
+		return MemberInfoResponse.from(currentMember);
 	}
 
 	private boolean existsStudentId(String studentId) {

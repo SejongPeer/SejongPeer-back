@@ -68,7 +68,7 @@ public class ImageService {
 			);
 
 		String presignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
-		study.updateUploadStatusPending();
+		study.updateImageUploadStatusPending();
 
 		imageRepository.save(
 			Image.createImage(
@@ -102,7 +102,7 @@ public class ImageService {
 				image.getImageKey(),
 				request.imageFileExtension()
 			);
-		study.updateUploadStatusComplete(imageUrl);
+		study.updateImageUploadStatusComplete(imageUrl);
 	}
 
 	private Study findStudyById(final Long studyId) {
