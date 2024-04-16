@@ -11,7 +11,6 @@ import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.service.HonbabService;
-import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,29 +27,29 @@ public class HonbabController {
 	@Operation(summary = "혼밥등록", description = "유저가 혼밥 등록")
 	@PostMapping("/register")
 	public void registerHonbab(@Valid @RequestBody RegisterHonbabRequest request) {
-		String memberId = SecurityContextUtil.extractMemberId();
-		honbabService.registerHonbab(request, memberId);
+		// String memberId = SecurityContextUtil.extractMemberId();
+		honbabService.registerHonbab(request);
 	}
 
 	@Operation(summary = "혼밥 매칭 상태 체크", description = "유저의 가장 최근 혼밥 상태값 리턴")
 	@GetMapping("/check-matching-status")
 	public HonbabMatchingStatusResponse getHonbabMatchingStatus() {
-		String memberId = SecurityContextUtil.extractMemberId();
-		return honbabService.getHonbabMatchingStatus(memberId);
+		// String memberId = SecurityContextUtil.extractMemberId();
+		return honbabService.getHonbabMatchingStatus();
 	}
 
 	@Operation(summary = "혼밥 중도 취소", description = "혼밥신청 후 취소")
 	@GetMapping("/cancel")
 	public void cancelHonbab() {
-		String memberId = SecurityContextUtil.extractMemberId();
-		honbabService.cancelHonbab(memberId);
+		// String memberId = SecurityContextUtil.extractMemberId();
+		honbabService.cancelHonbab();
 	}
 
 	@Operation(summary = "혼밥짝꿍 찾은 후 상대방 정보 요청", description = "매칭 후 상대방의 정보 반환")
 	@GetMapping("/partner/information")
 	public MatchingPartnerInfoResponse getFoundPartnerInfo() {
-		String memberId = SecurityContextUtil.extractMemberId();
-		return honbabService.getPartnerInfo(memberId);
+		// String memberId = SecurityContextUtil.extractMemberId();
+		return honbabService.getPartnerInfo();
 	}
 
 	@Operation(summary = "혼밥 상대를 찾고있는 이용자 수 요청", description = "IN_PROGRESS인 상태인 혼밥 이용자")

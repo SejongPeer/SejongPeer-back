@@ -23,6 +23,8 @@ import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.MemberUtil;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,14 +39,13 @@ public class BuddyService {
 	private final BuddyRepository buddyRepository;
 	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
+	private final MemberUtil memberUtil;
+	private final SecurityUtil securityUtil;
 
-	public void registerBuddy(BuddyRegistrationRequest request, String memberId) {
-		Member member =
-			memberRepository
-				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	public void registerBuddy(BuddyRegistrationRequest request) {
+		final Member member = memberUtil.getCurrentMember();
 
-		validatePossibleRegistration(memberId);
+		validatePossibleRegistration(member.getId());
 
 		Buddy buddy = Buddy.create(request, member);
 		buddyRepository.save(buddy);
@@ -52,7 +53,8 @@ public class BuddyService {
 		matchingService.matchBuddyWhenRegister(buddy);
 	}
 
-	public void cancelBuddy(String memberId) {
+	public void cancelBuddy() {
+		final String memberId = securityUtil.getCurrentMemberId();
 		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
 
@@ -90,7 +92,9 @@ public class BuddyService {
 		return LocalDateTime.now().isAfter(oneHourAfterTime);
 	}
 
-	public MatchingStatusResponse getBuddyMatchingStatusAndCount(String memberId) {
+	public MatchingStatusResponse getBuddyMatchingStatusAndCount() {
+		final String memberId = securityUtil.getCurrentMemberId();
+
 		Buddy lastBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElse(null);
 
@@ -99,7 +103,8 @@ public class BuddyService {
 		}
 
 		checkAndUpdateRejectedBuddyStatus(lastBuddy);
-		Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId, BuddyStatus.MATCHING_COMPLETED);
+		Long matchingCompletedCount = buddyRepository.countByMemberIdAndStatus(memberId,
+			BuddyStatus.MATCHING_COMPLETED);
 		return MatchingStatusResponse.of(lastBuddy, matchingCompletedCount);
 	}
 
@@ -111,7 +116,8 @@ public class BuddyService {
 		}
 	}
 
-	public MatchingPartnerInfoResponse getBuddyMatchingPartnerDetails(String memberId) {
+	public MatchingPartnerInfoResponse getBuddyMatchingPartnerDetails() {
+		final String memberId = securityUtil.getCurrentMemberId();
 
 		Buddy latestBuddy = buddyRepository.findLastBuddyByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));
@@ -126,7 +132,8 @@ public class BuddyService {
 		return MatchingPartnerInfoResponse.memberFrom(partnerMember);
 	}
 
-	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails(String memberId) {
+	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails() {
+		final String memberId = securityUtil.getCurrentMemberId();
 
 		List<Buddy> completedBuddies = buddyRepository.findAllByMemberIdAndStatus(memberId,
 			BuddyStatus.MATCHING_COMPLETED);
