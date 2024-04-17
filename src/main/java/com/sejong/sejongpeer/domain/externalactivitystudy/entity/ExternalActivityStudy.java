@@ -1,7 +1,9 @@
 package com.sejong.sejongpeer.domain.externalactivitystudy.entity;
 
+import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -15,12 +17,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ExternalActivityStudy {
+public class ExternalActivityStudy extends BaseAuditEntity {
 	@Id
-	private String studyId;
+	private Long studyId;
 
 	@MapsId
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Study study;
 
 	@ManyToOne(fetch = FetchType.LAZY)
