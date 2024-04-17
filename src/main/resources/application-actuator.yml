@@ -15,5 +15,3 @@ management:
   endpoint:
     health:
       enabled: true
-    prometheus:
-      enabled: true
