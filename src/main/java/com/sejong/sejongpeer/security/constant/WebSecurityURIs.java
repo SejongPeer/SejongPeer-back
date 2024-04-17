@@ -9,6 +9,7 @@ public final class WebSecurityURIs {
 	public static final List<String> PUBLIC_URIS =
 		List.of(
 			"/api/v1/auth/sign-in",
+			"/sejongpeer-actuator/**",
 			"/api/v1/auth/sejong-auth",
 			"/api/v1/member/sign-up",
 			"/api/v1/member/check-account",
@@ -19,7 +20,6 @@ public final class WebSecurityURIs {
 			"/api/v1/member/help/reset-password",
 			"/api/v1/buddy/active-count",
 			"/api/v1/honbab/active-count",
-			"/api/v1/study/**",
 			"/webjars/**",
 			"/swagger-ui/**",
 			"/favicon.ico/",
