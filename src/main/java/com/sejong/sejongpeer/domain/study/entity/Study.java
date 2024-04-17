@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
-import com.sejong.sejongpeer.domain.externalactivitystudy.entity.ExternalActivityStudy;
-import com.sejong.sejongpeer.domain.lecturestudy.entity.LectureStudy;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
@@ -14,7 +12,6 @@ import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +22,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,12 +70,6 @@ public class Study extends BaseAuditEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
-
-	@OneToOne(mappedBy = "lectureStudy", cascade = CascadeType.ALL, orphanRemoval = true)
-	private LectureStudy lectureStudy;
-
-	@OneToOne(mappedBy = "externalActivityStudy", cascade = CascadeType.ALL, orphanRemoval = true)
-	private ExternalActivityStudy externalActivityStudy;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private Study(
