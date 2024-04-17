@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			jwtProvider.resolveToken(request, HeaderConstant.REFRESH_TOKEN_HEADER);
 
 		if (accessToken == null) {
-			throw new CustomException(ErrorCode.UNAUTHORIZED);
+			return;
 		}
 
 		boolean isAccessTokenValid = jwtProvider.isTokenValid(accessToken, true);
