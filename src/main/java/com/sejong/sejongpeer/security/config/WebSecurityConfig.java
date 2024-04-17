@@ -75,6 +75,8 @@ public class WebSecurityConfig {
 		http.authorizeHttpRequests(
 				authorize ->
 					authorize
+						.requestMatchers("/sejongpeer-actuator/**")
+						.permitAll()
 						.requestMatchers(WebSecurityURIs.PUBLIC_URIS.toArray(String[]::new))
 						.permitAll()
 						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**")

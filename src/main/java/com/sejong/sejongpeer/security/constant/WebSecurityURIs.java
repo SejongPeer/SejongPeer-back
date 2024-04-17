@@ -19,7 +19,7 @@ public final class WebSecurityURIs {
 			"/api/v1/member/help/reset-password",
 			"/api/v1/buddy/active-count",
 			"/api/v1/honbab/active-count",
-			"/api/v1/study",
+			"/api/v1/study/**",
 			"/webjars/**",
 			"/swagger-ui/**",
 			"/favicon.ico/",
