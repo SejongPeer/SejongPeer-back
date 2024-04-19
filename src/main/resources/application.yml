@@ -2,8 +2,8 @@ spring:
   profiles:
     group:
       test: "test, storage"
-      dev: "dev, datasource, storage"
-      prod: "prod, datasource, storage"
+      dev: "dev, datasource, storage, actuator"
+      prod: "prod, datasource, storage, actuator"
     include:
       - security
       - infra
