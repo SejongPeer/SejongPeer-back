@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   build:
-    environment: DEV
     # build를 진행할 운영체제를 선택합니다.
     runs-on: ubuntu-latest
 
@@ -37,6 +36,7 @@ jobs:
           cd ./src/main/resources
           # 필요한 yml 파일들을 만들어줍니다.
           touch ./application.yml
+          touch ./application-actuator.yml
           touch ./application-datasource.yml
           touch ./application-infra.yml
           touch ./application-dev.yml
@@ -45,6 +45,7 @@ jobs:
           
           # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
           echo "$APPLICATION" > ./application.yml
+          echo "$APPLICATION_ACTUATOR" > ./application-actuator.yml
           echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
           echo "$APPLICATION_DEV" > ./application-dev.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
@@ -53,10 +54,12 @@ jobs:
 
         env:
           APPLICATION: ${{ secrets.APPLICATION }}
+          APPLICATION_ACTUATOR: ${{ secrets.APPLICATION_ACTUATOR }}
           APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
+          ENV: ${{ secrets.ENV }}
         shell: bash
 
       - name: Gradle 권한 부여

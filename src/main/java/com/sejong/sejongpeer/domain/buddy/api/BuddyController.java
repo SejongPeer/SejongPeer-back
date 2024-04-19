@@ -33,7 +33,6 @@ public class BuddyController {
 
 	@Operation(summary = "버디등록", description = "유저가 버디에 등록")
 	@PostMapping("/register")
-
 	public void registerBuddy(@Valid @RequestBody BuddyRegistrationRequest request) {
 		// String memberId = SecurityContextUtil.extractMemberId();
 		buddyService.registerBuddy(request);
@@ -70,7 +69,6 @@ public class BuddyController {
 	@Operation(summary = "현재 버디를 신청한 이용자 수 요청", description = "IN_PROGRESS, FOUND_BUDDY 상태값인 버디의 수")
 	@GetMapping("/active-count")
 	public ActiveCustomersCountResponse getCurrentlyActiveBuddyCount() {
-
 		return buddyService.getCurrentlyActiveBuddyCount();
 	}
 
