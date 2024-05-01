@@ -72,9 +72,12 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http)
 		throws Exception { // TODO: 추후 프로필에 따라 접근 권한 변경 필요
 		defaultFilterChain(http);
+
 		http.authorizeHttpRequests(
 				authorize ->
 					authorize
+						.requestMatchers("/sejongpeer-actuator/**")
+						.permitAll()
 						.requestMatchers(WebSecurityURIs.PUBLIC_URIS.toArray(String[]::new))
 						.permitAll()
 						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**")
