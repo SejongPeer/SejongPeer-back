@@ -1,7 +1,7 @@
-package com.sejong.sejongpeer.domain.college.api;
+package com.sejong.sejongpeer.domain.lecturestudy.controller;
 
-import com.sejong.sejongpeer.domain.college.dto.CollegeLessonProfResponse;
-import com.sejong.sejongpeer.domain.college.service.CollegeLessonProfService;
+import com.sejong.sejongpeer.domain.lecturestudy.dto.CollegeLessonProfessorResponse;
+import com.sejong.sejongpeer.domain.lecturestudy.service.LectureService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/colleges")
 @RequiredArgsConstructor
-public class CollegeLessonProfController {
+public class LectureController {
 
-	private final CollegeLessonProfService lessonProfService;
+	private final LectureService lessonProfService;
 
 	@Operation(summary = "수업 정보 조회", description = "스터디 게시글 작성에 필요한 단과대 별 개설된 수업 정보를 반환합니다.")
 	@GetMapping("/lessons-info")
-	public List<CollegeLessonProfResponse> getLessonInfoByColleage(
+	public List<CollegeLessonProfessorResponse> getLessonInfoByColleage(
 		@RequestParam(name = "college") String college) {
 		return lessonProfService.getLessonInfoByColleage(college);
 	}

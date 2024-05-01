@@ -23,4 +23,6 @@ public class Lecture {
 	private String code; // 학수번호
 
 	private Integer classNo; // 분반
+
+	private String college; // 단과대
 }
