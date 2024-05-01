@@ -18,7 +18,8 @@ public enum UrlConstants {
 	WWW_DEV_NONE_SECURE_URL("http://www.sejongpeer.co.kr"),
 	WWW_DEV_URL("https://www.sejongpeer.co.kr"),
 
-	SEJONG_AUTH_API_URL("https://auth.imsejong.com");
+	SEJONG_AUTH_API_URL("https://auth.imsejong.com"),
+	IMAGE_DOMAIN_URL("https://imageurl");
 
 	private String value;
 }

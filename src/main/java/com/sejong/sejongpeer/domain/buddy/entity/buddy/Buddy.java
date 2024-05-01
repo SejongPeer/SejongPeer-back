@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.buddy.entity.buddy;
 
 import org.hibernate.annotations.Comment;
 
+import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyRegistrationRequest;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.ClassTypeOption;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.CollegeMajorOption;
@@ -94,21 +95,17 @@ public class Buddy extends BaseAuditEntity {
 		this.isSubMajor = isSubMajor;
 	}
 
-	public static Buddy createBuddy(
-		Member member,
-		GenderOption genderOption,
-		ClassTypeOption classTypeOption,
-		CollegeMajorOption collegeMajorOption,
-		GradeOption gradeOption,
-		boolean isSubMajor) {
+	public static Buddy create(
+		BuddyRegistrationRequest request,
+		Member member) {
 		return Buddy.builder()
 			.member(member)
-			.genderOption(genderOption)
-			.classTypeOption(classTypeOption)
-			.collegeMajorOption(collegeMajorOption)
-			.gradeOption(gradeOption)
+			.genderOption(request.genderOption())
+			.classTypeOption(request.classTypeOption())
+			.collegeMajorOption(request.collegeMajorOption())
+			.gradeOption(request.gradeOption())
 			.status(BuddyStatus.IN_PROGRESS)
-			.isSubMajor(isSubMajor)
+			.isSubMajor(request.isSubMajor())
 			.build();
 	}
 
