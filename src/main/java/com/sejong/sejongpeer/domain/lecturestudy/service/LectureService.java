@@ -21,9 +21,10 @@ public class LectureService {
 	@Transactional(readOnly = true)
 	public List<CollegeLessonProfessorResponse> getLessonInfoByColleage(String college) {
 		List<Lecture> lectures = lectureRepository.findAllByCollege(college);
-		List<CollegeLessonProfessorResponse> lessonInfo = lectures.stream()
-			.map(CollegeLessonProfessorResponse::from)
-			.collect(Collectors.toList());
-		return Collections.unmodifiableList(lessonInfo);
+		return Collections.unmodifiableList(
+			lectures.stream()
+				.map(CollegeLessonProfessorResponse::from)
+				.collect(Collectors.toList())
+		);
 	}
 }
