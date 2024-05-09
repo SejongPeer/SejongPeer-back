@@ -18,12 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LectureController {
 
-	private final LectureService lessonProfService;
+	private final LectureService lectureService;
 
 	@Operation(summary = "수업 정보 조회", description = "스터디 게시글 작성에 필요한 단과대 별 개설된 수업 정보를 반환합니다.")
 	@GetMapping("/lessons-info")
 	public List<CollegeLessonProfessorResponse> getLessonInfoByColleage(
 		@RequestParam(name = "college") String college) {
-		return lessonProfService.getLessonInfoByColleage(college);
+		return lectureService.getLessonInfoByColleage(college);
 	}
 }
