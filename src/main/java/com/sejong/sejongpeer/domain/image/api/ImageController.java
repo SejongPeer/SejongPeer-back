@@ -30,7 +30,6 @@ public class ImageController {
 	public PresignedUrlResponse createStudyPresignedUrl(
 		@Valid @RequestBody StudyImageCreateRequest request
 	) {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		return imageService.createStudyPresignedUrl(request);
 	}
 
@@ -39,7 +38,6 @@ public class ImageController {
 	@PostMapping("/study/upload-complete")
 	public void uploadedStudyImage(
 		@Valid @RequestBody StudyImageUploadCompleteRequest request) {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		imageService.uploadCompleteStudyImage(request);
 	}
 }

@@ -37,7 +37,6 @@ public class StudyController {
 	@PostMapping
 	public ResponseEntity<StudyCreateResponse> studyCreate(
 		@Valid @RequestBody StudyCreateRequest studyCreateRequest) {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(studyService.createStudy(studyCreateRequest));
 	}

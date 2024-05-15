@@ -34,35 +34,30 @@ public class BuddyController {
 	@Operation(summary = "버디등록", description = "유저가 버디에 등록")
 	@PostMapping("/register")
 	public void registerBuddy(@Valid @RequestBody BuddyRegistrationRequest request) {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		buddyService.registerBuddy(request);
 	}
 
 	@Operation(summary = "버디 중도 취소", description = "매칭 전 버디 취소")
 	@GetMapping("/cancel")
 	public void cancelBuddy() {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		buddyService.cancelBuddy();
 	}
 
 	@Operation(summary = "버디 매칭 상태 체크", description = "유저의 가장 최근 버디 상태값 리턴")
 	@GetMapping("/matching-status")
 	public MatchingStatusResponse getMatchingStatusAndCount() {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		return buddyService.getBuddyMatchingStatusAndCount();
 	}
 
 	@Operation(summary = "버디 수락/거절 창에서의 상대방 정보 요청", description = "매칭 후 상대방의 학과, 학년 정보 리턴")
 	@GetMapping("/partner/details")
 	public MatchingPartnerInfoResponse getPartnerDetails() {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		return buddyService.getBuddyMatchingPartnerDetails();
 	}
 
 	@Operation(summary = "매칭 수락 완료 후 상대방 정보요청", description = "이름, 학년, 학과, 카카오톡 정보 리턴")
 	@GetMapping("/matched-partner/details")
 	public List<CompletedPartnerInfoResponse> getBuddyMatchedPartnerDetails() {
-		// String memberId = SecurityContextUtil.extractMemberId();
 		return buddyService.getBuddyMatchedPartnerDetails();
 	}
 
@@ -75,7 +70,6 @@ public class BuddyController {
 	@Operation(summary = "버디 매칭 이후 수락/거절 선택", description = "버디 최종 매칭 상태 등록")
 	@PostMapping("/matching/status")
 	public void processBuddyMatchingDecision(@Valid @RequestBody MatchingResultRequest request) {
-		// String memberId = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		buddyMatchingService.updateBuddyMatchedStatus(request);
 	}
 }

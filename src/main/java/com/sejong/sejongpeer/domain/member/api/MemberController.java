@@ -93,16 +93,12 @@ public class MemberController {
 	@Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
 	@PatchMapping("/my-page")
 	public void updateMemberInfo(@Valid @RequestBody MemberUpdateRequest request) {
-		// String memberId = SecurityContextUtil.extractMemberId();
-
 		memberService.updateMemberInfo(request);
 	}
 
 	@Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
 	@DeleteMapping("/my-page")
 	public void deleteMember() {
-		// String memberId = SecurityContextUtil.extractMemberId();
-
 		memberService.deleteMember();
 	}
 
