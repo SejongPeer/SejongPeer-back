@@ -4,6 +4,7 @@ import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
 import com.sejong.sejongpeer.security.util.SecurityContextUtil;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Tag(name = "3. [스터디]", description = "스터디 관련 API입니다.")
 @RestController
@@ -67,5 +70,12 @@ public class StudyController {
 	@DeleteMapping("/{studyId}")
 	public void studyDelete(@PathVariable Long studyId) {
 		studyService.deleteStudy(studyId);
+	}
+
+	@Operation(summary = "게시글 목록 조회", description = "학교 수업 스터디 혹은 수업 외 활동 게시글 전체 목록을 반환합니다.")
+	@GetMapping("/post/all")
+	public List<StudyTotalPostResponse> getAllLectureStudyPost(
+		@RequestParam(name = "choice") String choice) {
+		return studyService.getAllLectureStudyPost(choice);
 	}
 }
