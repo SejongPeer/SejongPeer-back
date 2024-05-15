@@ -22,15 +22,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
-import java.time.LocalDateTime;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import org.hibernate.annotations.Comment;
 
 @Getter
 @Entity
@@ -136,14 +131,14 @@ public class Study extends BaseAuditEntity {
 		this.recruitmentEndAt = recruitmentEndAt;
 	}
 
-	public void updateUploadStatusPending() {
+	public void updateImageUploadStatusPending() {
 		if (this.uploadStatus != ImageUploadStatus.NONE) {
 			throw new CustomException(ErrorCode.STUDY_UPLOAD_STATUS_IS_NOT_NONE);
 		}
 		this.uploadStatus = ImageUploadStatus.PENDING;
 	}
 
-	public void updateUploadStatusComplete(String imageUrl) {
+	public void updateImageUploadStatusComplete(String imageUrl) {
 		if (this.uploadStatus != ImageUploadStatus.PENDING) {
 			throw new CustomException(ErrorCode.STUDY_UPLOAD_STATUS_IS_NOT_PENDING);
 		}

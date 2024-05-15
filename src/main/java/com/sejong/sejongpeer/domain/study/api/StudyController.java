@@ -6,7 +6,6 @@ import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
-import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,9 +37,8 @@ public class StudyController {
 	@PostMapping
 	public ResponseEntity<StudyCreateResponse> studyCreate(
 		@Valid @RequestBody StudyCreateRequest studyCreateRequest) {
-		String memberId = SecurityContextUtil.extractMemberId();
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(studyService.createStudy(memberId, studyCreateRequest));
+			.body(studyService.createStudy(studyCreateRequest));
 	}
 
 	@Operation(summary = "스터디 단건 조회", description = "스터디 한 개를 조회합니다.")
