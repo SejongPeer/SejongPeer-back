@@ -34,4 +34,6 @@ public class Lecture extends BaseEntity {
 
 	@OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<LectureStudy> lectureStudies = new ArrayList<>();
+  
+	private String college; // 단과대
 }
