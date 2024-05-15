@@ -20,6 +20,8 @@ import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.entity.honbabmatched.HonbabMatched;
 import com.sejong.sejongpeer.domain.honbab.repository.HonbabMatchedRepository;
+import com.sejong.sejongpeer.global.util.MemberUtil;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,8 +33,11 @@ public class HonbabService {
 	private final MemberRepository memberRepository;
 	private final HonbabMatchedRepository honbabMatchedRepository;
 	private final HonbabMatchingService honbabMatchingService;
+	private final MemberUtil memberUtil;
+	private final SecurityUtil securityUtil;
 
-	public void registerHonbab(RegisterHonbabRequest request, String memberId) {
+	public void registerHonbab(RegisterHonbabRequest request) {
+		final String memberId = securityUtil.getCurrentMemberId();
 		Member member =
 			memberRepository
 				.findById(memberId)
@@ -47,7 +52,9 @@ public class HonbabService {
 	}
 
 	@Transactional(readOnly = true)
-	public HonbabMatchingStatusResponse getHonbabMatchingStatus(String memberId) {
+	public HonbabMatchingStatusResponse getHonbabMatchingStatus() {
+		final String memberId = securityUtil.getCurrentMemberId();
+
 		Optional<Honbab> optionalHonbab = getLastestHonbabByMemberId(memberId);
 
 		if (optionalHonbab.isPresent()) {
@@ -63,7 +70,9 @@ public class HonbabService {
 		}
 	}
 
-	public MatchingPartnerInfoResponse getPartnerInfo(String memberId) {
+	public MatchingPartnerInfoResponse getPartnerInfo() {
+		final String memberId = securityUtil.getCurrentMemberId();
+
 		Honbab lastestHonbab = getLastestHonbabByMemberId(memberId).orElseThrow(
 			() -> new CustomException(ErrorCode.HONBAB_NOT_FOUND));
 		HonbabMatched selectedHonbabMatched = getLastestHonbabMatchedByHonbab(lastestHonbab).orElseThrow(
@@ -79,7 +88,9 @@ public class HonbabService {
 		return ActiveCustomersCountResponse.of(activeHonbabCount);
 	}
 
-	public void cancelHonbab(String memberId) {
+	public void cancelHonbab() {
+		final String memberId = securityUtil.getCurrentMemberId();
+
 		Honbab latestHonbab = getLastestHonbabByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.HONBAB_NOT_FOUND));
 
@@ -116,7 +127,7 @@ public class HonbabService {
 			.orElse(null);
 
 		if (lastHonbab == null) {
-			return ;
+			return;
 		}
 		validateInProgressStatus(lastHonbab);
 		checkIfRegistrationTimeHasPassed(lastHonbab);

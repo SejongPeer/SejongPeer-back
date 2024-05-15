@@ -21,6 +21,7 @@ public enum ErrorCode {
 	// 인증 에러
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
 	TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "세션이 만료되었습니다."),
+	AUTH_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "인증 정보를 찾을 수 없습니다."),
 
 	// 회원가입 및 회원정보 수정 에러
 	INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "계정과 일치하지 않는 비밀번호입니다."),
@@ -67,7 +68,6 @@ public enum ErrorCode {
 
 	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
 	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
-
 	;
 
 	private final HttpStatus status;
