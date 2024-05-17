@@ -97,7 +97,7 @@ public class StudyService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<StudyTotalPostResponse> getAllLectureStudyPost(String choice) {
+	public List<StudyTotalPostResponse> getAllStudyPost(String choice) {
 
 		List<Study> studyList = new ArrayList<>();
 
