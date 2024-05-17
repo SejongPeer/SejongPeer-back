@@ -7,7 +7,7 @@ public record StudyTotalPostResponse(
 	String title,
 	String createdAt,
 	Boolean isImage,
-	List<String> postTag
+	String postTag
 
 ) {
 }
