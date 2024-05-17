@@ -100,62 +100,34 @@ public class StudyService {
 
 		if ("학교수업스터디".equals(choice)) {
 			studyList = studyRepository.findByType(StudyType.LECTURE);
-			for (Study st : studyList) {
-				System.out.println(st.getContent());
-			}
-
-			return studyList.stream()
-				.map(this::mapToLectureStudyTotalPostResponse)
-				.collect(Collectors.toList());
+			return mapToStudyTotalPostResponse(studyList, StudyType.LECTURE);
 		}
 
 		if ("수업외활동".equals(choice)) {
 			studyList = studyRepository.findByType(StudyType.EXTERNAL_ACTIVITY);
-			for (Study st : studyList) {
-				System.out.println(st.getContent());
-			}
-
-			return studyList.stream()
-				.map(this::mapToExternalActivityStudyTotalPostResponse)
-				.collect(Collectors.toList());
+			return mapToStudyTotalPostResponse(studyList, StudyType.EXTERNAL_ACTIVITY);
 		}
 
 		return Collections.emptyList();
 	}
 
-	private StudyTotalPostResponse mapToLectureStudyTotalPostResponse(Study study) {
-		boolean hasImage = true;
-		if (study.getImageUrl() == null) hasImage = false;
-
-		LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
-			.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
-
-		String lectureName = lectureStudy.getLecture().getName();
-
-		return new StudyTotalPostResponse(
-			study.getId(),
-			study.getTitle(),
-			study.getCreatedAt().toString().substring(0, 10),
-			hasImage,
-			lectureName
-		);
-	}
-
-	private StudyTotalPostResponse mapToExternalActivityStudyTotalPostResponse(Study study) {
-		boolean hasImage = true;
-		if (study.getImageUrl() == null) hasImage = false;
-
-		ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
-			.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
-
-		String activityCategoryName = externalActivityStudy.getExternalActivity().getName();
-
-		return new StudyTotalPostResponse(
-			study.getId(),
-			study.getTitle(),
-			study.getCreatedAt().toString().substring(0, 10),
-			hasImage,
-			activityCategoryName
-		);
+	private List<StudyTotalPostResponse> mapToStudyTotalPostResponse(List<Study> studyList, StudyType studyType) {
+		return studyList.stream()
+			.map(study -> {
+				if (studyType == StudyType.LECTURE) {
+					LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
+						.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
+					String lectureName = lectureStudy.getLecture().getName();
+					return StudyTotalPostResponse.fromLectureStudy(study, lectureName);
+				} else if (studyType == StudyType.EXTERNAL_ACTIVITY) {
+					ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
+						.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
+					String activityCategoryName = externalActivityStudy.getExternalActivity().getName();
+					return StudyTotalPostResponse.fromExternalActivityStudy(study, activityCategoryName);
+				} else {
+					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
+				}
+			})
+			.collect(Collectors.toList());
 	}
 }
