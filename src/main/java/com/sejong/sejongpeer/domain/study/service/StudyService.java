@@ -1,5 +1,7 @@
 package com.sejong.sejongpeer.domain.study.service;
 
+import com.sejong.sejongpeer.domain.externalactivitystudy.entity.ExternalActivityStudy;
+import com.sejong.sejongpeer.domain.externalactivitystudy.repository.ExternalActivityStudyRepository;
 import com.sejong.sejongpeer.domain.lecturestudy.entity.LectureStudy;
 import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,7 @@ import java.util.stream.Collectors;
 public class StudyService {
 
 	private final LectureStudyRepository lectureStudyRepository;
+	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
 	private final MemberRepository memberRepository;
 
@@ -93,21 +97,33 @@ public class StudyService {
 	public List<StudyTotalPostResponse> getAllLectureStudyPost(String choice) {
 
 		List<Study> studyList = new ArrayList<>();
-		;
+
 		if ("학교수업스터디".equals(choice)) {
 			studyList = studyRepository.findByType(StudyType.LECTURE);
 			for (Study st : studyList) {
 				System.out.println(st.getContent());
 			}
+
+			return studyList.stream()
+				.map(this::mapToLectureStudyTotalPostResponse)
+				.collect(Collectors.toList());
 		}
 
-		List<StudyTotalPostResponse> totalPost = studyList.stream()
-			.map(this::mapToStudyTotalPostResponse)
-			.collect(Collectors.toList());
-		return totalPost;
+		if ("수업외활동".equals(choice)) {
+			studyList = studyRepository.findByType(StudyType.EXTERNAL_ACTIVITY);
+			for (Study st : studyList) {
+				System.out.println(st.getContent());
+			}
+
+			return studyList.stream()
+				.map(this::mapToExternalActivityStudyTotalPostResponse)
+				.collect(Collectors.toList());
+		}
+
+		return Collections.emptyList();
 	}
 
-	private StudyTotalPostResponse mapToStudyTotalPostResponse(Study study) {
+	private StudyTotalPostResponse mapToLectureStudyTotalPostResponse(Study study) {
 		boolean hasImage = true;
 		if (study.getImageUrl() == null) hasImage = false;
 
@@ -122,6 +138,24 @@ public class StudyService {
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
 			lectureName
+		);
+	}
+
+	private StudyTotalPostResponse mapToExternalActivityStudyTotalPostResponse(Study study) {
+		boolean hasImage = true;
+		if (study.getImageUrl() == null) hasImage = false;
+
+		ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
+			.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
+
+		String activityCategoryName = externalActivityStudy.getExternalActivity().getName();
+
+		return new StudyTotalPostResponse(
+			study.getId(),
+			study.getTitle(),
+			study.getCreatedAt().toString().substring(0, 10),
+			hasImage,
+			activityCategoryName
 		);
 	}
 }
