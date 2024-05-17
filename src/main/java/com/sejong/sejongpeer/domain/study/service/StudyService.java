@@ -34,6 +34,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class StudyService {
 
+	private static final String UNIVERSITY_LECTURE_STUDY = "학교수업스터디";
+	private static final String EXTERNAL_ACTIVITY_STUDY = "수업외활동";
+
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
@@ -98,12 +101,12 @@ public class StudyService {
 
 		List<Study> studyList = new ArrayList<>();
 
-		if ("학교수업스터디".equals(choice)) {
+		if (UNIVERSITY_LECTURE_STUDY.equals(choice)) {
 			studyList = studyRepository.findByType(StudyType.LECTURE);
 			return mapToStudyTotalPostResponse(studyList, StudyType.LECTURE);
 		}
 
-		if ("수업외활동".equals(choice)) {
+		if (EXTERNAL_ACTIVITY_STUDY.equals(choice)) {
 			studyList = studyRepository.findByType(StudyType.EXTERNAL_ACTIVITY);
 			return mapToStudyTotalPostResponse(studyList, StudyType.EXTERNAL_ACTIVITY);
 		}
