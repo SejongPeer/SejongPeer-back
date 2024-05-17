@@ -52,6 +52,7 @@ public enum ErrorCode {
 	// Study
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 	LECTURE_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 교내 수업이 없습니다."),
+	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
 
 	// 버디 등록 거절
 	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 일정시간 동안 버디를 등록할 수 없습니다."),
