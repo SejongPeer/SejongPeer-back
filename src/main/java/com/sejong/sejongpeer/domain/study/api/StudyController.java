@@ -74,8 +74,8 @@ public class StudyController {
 
 	@Operation(summary = "게시글 목록 조회", description = "학교 수업 스터디 혹은 수업 외 활동 게시글 전체 목록을 반환합니다.")
 	@GetMapping("/post/all")
-	public List<StudyTotalPostResponse> getAllLectureStudyPost(
+	public List<StudyTotalPostResponse> getAllStudyPost(
 		@RequestParam(name = "choice") String choice) {
-		return studyService.getAllLectureStudyPost(choice);
+		return studyService.getAllStudyPost(choice);
 	}
 }
