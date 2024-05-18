@@ -76,7 +76,7 @@ public class StudyController {
 	public Slice<StudyTotalPostResponse> getAllStudyPost(
 		@RequestParam(name = "choice") String choice,
 		@RequestParam(defaultValue = "0") int page,
-		@RequestParam(defaultValue = "10") int size) {
+		@RequestParam(defaultValue = "50") int size) {
 		return studyService.getAllStudyPost(choice, page, size);
 	}
 }
