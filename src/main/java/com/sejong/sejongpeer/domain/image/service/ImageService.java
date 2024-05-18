@@ -25,6 +25,7 @@ import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.global.common.constants.UrlConstants;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.MemberUtil;
 import com.sejong.sejongpeer.global.util.SpringEnvironmentUtil;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
@@ -41,12 +42,11 @@ public class ImageService {
 	private final ImageRepository imageRepository;
 	private final StudyRepository studyRepository;
 	private final MemberRepository memberRepository;
+	private final MemberUtil memberUtil;
 
 	// 스터디 이미지 Presigned Url 생성
-	public PresignedUrlResponse createStudyPresignedUrl(final String memberId, final StudyImageCreateRequest request) {
-		Member member = memberRepository
-			.findById(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	public PresignedUrlResponse createStudyPresignedUrl(final StudyImageCreateRequest request) {
+		final Member member = memberUtil.getCurrentMember();
 		Study study = findStudyById(request.studyId());
 
 		validateStudyUserMismatch(study, member);
@@ -68,7 +68,7 @@ public class ImageService {
 			);
 
 		String presignedUrl = amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
-		study.updateUploadStatusPending();
+		study.updateImageUploadStatusPending();
 
 		imageRepository.save(
 			Image.createImage(
@@ -82,10 +82,8 @@ public class ImageService {
 	}
 
 	// 스터디 이미지 업로드
-	public void uploadCompleteStudyImage(final String memberId, final StudyImageUploadCompleteRequest request) {
-		Member member = memberRepository
-			.findById(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	public void uploadCompleteStudyImage(final StudyImageUploadCompleteRequest request) {
+		final Member member = memberUtil.getCurrentMember();
 		Study study = findStudyById(request.studyId());
 
 		validateStudyUserMismatch(study, member);
@@ -102,7 +100,7 @@ public class ImageService {
 				image.getImageKey(),
 				request.imageFileExtension()
 			);
-		study.updateUploadStatusComplete(imageUrl);
+		study.updateImageUploadStatusComplete(imageUrl);
 	}
 
 	private Study findStudyById(final Long studyId) {

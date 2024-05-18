@@ -9,6 +9,7 @@ import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 import com.sejong.sejongpeer.infra.sms.service.SmsService;
 import com.sejong.sejongpeer.infra.sms.service.SmsText;
 
@@ -27,9 +28,10 @@ public class BuddyMatchingService {
 	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final BuddyRepository buddyRepository;
 	private final SmsService smsService;
+	private final SecurityUtil securityUtil;
 
-	public void updateBuddyMatchedStatus(String memberId, MatchingResultRequest request) {
-
+	public void updateBuddyMatchedStatus(MatchingResultRequest request) {
+		final String memberId = securityUtil.getCurrentMemberId();
 		Buddy ownerLatestBuddy = buddyRepository.findTopByMemberIdAndStatusOrderByCreatedAtDesc(memberId,
 				BuddyStatus.FOUND_BUDDY)
 			.orElseThrow(() -> new CustomException(ErrorCode.BUDDY_NOT_FOUND));

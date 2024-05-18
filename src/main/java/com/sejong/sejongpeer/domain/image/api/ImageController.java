@@ -9,7 +9,6 @@ import com.sejong.sejongpeer.domain.image.dto.request.StudyImageCreateRequest;
 import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadCompleteRequest;
 import com.sejong.sejongpeer.domain.image.dto.response.PresignedUrlResponse;
 import com.sejong.sejongpeer.domain.image.service.ImageService;
-import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,8 +30,7 @@ public class ImageController {
 	public PresignedUrlResponse createStudyPresignedUrl(
 		@Valid @RequestBody StudyImageCreateRequest request
 	) {
-		String memberId = SecurityContextUtil.extractMemberId();
-		return imageService.createStudyPresignedUrl(memberId, request);
+		return imageService.createStudyPresignedUrl(request);
 	}
 
 	@Operation(summary = "스터디 이미지 업로드 완료처리",
@@ -40,7 +38,6 @@ public class ImageController {
 	@PostMapping("/study/upload-complete")
 	public void uploadedStudyImage(
 		@Valid @RequestBody StudyImageUploadCompleteRequest request) {
-		String memberId = SecurityContextUtil.extractMemberId();
-		imageService.uploadCompleteStudyImage(memberId, request);
+		imageService.uploadCompleteStudyImage(request);
 	}
 }

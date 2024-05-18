@@ -17,6 +17,7 @@ import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.MemberUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,11 +40,11 @@ public class StudyService {
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
 	private final MemberRepository memberRepository;
+	private final MemberUtil memberUtil;
 
-	public StudyCreateResponse createStudy(final String memberId, final StudyCreateRequest studyCreateRequest) {
-		final Member member = memberRepository
-			.findById(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	public StudyCreateResponse createStudy(final StudyCreateRequest studyCreateRequest) {
+		final Member member = memberUtil.getCurrentMember();
+
 		Study study = createStudyEntity(member, studyCreateRequest);
 		Study saveStudy = studyRepository.save(study);
 		return StudyCreateResponse.from(saveStudy);

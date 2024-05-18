@@ -20,6 +20,8 @@ import com.sejong.sejongpeer.domain.member.entity.type.MemberInfo;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.MemberUtil;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ public class MemberService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final CollegeMajorRepository collegeMajorRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final MemberUtil memberUtil;
+	private final SecurityUtil securityUtil;
 
 	public void signUp(SignUpRequest request) {
 		verifySignUp(request);
@@ -68,13 +72,9 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public MemberInfoResponse getMemberInfo(String memberId) {
-		Member member =
-			memberRepository
-				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-		return MemberInfoResponse.from(member);
+	public MemberInfoResponse getMemberInfo() {
+		final Member currentMember = memberUtil.getCurrentMember();
+		return MemberInfoResponse.from(currentMember);
 	}
 
 	private boolean existsStudentId(String studentId) {
@@ -97,11 +97,8 @@ public class MemberService {
 		return memberRepository.existsByKakaoAccount(kakaoAccount);
 	}
 
-	public void updateMemberInfo(String memberId, MemberUpdateRequest request) {
-		Member member =
-			memberRepository
-				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+	public void updateMemberInfo(MemberUpdateRequest request) {
+		final Member member = memberUtil.getCurrentMember();
 
 		updateMember(member, request);
 	}
@@ -151,7 +148,8 @@ public class MemberService {
 		member.changePassword(passwordEncoder.encode(request.password()));
 	}
 
-	public void deleteMember(String memberId) {
+	public void deleteMember() {
+		final String memberId = securityUtil.getCurrentMemberId();
 		RefreshToken refreshToken = refreshTokenRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(
 				ErrorCode.UNAUTHORIZED));    // refresh token이 없다는 것은 로그인하지 않았단 뜻. 로그인 없이 회원탈퇴는 불가
