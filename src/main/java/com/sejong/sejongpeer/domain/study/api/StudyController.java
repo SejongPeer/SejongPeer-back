@@ -2,10 +2,7 @@ package com.sejong.sejongpeer.domain.study.api;
 
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
 import com.sejong.sejongpeer.security.util.SecurityContextUtil;
 
@@ -78,4 +75,12 @@ public class StudyController {
 		@RequestParam(defaultValue = "0") int page) {
 		return studyService.getAllStudyPost(choice, page);
 	}
+
+	@Operation(summary = "게시글 단건 상세 조회", description = "게시글 목록 조회에서 리턴 받은 각 게시글 id에 해당하는 게시글의 세부 정보를 반환합니다.")
+	@GetMapping("/post/{studyId}")
+	public StudyPostInfoResponse getOneStudyPostInfo(@PathVariable Long studyId) {
+		return studyService.getOneStudyPostInfo(studyId);
+	}
+
+
 }
