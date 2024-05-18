@@ -75,8 +75,7 @@ public class StudyController {
 	@GetMapping("/post/all")
 	public Slice<StudyTotalPostResponse> getAllStudyPost(
 		@RequestParam(name = "choice") String choice,
-		@RequestParam(defaultValue = "0") int page,
-		@RequestParam(defaultValue = "50") int size) {
-		return studyService.getAllStudyPost(choice, page, size);
+		@RequestParam(defaultValue = "0") int page) {
+		return studyService.getAllStudyPost(choice, page);
 	}
 }
