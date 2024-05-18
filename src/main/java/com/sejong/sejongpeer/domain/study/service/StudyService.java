@@ -20,10 +20,11 @@ import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -97,40 +98,39 @@ public class StudyService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<StudyTotalPostResponse> getAllStudyPost(String choice) {
-
-		List<Study> studyList = new ArrayList<>();
+	public Slice<StudyTotalPostResponse> getAllStudyPost(String choice, int page, int size) {
+		LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Slice<Study> studySlice;
 
 		if (UNIVERSITY_LECTURE_STUDY.equals(choice)) {
-			studyList = studyRepository.findByType(StudyType.LECTURE);
-			return mapToStudyTotalPostResponse(studyList, StudyType.LECTURE);
+			studySlice = studyRepository.findByTypeAndCreatedAtAfter(StudyType.LECTURE, sixMonthsAgo, pageable);
+			return mapToStudyTotalPostResponse(studySlice, StudyType.LECTURE);
 		}
 
 		if (EXTERNAL_ACTIVITY_STUDY.equals(choice)) {
-			studyList = studyRepository.findByType(StudyType.EXTERNAL_ACTIVITY);
-			return mapToStudyTotalPostResponse(studyList, StudyType.EXTERNAL_ACTIVITY);
+			studySlice = studyRepository.findByTypeAndCreatedAtAfter(StudyType.EXTERNAL_ACTIVITY, sixMonthsAgo, pageable);
+			return mapToStudyTotalPostResponse(studySlice, StudyType.EXTERNAL_ACTIVITY);
 		}
 
-		return Collections.emptyList();
+		return new SliceImpl<>(Collections.emptyList(), pageable, false);
 	}
 
-	private List<StudyTotalPostResponse> mapToStudyTotalPostResponse(List<Study> studyList, StudyType studyType) {
-		return studyList.stream()
-			.map(study -> {
-				if (studyType == StudyType.LECTURE) {
-					LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
-						.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
-					String lectureName = lectureStudy.getLecture().getName();
-					return StudyTotalPostResponse.fromLectureStudy(study, lectureName);
-				} else if (studyType == StudyType.EXTERNAL_ACTIVITY) {
-					ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
-						.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
-					String activityCategoryName = externalActivityStudy.getExternalActivity().getName();
-					return StudyTotalPostResponse.fromExternalActivityStudy(study, activityCategoryName);
-				} else {
-					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
-				}
-			})
-			.collect(Collectors.toList());
+	private Slice<StudyTotalPostResponse> mapToStudyTotalPostResponse(Slice<Study> studySlice, StudyType studyType) {
+		return studySlice.map(study -> {
+			if (studyType == StudyType.LECTURE) {
+				LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
+					.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
+				String lectureName = lectureStudy.getLecture().getName();
+				return StudyTotalPostResponse.fromLectureStudy(study, lectureName);
+			} else if (studyType == StudyType.EXTERNAL_ACTIVITY) {
+				ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
+					.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
+				String activityCategoryName = externalActivityStudy.getExternalActivity().getName();
+				return StudyTotalPostResponse.fromExternalActivityStudy(study, activityCategoryName);
+			} else {
+				throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
+			}
+		});
 	}
 }
