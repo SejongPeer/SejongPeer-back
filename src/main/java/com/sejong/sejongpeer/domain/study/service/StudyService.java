@@ -123,16 +123,11 @@ public class StudyService {
 
 	private Slice<StudyTotalPostResponse> mapToStudyTotalPostResponse(Slice<Study> studySlice, StudyType studyType) {
 		return studySlice.map(study -> {
+			String categoryName = getCategoryNameByStudyType(study);
 			if (studyType == StudyType.LECTURE) {
-				LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
-					.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
-				String lectureName = lectureStudy.getLecture().getName();
-				return StudyTotalPostResponse.fromLectureStudy(study, lectureName);
+				return StudyTotalPostResponse.fromLectureStudy(study, categoryName);
 			} else if (studyType == StudyType.EXTERNAL_ACTIVITY) {
-				ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
-					.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
-				String activityCategoryName = externalActivityStudy.getExternalActivity().getName();
-				return StudyTotalPostResponse.fromExternalActivityStudy(study, activityCategoryName);
+				return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName);
 			} else {
 				throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 			}
@@ -141,21 +136,24 @@ public class StudyService {
 
 	@Transactional(readOnly = true)
 	public StudyPostInfoResponse getOneStudyPostInfo(Long studyId) {
-		Study study = studyRepository.findById(studyId).orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+		Study study = studyRepository.findById(studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		final Member member = memberUtil.getCurrentMember();
-		String categoryName;
+		String categoryName = getCategoryNameByStudyType(study);
+		return StudyPostInfoResponse.fromStudyAndMember(study, member, categoryName);
+	}
 
+	private String getCategoryNameByStudyType(Study study) {
 		if (study.getType() == StudyType.LECTURE) {
 			LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
 				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
-			Long lectureId = lectureStudy.getLecture().getId();
-			Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
-			categoryName = lecture.getName();
-		} else {
+			return lectureStudy.getLecture().getName();
+		} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
 			ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
 				.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
-			categoryName = externalActivityStudy.getExternalActivity().getName();
+			return externalActivityStudy.getExternalActivity().getName();
+		} else {
+			throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 		}
-		return StudyPostInfoResponse.fromStudyAndMember(study, member, categoryName);
 	}
 }
