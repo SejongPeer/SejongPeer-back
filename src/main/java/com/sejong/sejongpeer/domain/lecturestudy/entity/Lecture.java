@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Lecture extends BaseEntity {
+public class Lecture {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -34,6 +34,6 @@ public class Lecture extends BaseEntity {
 
 	@OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<LectureStudy> lectureStudies = new ArrayList<>();
-  
+
 	private String college; // 단과대
 }
