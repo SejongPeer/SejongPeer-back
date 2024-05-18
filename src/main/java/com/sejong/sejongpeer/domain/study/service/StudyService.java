@@ -96,17 +96,20 @@ public class StudyService {
 
 	@Transactional(readOnly = true)
 	public Slice<StudyTotalPostResponse> getAllStudyPost(String choice, int page, int size) {
-		LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime endDate = now.minusMonths(page * 6);
+		LocalDateTime startDate = endDate.minusMonths(6);
+
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Slice<Study> studySlice;
 
 		if (UNIVERSITY_LECTURE_STUDY.equals(choice)) {
-			studySlice = studyRepository.findByTypeAndCreatedAtAfter(StudyType.LECTURE, sixMonthsAgo, pageable);
+			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate, pageable);
 			return mapToStudyTotalPostResponse(studySlice, StudyType.LECTURE);
 		}
 
 		if (EXTERNAL_ACTIVITY_STUDY.equals(choice)) {
-			studySlice = studyRepository.findByTypeAndCreatedAtAfter(StudyType.EXTERNAL_ACTIVITY, sixMonthsAgo, pageable);
+			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate, pageable);
 			return mapToStudyTotalPostResponse(studySlice, StudyType.EXTERNAL_ACTIVITY);
 		}
 
