@@ -2,16 +2,15 @@ package com.sejong.sejongpeer.domain.study.service;
 
 import com.sejong.sejongpeer.domain.externalactivitystudy.entity.ExternalActivityStudy;
 import com.sejong.sejongpeer.domain.externalactivitystudy.repository.ExternalActivityStudyRepository;
+import com.sejong.sejongpeer.domain.lecturestudy.entity.Lecture;
 import com.sejong.sejongpeer.domain.lecturestudy.entity.LectureStudy;
+import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureRepository;
 import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
@@ -36,6 +35,7 @@ public class StudyService {
 	private static final String UNIVERSITY_LECTURE_STUDY = "학교수업스터디";
 	private static final String EXTERNAL_ACTIVITY_STUDY = "수업외활동";
 
+	private final LectureRepository lectureRepository;
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
@@ -137,5 +137,25 @@ public class StudyService {
 				throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 			}
 		});
+	}
+
+	@Transactional(readOnly = true)
+	public StudyPostInfoResponse getOneStudyPostInfo(Long studyId) {
+		Study study = studyRepository.findById(studyId).orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+		final Member member = memberUtil.getCurrentMember();
+		String categoryName;
+
+		if (study.getType() == StudyType.LECTURE) {
+			LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
+				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
+			Long lectureId = lectureStudy.getLecture().getId();
+			Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
+			categoryName = lecture.getName();
+		} else {
+			ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
+				.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
+			categoryName = externalActivityStudy.getExternalActivity().getName();
+		}
+		return StudyPostInfoResponse.fromStudyAndMember(study, member, categoryName);
 	}
 }
