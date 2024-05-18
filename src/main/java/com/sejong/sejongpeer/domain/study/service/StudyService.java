@@ -95,25 +95,29 @@ public class StudyService {
 	}
 
 	@Transactional(readOnly = true)
-	public Slice<StudyTotalPostResponse> getAllStudyPost(String choice, int page, int size) {
+	public Slice<StudyTotalPostResponse> getAllStudyPost(String choice, int page) {
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime endDate = now.minusMonths(page * 6);
 		LocalDateTime startDate = endDate.minusMonths(6);
 
-		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Pageable pageable;
 		Slice<Study> studySlice;
 
 		if (UNIVERSITY_LECTURE_STUDY.equals(choice)) {
+			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate);
+			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate, pageable);
 			return mapToStudyTotalPostResponse(studySlice, StudyType.LECTURE);
 		}
 
 		if (EXTERNAL_ACTIVITY_STUDY.equals(choice)) {
+			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate);
+			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate, pageable);
 			return mapToStudyTotalPostResponse(studySlice, StudyType.EXTERNAL_ACTIVITY);
 		}
 
-		return new SliceImpl<>(Collections.emptyList(), pageable, false);
+		return new SliceImpl<>(Collections.emptyList(), Pageable.unpaged(), false);
 	}
 
 	private Slice<StudyTotalPostResponse> mapToStudyTotalPostResponse(Slice<Study> studySlice, StudyType studyType) {
