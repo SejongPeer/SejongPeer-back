@@ -9,9 +9,7 @@ import com.sejong.sejongpeer.domain.lecture.repository.LectureRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
-import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
 import com.sejong.sejongpeer.domain.study.entity.LectureStudy;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.LectureStudyRepository;
@@ -52,15 +50,6 @@ public class LectureStudyService {
 
 		LectureStudy lectureStudy = LectureStudy.create(lecture, saveStudy);
 		lectureStudyRepository.save(lectureStudy);
-	}
-
-	public StudyUpdateResponse updateStudy(LectureStudyUpdateRequest request, Long studyId) {
-		Study study =
-			studyRepository
-				.findById(studyId)
-				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
-
-		return null;
 	}
 
 	@Transactional(readOnly = true)

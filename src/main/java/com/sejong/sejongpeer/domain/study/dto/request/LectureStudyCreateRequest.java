@@ -17,7 +17,7 @@ public record LectureStudyCreateRequest(
 	@NotBlank(message = "스터디 내용은 비워둘 수 없습니다.")
 	@Schema(description = "스터디 내용") String content,
 	@Schema(description = "모집 인원") Integer recruitmentCount,
-	@NotBlank(message = "스터디 방식은 비워둘 수 없습니다.")
+	@NotNull(message = "스터디 방식은 비워둘 수 없습니다.")
 	@Schema(description = "스터디 방식") StudyType type,
 	@NotNull(message = "모집 시작 시간은 비워둘 수 없습니다.")
 	@JsonFormat(
