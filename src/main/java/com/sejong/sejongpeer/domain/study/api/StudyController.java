@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.study.api;
 
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.request.StudySearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @Tag(name = "3. [스터디]", description = "스터디 관련 API입니다.")
@@ -78,6 +81,12 @@ public class StudyController {
 	@GetMapping("/post/{studyId}")
 	public StudyPostInfoResponse getOneStudyPostInfo(@PathVariable Long studyId) {
 		return studyService.getOneStudyPostInfo(studyId);
+	}
+
+	@Operation(summary = "게시글 검색", description = "검색 조건에 해당하는 모든 게시글을 반환합니다.")
+	@GetMapping("/post/search")
+	public List<StudyPostInfoResponse> getAllStudyPostBySearch(@RequestBody StudySearchRequest studySearchRequest) {
+		return studyService.getAllStudyPostBySearch(studySearchRequest);
 	}
 
 
