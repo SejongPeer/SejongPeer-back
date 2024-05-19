@@ -1,17 +1,5 @@
 package com.sejong.sejongpeer.domain.study.api;
 
-import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
-import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
-import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
-import com.sejong.sejongpeer.domain.study.service.StudyService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,20 +13,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "3. [스터디]", description = "스터디 관련 API입니다.")
+import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyUpdateResponse;
+import com.sejong.sejongpeer.domain.study.service.StudyService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@Tag(name = "3. [학교수업 스터디]", description = "학교수업 스터디 관련 API입니다.")
 @RestController
-@RequestMapping("/api/v1/study")
+@RequestMapping("/api/v1/lecture/study")
 @RequiredArgsConstructor
-public class StudyController {
+public class LectureStudyController {
 
 	private final StudyService studyService;
 
-	@Operation(summary = "스터디 생성", description = "스터디를 생성합니다.")
+	@Operation(summary = "수업 스터디 생성", description = "스터디를 생성합니다.")
 	@PostMapping
-	public ResponseEntity<StudyCreateResponse> studyCreate(
-		@Valid @RequestBody StudyCreateRequest studyCreateRequest) {
+	public ResponseEntity<Void> createLectureStudy(
+		@Valid @RequestBody LectureStudyCreateRequest request) {
+		studyService.createStudy(request);
+
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(studyService.createStudy(studyCreateRequest));
+			.body(null);
 	}
 
 	@Operation(summary = "스터디 단건 조회", description = "스터디 한 개를 조회합니다.")

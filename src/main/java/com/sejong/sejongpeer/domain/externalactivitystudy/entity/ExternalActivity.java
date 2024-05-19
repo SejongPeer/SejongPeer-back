@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.common.BaseEntity;
-import com.sejong.sejongpeer.domain.study.entity.Study;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
