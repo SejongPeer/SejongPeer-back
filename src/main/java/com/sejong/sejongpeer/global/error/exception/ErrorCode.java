@@ -52,6 +52,7 @@ public enum ErrorCode {
 
 	// Study
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
+	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
 
 	// Lecture
 	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
