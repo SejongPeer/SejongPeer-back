@@ -10,6 +10,8 @@ import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCrea
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
 import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationRepository;
+import com.sejong.sejongpeer.infra.sms.service.SmsService;
+import com.sejong.sejongpeer.infra.sms.service.SmsText;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class StudyRelationService {
 
+	private final SmsService smsService;
 	private final StudyRelationRepository studyRelationRepository;
 
 	public StudyRelationCreateResponse createStudyRelation(final Long studyId) {
@@ -29,7 +32,7 @@ public class StudyRelationService {
 
 		studyRelations.forEach(study -> {
 			if (study.getStatus() == StudyMatchingStatus.ACCEPT) {
-				sendKakaoLink();
+				sendStudyKakaoLink(study);
 			} else {
 				study.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
 			}
@@ -37,7 +40,10 @@ public class StudyRelationService {
 		studyRelationRepository.saveAll(studyRelations);
 	}
 
-	private void sendKakaoLink(){
-		// 문자메시지 전송
+	private void sendStudyKakaoLink(StudyRelation study){
+		smsService.sendSms(
+			study.getMember().getPhoneNumber(),
+			SmsText.valueOf(SmsText.STUDY_RECRUITMENT_COMPLETED + study.getStudy().getKakaoLink())
+		);
 	}
 }
