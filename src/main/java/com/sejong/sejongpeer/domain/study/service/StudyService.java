@@ -2,12 +2,9 @@ package com.sejong.sejongpeer.domain.study.service;
 
 import com.sejong.sejongpeer.domain.externalactivitystudy.entity.ExternalActivityStudy;
 import com.sejong.sejongpeer.domain.externalactivitystudy.repository.ExternalActivityStudyRepository;
-import com.sejong.sejongpeer.domain.lecturestudy.entity.Lecture;
 import com.sejong.sejongpeer.domain.lecturestudy.entity.LectureStudy;
-import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureRepository;
 import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudySearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,11 +36,9 @@ public class StudyService {
 	private static final String UNIVERSITY_LECTURE_STUDY = "학교수업스터디";
 	private static final String EXTERNAL_ACTIVITY_STUDY = "수업외활동";
 
-	private final LectureRepository lectureRepository;
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
-	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
 
 	public StudyCreateResponse createStudy(final StudyCreateRequest studyCreateRequest) {
