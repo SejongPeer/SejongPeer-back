@@ -3,6 +3,7 @@ package com.sejong.sejongpeer.domain.study.vo;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.sejongpeer.domain.study.dto.request.ExternalActivityStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 
@@ -49,7 +50,19 @@ public record StudyVo(
 			request.title(),
 			request.content(),
 			request.recruitmentCount(),
-			request.type(),
+			StudyType.LECTURE,
+			request.recruitmentStartAt(),
+			request.recruitmentEndAt(),
+			request.kakaoLink()
+		);
+	}
+
+	public static StudyVo from(ExternalActivityStudyCreateRequest request) {
+		return new StudyVo(
+			request.title(),
+			request.content(),
+			request.recruitmentCount(),
+			StudyType.EXTERNAL_ACTIVITY,
 			request.recruitmentStartAt(),
 			request.recruitmentEndAt(),
 			request.kakaoLink()
