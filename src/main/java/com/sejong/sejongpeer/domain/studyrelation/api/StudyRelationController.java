@@ -46,4 +46,11 @@ public class StudyRelationController {
 	public ResponseEntity<?> rejectStudyRelation() {
 		return null;
 	}
+
+	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
+	@PostMapping
+	public void earlyCloseRegistration(@RequestParam("studyId") Long studyId) {
+		studyRelationService.earlyCloseRegistration(studyId);
+	}
+
 }
