@@ -22,6 +22,7 @@ import com.sejong.sejongpeer.global.util.MemberUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -160,7 +162,32 @@ public class StudyService {
 		}
 	}
 
-	public List<StudyPostInfoResponse> getAllStudyPostBySearch(StudySearchRequest request) {
-		return new ArrayList<>();
+	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudySearchRequest request) {
+		Specification<Study> spec = (root, query, criteriaBuilder) -> null;
+
+		spec = spec.and(StudySpecification.biggerThanRecruitmentMin(request.recruitmentMin()));
+		spec = spec.and(StudySpecification.smallerThanRecruitmentMax(request.recruitmentMax()));
+		spec = spec.and(StudySpecification.afterStartedAt(request.recruitmentStartAt()));
+		spec = spec.and(StudySpecification.beforeClosededAt(request.recruitmentEndAt()));
+		spec = spec.and(StudySpecification.equalsRecruitmentStatus(request.isRecruiting()));
+		spec = spec.or(StudySpecification.equalsTitle(request.searchWord()));
+		spec = spec.or(StudySpecification.equalsContent(request.searchWord()));
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
+
+		return studyPage.stream()
+			.map(study -> {
+				String categoryName = getCategoryNameByStudyType(study);
+				if (study.getType() == StudyType.LECTURE) {
+					return StudyTotalPostResponse.fromLectureStudy(study, categoryName);
+				} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
+					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName);
+				} else {
+					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
+				}
+			})
+			.collect(Collectors.toList());
+
 	}
 }

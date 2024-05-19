@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,8 +86,11 @@ public class StudyController {
 
 	@Operation(summary = "게시글 검색", description = "검색 조건에 해당하는 모든 게시글을 반환합니다.")
 	@GetMapping("/post/search")
-	public List<StudyPostInfoResponse> getAllStudyPostBySearch(@RequestBody StudySearchRequest studySearchRequest) {
-		return studyService.getAllStudyPostBySearch(studySearchRequest);
+	public List<StudyTotalPostResponse> getAllStudyPostBySearch(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "20") int size,
+		@RequestBody StudySearchRequest studySearchRequest) {
+		return studyService.getAllStudyPostBySearch(page, size, studySearchRequest);
 	}
 
 
