@@ -1,9 +1,10 @@
-package com.sejong.sejongpeer.domain.externalactivitystudy.entity;
+package com.sejong.sejongpeer.domain.externalactivity.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.common.BaseEntity;
+import com.sejong.sejongpeer.domain.study.entity.ExternalActivityStudy;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
