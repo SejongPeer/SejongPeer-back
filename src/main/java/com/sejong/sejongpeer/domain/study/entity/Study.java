@@ -6,6 +6,7 @@ import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
@@ -111,17 +112,16 @@ public class Study extends BaseAuditEntity {
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(vo.recruitmentStartAt())
 			.recruitmentEndAt(vo.recruitmentEndAt())
+			.kakaoLink(vo.kakaoLink())
 			.member(member)
 			.build();
 	}
 
-	public void updateStudy(LectureStudyUpdateRequest request) {
-		this.title = title;
-		this.content = content;
-		this.recruitmentCount = recruitmentCount;
-		this.type = type;
-		this.recruitmentStartAt = recruitmentStartAt;
-		this.recruitmentEndAt = recruitmentEndAt;
+	public void update(StudyUpdateRequest request) {
+		this.title = request.title();
+		this.content = request.content();
+		this.recruitmentCount = request.recruitmentCount();
+		this.recruitmentEndAt = request.recruitmentEndAt();
 	}
 
 	public void updateImageUploadStatusPending() {
