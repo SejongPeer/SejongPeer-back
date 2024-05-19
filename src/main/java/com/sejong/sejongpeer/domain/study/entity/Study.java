@@ -58,6 +58,9 @@ public class Study extends BaseAuditEntity {
 	@Comment("스터디 이미지")
 	private String imageUrl;
 
+	@Comment("오픈카카오톡 링크")
+	private String kakaoLink;
+
 	@Enumerated(EnumType.STRING)
 	private ImageUploadStatus uploadStatus;
 
@@ -79,6 +82,7 @@ public class Study extends BaseAuditEntity {
 		StudyType type,
 		RecruitmentStatus recruitmentStatus,
 		String imageUrl,
+		String kakaoLink,
 		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
@@ -90,6 +94,7 @@ public class Study extends BaseAuditEntity {
 		this.uploadStatus = uploadStatus;
 		this.recruitmentStatus = recruitmentStatus;
 		this.imageUrl = imageUrl;
+		this.kakaoLink = kakaoLink;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
 		this.member = member;
@@ -100,6 +105,7 @@ public class Study extends BaseAuditEntity {
 		String content,
 		Integer recruitmentCount,
 		StudyType type,
+		String kakaoLink,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {
@@ -108,6 +114,7 @@ public class Study extends BaseAuditEntity {
 			.content(content)
 			.recruitmentCount(recruitmentCount)
 			.type(type)
+			.kakaoLink(kakaoLink)
 			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(recruitmentStartAt)
