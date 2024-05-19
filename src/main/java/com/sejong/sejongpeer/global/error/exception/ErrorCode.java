@@ -53,6 +53,9 @@ public enum ErrorCode {
 	// Study
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 
+	// Lecture
+	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
+
 	// 버디 등록 거절
 	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 일정시간 동안 버디를 등록할 수 없습니다."),
 
@@ -67,8 +70,7 @@ public enum ErrorCode {
 	STUDY_USER_MISMATCH(HttpStatus.FORBIDDEN, "스터디를 생성한 유저와 로그인한 계정이 일치하지 않습니다."),
 
 	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
-	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
-	;
+	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다.");
 
 	private final HttpStatus status;
 	private final String message;

@@ -6,6 +6,7 @@ import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
@@ -67,6 +68,9 @@ public class Study extends BaseAuditEntity {
 	@Comment("모집 마감 기간")
 	private LocalDateTime recruitmentEndAt;
 
+	@Comment("오픈카카오톡 링크")
+	private String kakaoLink;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
@@ -82,6 +86,7 @@ public class Study extends BaseAuditEntity {
 		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
+		String kakaoLink,
 		Member member) {
 		this.title = title;
 		this.content = content;
@@ -92,26 +97,20 @@ public class Study extends BaseAuditEntity {
 		this.imageUrl = imageUrl;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
+		this.kakaoLink = kakaoLink;
 		this.member = member;
 	}
 
-	public static Study createStudy(
-		String title,
-		String content,
-		Integer recruitmentCount,
-		StudyType type,
-		LocalDateTime recruitmentStartAt,
-		LocalDateTime recruitmentEndAt,
-		Member member) {
+	public static Study createLecutreStudy(Member member, LectureStudyCreateRequest request) {
 		return Study.builder()
-			.title(title)
-			.content(content)
-			.recruitmentCount(recruitmentCount)
-			.type(type)
+			.title(request.title())
+			.content(request.content())
+			.recruitmentCount(request.recruitmentCount())
+			.type(StudyType.LECTURE)
 			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
-			.recruitmentStartAt(recruitmentStartAt)
-			.recruitmentEndAt(recruitmentEndAt)
+			.recruitmentStartAt(request.recruitmentStartAt())
+			.recruitmentEndAt(request.recruitmentEndAt())
 			.member(member)
 			.build();
 	}
