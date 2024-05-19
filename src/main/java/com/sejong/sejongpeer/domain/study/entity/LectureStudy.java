@@ -35,7 +35,7 @@ public class LectureStudy extends BaseAuditEntity {
 		this.lecture = lecture;
 	}
 
-	public static LectureStudy createLectureStudy(Lecture lecture, Study saveStudy) {
+	public static LectureStudy create(Lecture lecture, Study saveStudy) {
 		return LectureStudy.builder()
 			.study(saveStudy)
 			.lecture(lecture)
