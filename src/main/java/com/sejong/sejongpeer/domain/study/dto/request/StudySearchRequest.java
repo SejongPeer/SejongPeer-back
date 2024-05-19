@@ -39,7 +39,10 @@ public record StudySearchRequest(
 	@NotBlank(message = "스터디 모집 여부는 비워둘 수 없습니다.")
 	@Size(max = 5, message = "모집 중은 true, 모집 마감은 false로 요청주세요.")
 	@Schema(description = "스터디 모집 여부")
-	Boolean isRecruiting
+	Boolean isRecruiting,
+
+	@NotBlank(message = "검색어는 비워둘 수 없습니다.")
+	@Schema(description = "검색어") String searchWord
 
 ) {
 }
