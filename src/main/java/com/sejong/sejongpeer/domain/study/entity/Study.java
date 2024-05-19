@@ -6,9 +6,11 @@ import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
+import com.sejong.sejongpeer.domain.study.vo.StudyVo;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
@@ -67,6 +69,9 @@ public class Study extends BaseAuditEntity {
 	@Comment("모집 마감 기간")
 	private LocalDateTime recruitmentEndAt;
 
+	@Comment("오픈카카오톡 링크")
+	private String kakaoLink;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
@@ -82,6 +87,7 @@ public class Study extends BaseAuditEntity {
 		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
+		String kakaoLink,
 		Member member) {
 		this.title = title;
 		this.content = content;
@@ -92,43 +98,30 @@ public class Study extends BaseAuditEntity {
 		this.imageUrl = imageUrl;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
+		this.kakaoLink = kakaoLink;
 		this.member = member;
 	}
 
-	public static Study createStudy(
-		String title,
-		String content,
-		Integer recruitmentCount,
-		StudyType type,
-		LocalDateTime recruitmentStartAt,
-		LocalDateTime recruitmentEndAt,
-		Member member) {
+	public static Study create(Member member, StudyVo vo) {
 		return Study.builder()
-			.title(title)
-			.content(content)
-			.recruitmentCount(recruitmentCount)
-			.type(type)
+			.title(vo.title())
+			.content(vo.content())
+			.recruitmentCount(vo.recruitmentCount())
+			.type(vo.type())
 			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
-			.recruitmentStartAt(recruitmentStartAt)
-			.recruitmentEndAt(recruitmentEndAt)
+			.recruitmentStartAt(vo.recruitmentStartAt())
+			.recruitmentEndAt(vo.recruitmentEndAt())
+			.kakaoLink(vo.kakaoLink())
 			.member(member)
 			.build();
 	}
 
-	public void updateStudy(
-		String title,
-		String content,
-		Integer recruitmentCount,
-		StudyType type,
-		LocalDateTime recruitmentStartAt,
-		LocalDateTime recruitmentEndAt) {
-		this.title = title;
-		this.content = content;
-		this.recruitmentCount = recruitmentCount;
-		this.type = type;
-		this.recruitmentStartAt = recruitmentStartAt;
-		this.recruitmentEndAt = recruitmentEndAt;
+	public void update(StudyUpdateRequest request) {
+		this.title = request.title();
+		this.content = request.content();
+		this.recruitmentCount = request.recruitmentCount();
+		this.recruitmentEndAt = request.recruitmentEndAt();
 	}
 
 	public void updateImageUploadStatusPending() {

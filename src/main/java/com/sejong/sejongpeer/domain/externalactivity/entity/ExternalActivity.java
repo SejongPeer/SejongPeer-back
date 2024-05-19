@@ -1,10 +1,10 @@
-package com.sejong.sejongpeer.domain.lecturestudy.entity;
+package com.sejong.sejongpeer.domain.externalactivity.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.common.BaseEntity;
-import com.sejong.sejongpeer.domain.externalactivitystudy.entity.ExternalActivityStudy;
+import com.sejong.sejongpeer.domain.study.entity.ExternalActivityStudy;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -19,21 +19,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Lecture extends BaseEntity {
+public class ExternalActivity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
 
-	private String professor;
+	private String description;
 
-	private String code; // 학수번호
-
-	private Integer classNo; // 분반
-
-	@OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<LectureStudy> lectureStudies = new ArrayList<>();
-  
-	private String college; // 단과대
+	@OneToMany(mappedBy = "externalActivity", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ExternalActivityStudy> externalActivityStudies = new ArrayList<>();
 }
