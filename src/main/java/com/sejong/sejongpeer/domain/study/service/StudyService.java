@@ -9,6 +9,7 @@ import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureStudyReposito
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.request.StudySearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.entity.Study;
@@ -25,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -105,14 +108,14 @@ public class StudyService {
 		Slice<Study> studySlice;
 
 		if (UNIVERSITY_LECTURE_STUDY.equals(choice)) {
-			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate);
+			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate).intValue();
 			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate, pageable);
 			return mapToStudyTotalPostResponse(studySlice, StudyType.LECTURE);
 		}
 
 		if (EXTERNAL_ACTIVITY_STUDY.equals(choice)) {
-			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate);
+			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate).intValue();
 			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate, pageable);
 			return mapToStudyTotalPostResponse(studySlice, StudyType.EXTERNAL_ACTIVITY);
@@ -155,5 +158,9 @@ public class StudyService {
 		} else {
 			throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 		}
+	}
+
+	public List<StudyPostInfoResponse> getAllStudyPostBySearch(StudySearchRequest request) {
+		return new ArrayList<>();
 	}
 }
