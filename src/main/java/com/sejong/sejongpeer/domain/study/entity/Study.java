@@ -6,10 +6,10 @@ import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
+import com.sejong.sejongpeer.domain.study.vo.StudyVo;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
@@ -101,27 +101,21 @@ public class Study extends BaseAuditEntity {
 		this.member = member;
 	}
 
-	public static Study createLecutreStudy(Member member, LectureStudyCreateRequest request) {
+	public static Study create(Member member, StudyVo vo) {
 		return Study.builder()
-			.title(request.title())
-			.content(request.content())
-			.recruitmentCount(request.recruitmentCount())
-			.type(StudyType.LECTURE)
+			.title(vo.title())
+			.content(vo.content())
+			.recruitmentCount(vo.recruitmentCount())
+			.type(vo.type())
 			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
-			.recruitmentStartAt(request.recruitmentStartAt())
-			.recruitmentEndAt(request.recruitmentEndAt())
+			.recruitmentStartAt(vo.recruitmentStartAt())
+			.recruitmentEndAt(vo.recruitmentEndAt())
 			.member(member)
 			.build();
 	}
 
-	public void updateStudy(
-		String title,
-		String content,
-		Integer recruitmentCount,
-		StudyType type,
-		LocalDateTime recruitmentStartAt,
-		LocalDateTime recruitmentEndAt) {
+	public void updateStudy(LectureStudyUpdateRequest request) {
 		this.title = title;
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;

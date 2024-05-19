@@ -1,8 +1,9 @@
-package com.sejong.sejongpeer.domain.study.dto.request;
+package com.sejong.sejongpeer.domain.study.vo;
 
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record LectureStudyCreateRequest(
+public record StudyVo(
 	@NotBlank(message = "스터디 제목은 비워둘 수 없습니다.")
 	@Size(max = 50, message = "제목은 50자 이하 입니다.")
 	@Schema(description = "스터디 제목") String title,
@@ -41,8 +42,17 @@ public record LectureStudyCreateRequest(
 	@NotBlank(message = "모집 상태는 비워둘 수 없습니다.")
 	@NotBlank(message = "스터디 방식은 비워둘 수 없습니다.")
 	@NotBlank(message = "카카오톡 오픈채팅 링크는 비워둘 수 없습니다.")
-	@Schema(description = "카카오톡 오픈채팅 링크") String kakaoLink,
-	@NotNull(message = "강의 ID는 비워둘 수 없습니다.")
-	@Schema(description = "강의 ID") Long lectureId
+	@Schema(description = "카카오톡 오픈채팅 링크") String kakaoLink
 ) {
+	public static StudyVo from(LectureStudyCreateRequest request) {
+		return new StudyVo(
+			request.title(),
+			request.content(),
+			request.recruitmentCount(),
+			request.type(),
+			request.recruitmentStartAt(),
+			request.recruitmentEndAt(),
+			request.kakaoLink()
+		);
+	}
 }
