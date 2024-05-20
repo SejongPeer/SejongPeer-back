@@ -68,7 +68,9 @@ public enum ErrorCode {
 
 	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
 	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
-	;
+
+	// 스크랩 에러
+	SCRAP_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스크랩입니다.");
 
 	private final HttpStatus status;
 	private final String message;
