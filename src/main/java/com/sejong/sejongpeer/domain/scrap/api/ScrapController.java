@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.scrap.api;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +24,13 @@ public class ScrapController {
 		@PathVariable Long studyId
 	) {
 		return scrapService.createScrap(studyId);
+	}
+
+	@Operation(summary = "스터디 스크랩을 삭제", description = "스터디 스크랩을 삭제합니다.")
+	@DeleteMapping("/{scrapId}")
+	public void scrapDelete(
+		@PathVariable Long scrapId
+	) {
+		scrapService.deleteScrap(scrapId);
 	}
 }

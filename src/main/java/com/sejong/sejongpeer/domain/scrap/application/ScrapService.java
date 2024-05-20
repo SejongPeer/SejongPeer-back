@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.scrap.application;
 
-import org.hibernate.internal.SessionCreationOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,5 +30,13 @@ public class ScrapService {
 
 		Scrap scrap = Scrap.createScrap(ScrapType.STUDY, memberUtil.getCurrentMember(), study);
 		return scrapRepository.save(scrap).getId();
+	}
+
+	public void deleteScrap(Long scrapId) {
+		Scrap scrap = scrapRepository.findById(scrapId).orElseThrow(
+			() -> new CustomException(ErrorCode.SCRAP_NOT_FOUND)
+		);
+
+		scrapRepository.delete(scrap);
 	}
 }
