@@ -7,6 +7,8 @@ import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,9 @@ public class Scrap extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Enumerated(EnumType.STRING)
+	private ScrapType type;
+
 	@Comment("스크랩한 사용자")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -37,13 +42,15 @@ public class Scrap extends BaseEntity {
 	private Study study;
 
 	@Builder(access = AccessLevel.PRIVATE)
-	private Scrap(Member member, Study study) {
+	private Scrap(ScrapType type, Member member, Study study) {
+		this.type = type;
 		this.member = member;
 		this.study = study;
 	}
 
-	public static Scrap createScrap(Member member, Study study) {
+	public static Scrap createScrap(ScrapType type, Member member, Study study) {
 		return Scrap.builder()
+			.type(type)
 			.member(member)
 			.study(study)
 			.build();
