@@ -1,9 +1,13 @@
 package com.sejong.sejongpeer.domain.scrap.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.scrap.dao.ScrapRepository;
+import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapResponse;
 import com.sejong.sejongpeer.domain.scrap.entity.Scrap;
 import com.sejong.sejongpeer.domain.scrap.entity.ScrapType;
 import com.sejong.sejongpeer.domain.study.entity.Study;
@@ -22,6 +26,20 @@ public class ScrapService {
 	private final ScrapRepository scrapRepository;
 	private final StudyRepository studyRepository;
 	private final MemberUtil memberUtil;
+
+	public StudyScrapResponse findOneStudyScrap(Long studyId) {
+		final Member member = memberUtil.getCurrentMember();
+
+		Study study = studyRepository.findById(studyId).orElseThrow(
+			() -> new CustomException(ErrorCode.STUDY_NOT_FOUND)
+		);
+		
+		List<Scrap> scraps = scrapRepository.findByTypeAndStudy(ScrapType.STUDY, study);
+		boolean isScrap = scraps.stream()
+			.anyMatch(scrap -> scrap.getMember().equals(member));
+
+		return StudyScrapResponse.of(isScrap, scraps.size());
+	}
 
 	public Long createScrap(Long studyId) {
 		Study study = studyRepository.findById(studyId).orElseThrow(
