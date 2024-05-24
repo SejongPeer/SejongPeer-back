@@ -58,4 +58,8 @@ public class StudyRelation extends BaseAuditEntity {
 			.status(StudyMatchingStatus.PENDING)
 			.build();
 	}
+
+	public void changeStudyMatchingStatus(StudyMatchingStatus status) {
+		this.status = status;
+	}
 }
