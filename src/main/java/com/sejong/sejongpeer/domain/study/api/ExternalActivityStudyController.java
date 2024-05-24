@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.study.dto.request.ExternalActivityStudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
 import com.sejong.sejongpeer.domain.study.service.ExternalActivityStudyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,10 +25,11 @@ public class ExternalActivityStudyController {
 
 	@Operation(summary = "외부 활동 스터디 생성", description = "외부 활동 스터디를 생성합니다.")
 	@PostMapping
-	public ResponseEntity<Void> createStudy(@Valid @RequestBody ExternalActivityStudyCreateRequest request) {
-		externalActivityStudyService.createStudy(request);
+	public ResponseEntity<StudyCreateResponse> createStudy(
+		@Valid @RequestBody ExternalActivityStudyCreateRequest request) {
+		StudyCreateResponse response = externalActivityStudyService.createStudy(request);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(null);
+			.body(response);
 	}
 }

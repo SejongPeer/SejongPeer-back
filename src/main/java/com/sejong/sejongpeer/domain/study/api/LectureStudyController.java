@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
 import com.sejong.sejongpeer.domain.study.service.LectureStudyService;
 
@@ -31,12 +32,12 @@ public class LectureStudyController {
 
 	@Operation(summary = "학교수업 스터디 생성", description = "학교수업 스터디를 생성합니다.")
 	@PostMapping
-	public ResponseEntity<Void> createLectureStudy(
+	public ResponseEntity<StudyCreateResponse> createStudy(
 		@Valid @RequestBody LectureStudyCreateRequest request) {
-		lectureStudyService.createStudy(request);
+		StudyCreateResponse response = lectureStudyService.createStudy(request);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(null);
+			.body(response);
 	}
 
 	@Operation(summary = "스터디 단건 조회", description = "스터디 한 개를 조회합니다.")

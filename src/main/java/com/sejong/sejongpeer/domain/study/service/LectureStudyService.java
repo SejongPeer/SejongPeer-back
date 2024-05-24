@@ -9,6 +9,7 @@ import com.sejong.sejongpeer.domain.lecture.repository.LectureRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyFindResponse;
 import com.sejong.sejongpeer.domain.study.entity.LectureStudy;
 import com.sejong.sejongpeer.domain.study.entity.Study;
@@ -33,7 +34,7 @@ public class LectureStudyService {
 	private final LectureStudyRepository lectureStudyRepository;
 	private final MemberRepository memberRepository;
 
-	public void createStudy(LectureStudyCreateRequest request) {
+	public StudyCreateResponse createStudy(LectureStudyCreateRequest request) {
 		String memberId = securityUtil.getCurrentMemberId();
 
 		Member member =
@@ -50,6 +51,8 @@ public class LectureStudyService {
 
 		LectureStudy lectureStudy = LectureStudy.create(lecture, saveStudy);
 		lectureStudyRepository.save(lectureStudy);
+
+		return StudyCreateResponse.from(saveStudy);
 	}
 
 	@Transactional(readOnly = true)
