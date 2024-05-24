@@ -8,6 +8,7 @@ import com.sejong.sejongpeer.domain.externalactivity.repository.ExternalActivity
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.ExternalActivityStudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyCreateResponse;
 import com.sejong.sejongpeer.domain.study.entity.ExternalActivityStudy;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.ExternalActivityStudyRepository;
@@ -30,7 +31,7 @@ public class ExternalActivityStudyService {
 
 	private final SecurityUtil securityUtil;
 
-	public void createStudy(ExternalActivityStudyCreateRequest request) {
+	public StudyCreateResponse createStudy(ExternalActivityStudyCreateRequest request) {
 		String memberId = securityUtil.getCurrentMemberId();
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -44,5 +45,7 @@ public class ExternalActivityStudyService {
 
 		ExternalActivityStudy externalActivityStudy = ExternalActivityStudy.create(externalActivity, savedStudy);
 		externalActivityStudyRepository.save(externalActivityStudy);
+
+		return StudyCreateResponse.from(savedStudy);
 	}
 }
