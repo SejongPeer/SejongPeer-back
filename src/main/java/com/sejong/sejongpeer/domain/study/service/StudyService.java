@@ -178,7 +178,7 @@ public class StudyService {
 					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 				}
 			})
-			.collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+			.collect(Collectors.toUnmodifiableList());
 
 	}
 }
