@@ -144,11 +144,11 @@ public class StudyService {
 
 	private String getCategoryNameByStudyType(Study study) {
 		if (study.getType() == StudyType.LECTURE) {
-			LectureStudy lectureStudy = lectureStudyRepository.findByStudyId(study.getId())
+			LectureStudy lectureStudy = lectureStudyRepository.findByStudy(study)
 				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
 			return lectureStudy.getLecture().getName();
 		} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
-			ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudyId(study.getId())
+			ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudy(study)
 				.orElseThrow(() -> new CustomException(ErrorCode.ACTIVITY_AND_STUDY_NOT_CONNECTED));
 			return externalActivityStudy.getExternalActivity().getName();
 		} else {
