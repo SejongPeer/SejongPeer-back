@@ -4,6 +4,7 @@ import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
+import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,9 +73,9 @@ public class StudyController {
 	@Operation(summary = "게시글 목록 조회", description = "학교 수업 스터디 혹은 수업 외 활동 게시글 전체 목록을 반환합니다.")
 	@GetMapping("/post")
 	public Slice<StudyTotalPostResponse> getAllStudyPost(
-		@RequestParam(name = "choice") String choice,
+		@RequestParam(name = "studyType") StudyType studyType,
 		@RequestParam(defaultValue = "0") int page) {
-		return studyService.getAllStudyPost(choice, page);
+		return studyService.getAllStudyPost(studyType, page);
 	}
 
 	@Operation(summary = "게시글 단건 상세 조회", description = "게시글 목록 조회에서 리턴 받은 각 게시글 id에 해당하는 게시글의 세부 정보를 반환합니다.")
