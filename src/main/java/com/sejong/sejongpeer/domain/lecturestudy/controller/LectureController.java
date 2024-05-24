@@ -2,9 +2,11 @@ package com.sejong.sejongpeer.domain.lecturestudy.controller;
 
 import com.sejong.sejongpeer.domain.lecturestudy.dto.CollegeLessonProfessorResponse;
 import com.sejong.sejongpeer.domain.lecturestudy.service.LectureService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "3. [스터디]", description = "스터디 관련 API입니다.")
+@Tag(name = "5. [수업]", description = "수업 관련 API입니다.")
 @RestController
 @RequestMapping("/api/v1/colleges")
 @RequiredArgsConstructor
