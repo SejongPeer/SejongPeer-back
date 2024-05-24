@@ -48,7 +48,7 @@ public class StudyRelationController {
 	}
 
 	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
-	@PostMapping
+	@PostMapping("/early-close")
 	public void earlyCloseRegistration(@RequestParam("studyId") Long studyId) {
 		studyRelationService.earlyCloseRegistration(studyId);
 	}
