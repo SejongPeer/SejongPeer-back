@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.scrap.dao.ScrapRepository;
+import com.sejong.sejongpeer.domain.scrap.dto.request.StudyScrapCreateRequest;
 import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapResponse;
 import com.sejong.sejongpeer.domain.scrap.entity.Scrap;
 import com.sejong.sejongpeer.domain.scrap.entity.ScrapType;
@@ -27,10 +28,10 @@ public class ScrapService {
 	private final StudyRepository studyRepository;
 	private final MemberUtil memberUtil;
 
-	public StudyScrapResponse findOneStudyScrap(Long studyId) {
+	public StudyScrapResponse findOneStudyScrap(StudyScrapCreateRequest request) {
 		final Member member = memberUtil.getCurrentMember();
 
-		Study study = studyRepository.findById(studyId).orElseThrow(
+		Study study = studyRepository.findById(request.studyId()).orElseThrow(
 			() -> new CustomException(ErrorCode.STUDY_NOT_FOUND)
 		);
 		
