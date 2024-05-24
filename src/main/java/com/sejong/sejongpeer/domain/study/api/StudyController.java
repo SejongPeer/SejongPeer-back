@@ -1,7 +1,7 @@
 package com.sejong.sejongpeer.domain.study.api;
 
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
-import com.sejong.sejongpeer.domain.study.dto.request.StudySearchRequest;
+import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +70,7 @@ public class StudyController {
 	}
 
 	@Operation(summary = "게시글 목록 조회", description = "학교 수업 스터디 혹은 수업 외 활동 게시글 전체 목록을 반환합니다.")
-	@GetMapping("/post/all")
+	@GetMapping("/post")
 	public Slice<StudyTotalPostResponse> getAllStudyPost(
 		@RequestParam(name = "choice") String choice,
 		@RequestParam(defaultValue = "0") int page) {
@@ -89,8 +88,8 @@ public class StudyController {
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "20") int size,
-		@Valid @RequestBody StudySearchRequest studySearchRequest) {
-		return studyService.getAllStudyPostBySearch(page, size, studySearchRequest);
+		@Valid @RequestBody StudyPostSearchRequest studyPostSearchRequest) {
+		return studyService.getAllStudyPostBySearch(page, size, studyPostSearchRequest);
 	}
 
 

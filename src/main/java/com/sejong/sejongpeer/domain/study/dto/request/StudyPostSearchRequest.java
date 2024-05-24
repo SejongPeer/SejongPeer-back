@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
-public record StudySearchRequest(
+public record StudyPostSearchRequest(
 
 	@NotNull(message = "검색 시 모집 인원 하한선은 비워둘 수 없습니다.")
 	@Min(value = 2, message = "모집 최소 인원은 2명 이상이어야 합니다.")
