@@ -10,6 +10,8 @@ import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCrea
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
 import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationRepository;
+import com.sejong.sejongpeer.global.error.exception.CustomException;
+import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.infra.sms.service.SmsService;
 import com.sejong.sejongpeer.infra.sms.service.SmsText;
 
@@ -29,6 +31,10 @@ public class StudyRelationService {
 
 	public void earlyCloseRegistration(final Long studyId) {
 		List<StudyRelation> studyRelations = studyRelationRepository.findByStudyId(studyId);
+
+		if (studyRelations.isEmpty()) {
+			throw new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND);
+		}
 
 		studyRelations.forEach(study -> {
 			if (study.getStatus() == StudyMatchingStatus.ACCEPT) {

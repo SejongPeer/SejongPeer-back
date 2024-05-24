@@ -3,6 +3,8 @@ package com.sejong.sejongpeer.domain.studyrelation.api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,8 +50,8 @@ public class StudyRelationController {
 	}
 
 	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
-	@PostMapping("/early-close")
-	public void earlyCloseRegistration(@RequestParam("studyId") Long studyId) {
+	@PatchMapping("/{studyId}/early-close")
+	public void earlyCloseRegistration(@PathVariable Long studyId) {
 		studyRelationService.earlyCloseRegistration(studyId);
 	}
 
