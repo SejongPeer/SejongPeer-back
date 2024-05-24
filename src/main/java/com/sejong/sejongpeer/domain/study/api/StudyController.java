@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-
 @Tag(name = "7-1. [스터디]", description = "스터디 관련 API입니다.")
 @RestController
 @RequestMapping("/api/v1/study")
@@ -90,7 +89,7 @@ public class StudyController {
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "20") int size,
-		@RequestBody StudySearchRequest studySearchRequest) {
+		@Valid @RequestBody StudySearchRequest studySearchRequest) {
 		return studyService.getAllStudyPostBySearch(page, size, studySearchRequest);
 	}
 

@@ -157,6 +157,10 @@ public class StudyService {
 	}
 
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudySearchRequest request) {
+		if (request.recruitmentMin() > request.recruitmentMax()) {
+			throw new CustomException(ErrorCode.STUDY_SEARCH_PERSONNEL_MISCONDITION);
+		}
+
 		Specification<Study> spec = (root, query, criteriaBuilder) -> null;
 
 		spec = spec.and(StudySpecification.biggerThanRecruitmentMin(request.recruitmentMin()));
