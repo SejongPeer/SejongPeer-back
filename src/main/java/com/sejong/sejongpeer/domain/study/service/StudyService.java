@@ -6,7 +6,7 @@ import com.sejong.sejongpeer.domain.lecturestudy.entity.LectureStudy;
 import com.sejong.sejongpeer.domain.lecturestudy.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
-import com.sejong.sejongpeer.domain.study.dto.request.StudySearchRequest;
+import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.entity.Study;
@@ -137,9 +137,8 @@ public class StudyService {
 	public StudyPostInfoResponse getOneStudyPostInfo(Long studyId) {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
-		final Member member = memberUtil.getCurrentMember();
 		String categoryName = getCategoryNameByStudyType(study);
-		return StudyPostInfoResponse.fromStudyAndMember(study, member, categoryName);
+		return StudyPostInfoResponse.fromStudy(study, categoryName);
 	}
 
 	private String getCategoryNameByStudyType(Study study) {
@@ -156,7 +155,7 @@ public class StudyService {
 		}
 	}
 
-	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudySearchRequest request) {
+	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudyPostSearchRequest request) {
 		if (request.recruitmentMin() > request.recruitmentMax()) {
 			throw new CustomException(ErrorCode.STUDY_SEARCH_PERSONNEL_MISCONDITION);
 		}
