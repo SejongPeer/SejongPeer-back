@@ -32,11 +32,10 @@ public class StudySpecification {
 		}
 	}
 
-	public static Specification<Study> equalsTitle(String searchWord) {
-		return (root, query, CriteriaBuilder) -> CriteriaBuilder.like(root.get("title"), searchWord);
-	}
-
-	public static Specification<Study> equalsContent(String searchWord) {
-		return (root, query, CriteriaBuilder) -> CriteriaBuilder.like(root.get("content"), searchWord);
+	public static Specification<Study> containsTitleOrContent(String searchWord) {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.or(
+			criteriaBuilder.like(root.get("title"), "%" + searchWord + "%"),
+			criteriaBuilder.like(root.get("content"), "%" + searchWord + "%")
+		);
 	}
 }
