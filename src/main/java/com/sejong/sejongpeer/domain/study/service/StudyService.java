@@ -157,15 +157,12 @@ public class StudyService {
 			throw new CustomException(ErrorCode.STUDY_SEARCH_PERSONNEL_MISCONDITION);
 		}
 
-		Specification<Study> spec = (root, query, criteriaBuilder) -> null;
-
-		spec = spec.and(StudySpecification.biggerThanRecruitmentMin(request.recruitmentMin()));
-		spec = spec.and(StudySpecification.smallerThanRecruitmentMax(request.recruitmentMax()));
-		spec = spec.and(StudySpecification.afterStartedAt(request.recruitmentStartAt()));
-		spec = spec.and(StudySpecification.beforeClosededAt(request.recruitmentEndAt()));
-		spec = spec.and(StudySpecification.equalsRecruitmentStatus(request.isRecruiting()));
-		spec = spec.or(StudySpecification.equalsTitle(request.searchWord()));
-		spec = spec.or(StudySpecification.equalsContent(request.searchWord()));
+		Specification<Study> spec = Specification.where(StudySpecification.biggerThanRecruitmentMin(request.recruitmentMin()))
+			.and(StudySpecification.smallerThanRecruitmentMax(request.recruitmentMax()))
+			.and(StudySpecification.afterStartedAt(request.recruitmentStartAt()))
+			.and(StudySpecification.beforeClosededAt(request.recruitmentEndAt()))
+			.and(StudySpecification.equalsRecruitmentStatus(request.isRecruiting()))
+			.and(StudySpecification.containsTitleOrContent(request.searchWord()));
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
