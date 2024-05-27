@@ -1,5 +1,7 @@
 package com.sejong.sejongpeer.domain.buddy.repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +25,6 @@ public interface BuddyRepository extends JpaRepository<Buddy, Long> {
 	long countByMemberIdAndStatus(String memberId, BuddyStatus status);
 
 	List<Buddy> findAllByMemberIdAndStatus(String memberId, BuddyStatus status);
+
+	List<Buddy> findAllByCreatedAtBetween(LocalDateTime festivalStartDate, LocalDateTime festivalEndDate);
 }
