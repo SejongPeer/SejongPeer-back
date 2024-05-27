@@ -4,6 +4,7 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
+import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyMatchingService;
 import com.sejong.sejongpeer.domain.buddy.service.MatchingService;
@@ -24,6 +25,7 @@ public class MatchingScheduler {
 	private static final int NO_RESPONSE_HOUR_LIMIT = 24;
 
 	private final BuddyRepository buddyRepository;
+	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final MatchingService matchingService;
 	private final BuddyMatchingService buddyMatchingService;
 
@@ -56,8 +58,12 @@ public class MatchingScheduler {
 
 				progressMatch.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
 
+				buddyMatchedRepository.save(progressMatch);
+
 			}
 		}
+
+		buddyRepository.saveAll(foundBuddies);
 	}
 
 }
