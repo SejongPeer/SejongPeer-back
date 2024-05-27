@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.buddy.service;
 
 import static com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,8 +100,11 @@ public class MatchingService {
 	}
 
 	private Buddy findSuitableBuddy(List<Buddy> candidates, Buddy me) {
+		LocalDate myRegisterDate = me.getCreatedAt().toLocalDate();
+
 		return candidates.stream()
 			.filter(candidate -> candidate.getId() != me.getId()) // 본인은 제외 시킴
+			.filter(candidate -> candidate.getCreatedAt().toLocalDate().isEqual(myRegisterDate))
 			.filter(
 				candidate ->
 					candidate.getStatus()
