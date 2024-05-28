@@ -21,6 +21,7 @@ public enum ErrorCode {
 	// 인증 에러
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
 	TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "세션이 만료되었습니다."),
+	AUTH_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "인증 정보를 찾을 수 없습니다."),
 
 	// 회원가입 및 회원정보 수정 에러
 	INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "계정과 일치하지 않는 비밀번호입니다."),
@@ -34,6 +35,9 @@ public enum ErrorCode {
 
 	// 조회 에러
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+	NICKNAME_IS_NULL(HttpStatus.BAD_REQUEST, "닉네임이 존재하지 않습니다."),
+	PHONE_NUMBER_IS_NULL(HttpStatus.BAD_REQUEST, "전화번호가 존재하지 않습니다."),
+	KAKAO_ACCOUNT_IS_NULL(HttpStatus.BAD_REQUEST, "카카오 ID가 존재하지 않습니다."),
 
 	// ID/PW 찾기 에러
 	ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 정보로 가입된 계정이 존재하지 않습니다."),
@@ -44,10 +48,14 @@ public enum ErrorCode {
 	REGISTRATION_NOT_POSSIBLE(HttpStatus.CONFLICT, "이미 최대횟수만큼 버디 찾기를 신청했습니다."),
 	TARGET_BUDDY_NOT_FOUND(HttpStatus.NOT_FOUND, "상대 버디를 찾을 수 없습니다."),
 	BUDDY_NOT_MATCHED(HttpStatus.CONFLICT, "매칭 성사된 버디가 아닙니다."),
-  MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
+	MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
 
 	// Study
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
+	LECTURE_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 교내 수업이 없습니다."),
+	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
+	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
+	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
 
 	// 버디 등록 거절
 	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 일정시간 동안 버디를 등록할 수 없습니다."),
@@ -55,7 +63,19 @@ public enum ErrorCode {
 	// 혼밥 에러
 	HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 혼밥이 없습니다"),
 	TARGET_HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "혼밥 짝꿍을 찾을 수 없습니다."),
-	HONBAB_REGISTRATION_LIMIT(HttpStatus.CONFLICT, "혼밥 매칭 후 일정시간 동안 재신청을 할 수 없습니다.");
+	HONBAB_REGISTRATION_LIMIT(HttpStatus.CONFLICT, "혼밥 매칭 후 일정시간 동안 재신청을 할 수 없습니다."),
+
+	// 이미지 에러
+	IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지 파일 형식을 찾을 수 없습니다."),
+	IMAGE_KEY_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지 키를 찾을 수 없습니다."),
+	STUDY_USER_MISMATCH(HttpStatus.FORBIDDEN, "스터디를 생성한 유저와 로그인한 계정이 일치하지 않습니다."),
+
+	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
+	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
+
+	// 스크랩 에러
+	SCRAP_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스크랩입니다.");
+
 	private final HttpStatus status;
 	private final String message;
 

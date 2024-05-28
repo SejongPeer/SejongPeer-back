@@ -87,29 +87,19 @@ public class MemberController {
 	@Operation(summary = "회원정보 조회", description = "회원정보를 조회합니다.")
 	@GetMapping("/my-page")
 	public MemberInfoResponse getMemberInfo() {
-		String memberId =
-			(String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		System.out.println(SecurityContextHolder.getContext().getAuthentication());
-		return memberService.getMemberInfo(memberId);
+		return memberService.getMemberInfo();
 	}
 
 	@Operation(summary = "회원정보 수정", description = "회원정보를 수정합니다.")
 	@PatchMapping("/my-page")
 	public void updateMemberInfo(@Valid @RequestBody MemberUpdateRequest request) {
-		String memberId =
-			(String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		memberService.updateMemberInfo(memberId, request);
+		memberService.updateMemberInfo(request);
 	}
 
 	@Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 진행합니다.")
 	@DeleteMapping("/my-page")
 	public void deleteMember() {
-		String memberId =
-			(String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		memberService.deleteMember(memberId);
+		memberService.deleteMember();
 	}
 
 	@Operation(summary = "아이디 찾기", description = "학번과 이름 및 전화번호로 아이디를 찾습니다.")

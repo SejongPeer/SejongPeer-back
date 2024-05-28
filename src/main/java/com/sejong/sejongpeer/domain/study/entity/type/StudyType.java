@@ -6,12 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum StudyType {
-    PROJECT("프로젝트"),
-    CONTEST("공모전"),
-    EXTERNAL_ACTIVITY("대외활동"),
-    PREPARE_EMPLOYMENT("취업준비"),
-    LANGUAGE_STUDY("어학"),
-    PROGRAMMING("프로그래밍"),
-    ETC("기타");
-    private final String value;
+	LECTURE("학교 수업"),
+	EXTERNAL_ACTIVITY("수업 외 활동");
+
+	private final String value;
 }

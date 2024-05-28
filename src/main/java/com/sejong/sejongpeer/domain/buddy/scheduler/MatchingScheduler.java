@@ -4,11 +4,14 @@ import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
+import com.sejong.sejongpeer.domain.buddy.repository.BuddyMatchedRepository;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.buddy.service.BuddyMatchingService;
 import com.sejong.sejongpeer.domain.buddy.service.MatchingService;
 import com.sejong.sejongpeer.infra.sms.service.SmsText;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +25,7 @@ public class MatchingScheduler {
 	private static final int NO_RESPONSE_HOUR_LIMIT = 24;
 
 	private final BuddyRepository buddyRepository;
+	private final BuddyMatchedRepository buddyMatchedRepository;
 	private final MatchingService matchingService;
 	private final BuddyMatchingService buddyMatchingService;
 
@@ -42,19 +46,24 @@ public class MatchingScheduler {
 
 			if (hoursElapsed >= NO_RESPONSE_HOUR_LIMIT) {
 				noResposeBuddy.changeStatus(BuddyStatus.REJECT);
-				buddyMatchingService.sendMatchingFailurePenaltyMessage(noResposeBuddy, SmsText.MATCHING_AUTO_FAILED_REJECT);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(noResposeBuddy.getMember().getPhoneNumber(),
+					SmsText.MATCHING_AUTO_FAILED_REJECT);
 
 				BuddyMatched progressMatch = buddyMatchingService.getBuddyMatchedByBuddy(noResposeBuddy);
 
 				Buddy partnerBuddy = buddyMatchingService.getOtherBuddyInBuddyMatched(progressMatch, noResposeBuddy);
 				partnerBuddy.changeStatus(BuddyStatus.DENIED);
-				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy, SmsText.MATCHING_AUTO_FAILED_DENIED);
+				buddyMatchingService.sendMatchingFailurePenaltyMessage(partnerBuddy.getMember().getPhoneNumber(),
+					SmsText.MATCHING_AUTO_FAILED_DENIED);
 
 				progressMatch.changeStatus(BuddyMatchedStatus.MATCHING_FAIL);
 
+				buddyMatchedRepository.save(progressMatch);
 
 			}
 		}
+
+		buddyRepository.saveAll(foundBuddies);
 	}
 
 }

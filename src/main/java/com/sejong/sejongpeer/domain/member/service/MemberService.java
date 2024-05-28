@@ -20,6 +20,8 @@ import com.sejong.sejongpeer.domain.member.entity.type.MemberInfo;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
+import com.sejong.sejongpeer.global.util.MemberUtil;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ public class MemberService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final CollegeMajorRepository collegeMajorRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final MemberUtil memberUtil;
+	private final SecurityUtil securityUtil;
 
 	public void signUp(SignUpRequest request) {
 		verifySignUp(request);
@@ -41,46 +45,6 @@ public class MemberService {
 		memberRepository.save(member);
 
 		log.info("회원가입 완료: {}", member);
-	}
-
-	private Member createMember(SignUpRequest request) {
-		String encodedPassword = passwordEncoder.encode(request.password());
-
-		CollegeMajor collegeMajor =
-			collegeMajorRepository
-				.findByCollegeAndMajor(request.college(), request.major())
-				.orElseThrow(() -> new CustomException(ErrorCode.COLLEGE_NOT_FOUND));
-
-		CollegeMajor collegeMinor = null;
-		if (request.hasSubMajor()) {
-			collegeMinor =
-				collegeMajorRepository
-					.findByCollegeAndMajor(request.subCollege(), request.subMajor())
-					.orElseThrow(() -> new CustomException(ErrorCode.COLLEGE_NOT_FOUND));
-		}
-
-		return Member.create(request, collegeMajor, collegeMinor, encodedPassword);
-	}
-
-	private void verifySignUp(SignUpRequest request) {
-		verifyPassword(request.password(), request.passwordCheck());
-		verifyPhoneNumber(request.phoneNumber());
-		verifyAccount(request.account());
-		verifyStudentId(request.studentId());
-		verifyNickname(request.nickname());
-		verifyKakaoAccount(request.kakaoAccount());
-	}
-
-	private void verifyKakaoAccount(String kakaoAccount) {
-		if (existsKakaoAccount(kakaoAccount)) {
-			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
-		}
-	}
-
-	private void verifyNickname(String nickname) {
-		if (existsNickname(nickname)) {
-			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
-		}
 	}
 
 	private void verifyStudentId(String studentId) {
@@ -108,13 +72,9 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public MemberInfoResponse getMemberInfo(String memberId) {
-		Member member =
-			memberRepository
-				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-		return MemberInfoResponse.of(member);
+	public MemberInfoResponse getMemberInfo() {
+		final Member currentMember = memberUtil.getCurrentMember();
+		return MemberInfoResponse.from(currentMember);
 	}
 
 	private boolean existsStudentId(String studentId) {
@@ -137,18 +97,14 @@ public class MemberService {
 		return memberRepository.existsByKakaoAccount(kakaoAccount);
 	}
 
-	public void updateMemberInfo(String memberId, MemberUpdateRequest request) {
-		Member member =
-			memberRepository
-				.findById(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+	public void updateMemberInfo(MemberUpdateRequest request) {
+		final Member member = memberUtil.getCurrentMember();
 
 		updateMember(member, request);
 	}
 
 	private void updateMember(Member member, MemberUpdateRequest request) {
 		verifyUpdatable(request);
-
 		MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
 		MemberInfo.PHONE_NUMBER.executeUpdate(member, request.phoneNumber());
 		MemberInfo.KAKAO_ACCOUNT.executeUpdate(member, request.kakaoAccount());
@@ -192,7 +148,8 @@ public class MemberService {
 		member.changePassword(passwordEncoder.encode(request.password()));
 	}
 
-	public void deleteMember(String memberId) {
+	public void deleteMember() {
+		final String memberId = securityUtil.getCurrentMemberId();
 		RefreshToken refreshToken = refreshTokenRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new CustomException(
 				ErrorCode.UNAUTHORIZED));    // refresh token이 없다는 것은 로그인하지 않았단 뜻. 로그인 없이 회원탈퇴는 불가
@@ -209,21 +166,61 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkAccountExists(String account) {
-		return new ExistsCheckResponse(memberRepository.existsByAccount(account));
+		return ExistsCheckResponse.of(memberRepository.existsByAccount(account));
 	}
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkNicknameExists(String nickname) {
-		return new ExistsCheckResponse(memberRepository.existsByNickname(nickname));
+		return ExistsCheckResponse.of(memberRepository.existsByNickname(nickname));
 	}
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkPhoneNumberExists(String phoneNumber) {
-		return new ExistsCheckResponse(memberRepository.existsByPhoneNumber(phoneNumber));
+		return ExistsCheckResponse.of(memberRepository.existsByPhoneNumber(phoneNumber));
 	}
 
 	@Transactional(readOnly = true)
 	public ExistsCheckResponse checkKakaoAccountExists(String kakaoAccount) {
-		return new ExistsCheckResponse(memberRepository.existsByKakaoAccount(kakaoAccount));
+		return ExistsCheckResponse.of(memberRepository.existsByKakaoAccount(kakaoAccount));
+	}
+
+	private Member createMember(SignUpRequest request) {
+		String encodedPassword = passwordEncoder.encode(request.password());
+
+		CollegeMajor collegeMajor =
+			collegeMajorRepository
+				.findByCollegeAndMajor(request.college(), request.major())
+				.orElseThrow(() -> new CustomException(ErrorCode.COLLEGE_NOT_FOUND));
+
+		CollegeMajor collegeMinor = null;
+		if (request.hasSubMajor()) {
+			collegeMinor =
+				collegeMajorRepository
+					.findByCollegeAndMajor(request.subCollege(), request.subMajor())
+					.orElseThrow(() -> new CustomException(ErrorCode.COLLEGE_NOT_FOUND));
+		}
+
+		return Member.create(request, collegeMajor, collegeMinor, encodedPassword);
+	}
+
+	private void verifySignUp(SignUpRequest request) {
+		verifyPassword(request.password(), request.passwordCheck());
+		verifyPhoneNumber(request.phoneNumber());
+		verifyAccount(request.account());
+		verifyStudentId(request.studentId());
+		verifyNickname(request.nickname());
+		verifyKakaoAccount(request.kakaoAccount());
+	}
+
+	private void verifyKakaoAccount(String kakaoAccount) {
+		if (existsKakaoAccount(kakaoAccount)) {
+			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
+		}
+	}
+
+	private void verifyNickname(String nickname) {
+		if (existsNickname(nickname)) {
+			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+		}
 	}
 }
