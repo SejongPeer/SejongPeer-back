@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -23,6 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchingScheduler {
 	private static final int NO_RESPONSE_HOUR_LIMIT = 24;
+	private static final String FESTIVAL_START_DATE = "2024-05-29T00:00:00";
+	private static final String FESTIVAL_END_DATE = "2024-05-31T23:59:59";
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private final BuddyRepository buddyRepository;
 	private final BuddyMatchedRepository buddyMatchedRepository;
@@ -66,4 +70,16 @@ public class MatchingScheduler {
 		buddyRepository.saveAll(foundBuddies);
 	}
 
+	@Scheduled(cron = "0 0 0 * * *")
+	public void resetBuddyStatusDaily() {
+		LocalDateTime startDate = LocalDateTime.parse(FESTIVAL_START_DATE, DATE_TIME_FORMATTER);
+		LocalDateTime endDate = LocalDateTime.parse(FESTIVAL_END_DATE, DATE_TIME_FORMATTER);
+		List<Buddy> buddiesInFestivalPeriod = buddyRepository.findAllByCreatedAtBetween(startDate, endDate);
+
+		for (Buddy buddy : buddiesInFestivalPeriod) {
+			buddy.changeStatus(BuddyStatus.REACTIVATE);
+		}
+
+		buddyRepository.saveAll(buddiesInFestivalPeriod);
+	}
 }
