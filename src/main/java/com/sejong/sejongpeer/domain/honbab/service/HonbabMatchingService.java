@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class HonbabMatchingService {
+	private static final long FIXED_WAIT_TIME_SECONDS = 86400; // 24시간
+
 	private final SmsService smsService;
 
 	private final HonbabRepository honbabRepository;
@@ -93,8 +95,7 @@ public class HonbabMatchingService {
 	}
 
 	private boolean isWaitTimeExceeded(Honbab honbab) {
-		long fixedWaitTimeSeconds = 86400; // 24시간
-		return Duration.between(honbab.getCreatedAt(), LocalDateTime.now()).getSeconds() > fixedWaitTimeSeconds;
+		return Duration.between(honbab.getCreatedAt(), LocalDateTime.now()).getSeconds() > FIXED_WAIT_TIME_SECONDS;
 	}
 
 	private void handleTimeOut(Honbab honbab) {
