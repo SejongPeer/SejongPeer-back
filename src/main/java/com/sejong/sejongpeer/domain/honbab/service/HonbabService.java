@@ -84,8 +84,8 @@ public class HonbabService {
 	}
 
 	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
-		Long activeHonbabCount = honbabRepository.countByStatusInProgressHonbab();
-		return ActiveCustomersCountResponse.of(activeHonbabCount);
+		Long totalHonbabCount = honbabRepository.count();
+		return ActiveCustomersCountResponse.of(totalHonbabCount);
 	}
 
 	public void cancelHonbab() {
