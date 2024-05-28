@@ -48,7 +48,7 @@ public class HonbabController {
 		return honbabService.getPartnerInfo();
 	}
 
-	@Operation(summary = "혼밥 상대를 찾고있는 이용자 수 요청", description = "IN_PROGRESS인 상태인 혼밥 이용자")
+	@Operation(summary = "혼밥 탈출 총 이용자 수 요청", description = "전체 혼밥 이용자 수 반환")
 	@GetMapping("/active-count")
 	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
 		return honbabService.getCurrentlyActiveHonbabCount();
