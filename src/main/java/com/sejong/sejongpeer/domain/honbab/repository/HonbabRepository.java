@@ -18,4 +18,6 @@ public interface HonbabRepository extends JpaRepository<Honbab, Long> {
 
 	@Query("SELECT COUNT(b) FROM Honbab b WHERE b.status = 'IN_PROGRESS'")
 	Long countByStatusInProgressHonbab();
+
+	Long countByStatus(HonbabStatus inProgress);
 }

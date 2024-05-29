@@ -10,16 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
 import com.sejong.sejongpeer.domain.honbab.dto.request.RegisterHonbabRequest;
 import com.sejong.sejongpeer.domain.honbab.dto.response.HonbabMatchingStatusResponse;
+import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.Honbab;
 import com.sejong.sejongpeer.domain.honbab.entity.honbab.type.HonbabStatus;
+import com.sejong.sejongpeer.domain.honbab.entity.honbabmatched.HonbabMatched;
+import com.sejong.sejongpeer.domain.honbab.repository.HonbabMatchedRepository;
 import com.sejong.sejongpeer.domain.honbab.repository.HonbabRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
-import com.sejong.sejongpeer.domain.honbab.dto.response.MatchingPartnerInfoResponse;
-import com.sejong.sejongpeer.domain.honbab.entity.honbabmatched.HonbabMatched;
-import com.sejong.sejongpeer.domain.honbab.repository.HonbabMatchedRepository;
 import com.sejong.sejongpeer.global.util.MemberUtil;
 import com.sejong.sejongpeer.global.util.SecurityUtil;
 
@@ -84,7 +84,7 @@ public class HonbabService {
 	}
 
 	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
-		Long totalHonbabCount = honbabRepository.count();
+		Long totalHonbabCount = honbabRepository.countByStatus(HonbabStatus.IN_PROGRESS);
 		return ActiveCustomersCountResponse.of(totalHonbabCount);
 	}
 
