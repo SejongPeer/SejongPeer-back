@@ -16,13 +16,14 @@ public enum GenderOption {
 			return myGender == candidateGender;
 		}
 	},
-	NO_MATTER("상관없음") {
-		// me가 상관없을 경우, candidate가 동성만 원하는 경우가 있을 수 있음
+	NO_MATTER("이성") {
+		// me와 candidate의 성별이 달라야함
 		@Override
 		public boolean isMatch(
 			Gender myGender, GenderOption candidateOption, Gender candidateGender) {
-			return candidateOption == NO_MATTER
-				|| (candidateOption == SAME && myGender == candidateGender);
+			return candidateOption == NO_MATTER &&
+				myGender != candidateGender;
+
 		}
 	};
 	private final String value;
