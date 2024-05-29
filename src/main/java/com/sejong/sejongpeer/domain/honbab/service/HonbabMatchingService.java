@@ -53,6 +53,7 @@ public class HonbabMatchingService {
 
 	public HonbabMatched matchHonbabWhenRegister(Honbab me) {
 		List<Honbab> candidates = honbabRepository.findAllByStatus(HonbabStatus.IN_PROGRESS);
+
 		return matchHonbabByCandidates(candidates, me);
 	}
 
@@ -67,6 +68,7 @@ public class HonbabMatchingService {
 		}
 
 		HonbabMatched honbabMatched = HonbabMatched.registerMatchingPair(me, partner);
+		honbabMatchedRepository.save(honbabMatched);
 		completeMatching(partner, me);
 		return honbabMatched;
 	}
