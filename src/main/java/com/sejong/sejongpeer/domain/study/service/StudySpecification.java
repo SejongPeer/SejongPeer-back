@@ -8,23 +8,23 @@ import java.time.LocalDateTime;
 
 public class StudySpecification {
 
-	public static Specification<Study> biggerThanRecruitmentMin(Integer recruitmentMin) {
+	public static Specification<Study> checkBiggerThanRecruitmentMin(Integer recruitmentMin) {
 		return (root, query, CriteriaBuilder) -> CriteriaBuilder.greaterThanOrEqualTo(root.get("recruitmentCount"), recruitmentMin);
 	}
 
-	public static Specification<Study> smallerThanRecruitmentMax(Integer recruitmentMax) {
+	public static Specification<Study> checkSmallerThanRecruitmentMax(Integer recruitmentMax) {
 		return (root, query, CriteriaBuilder) -> CriteriaBuilder.lessThanOrEqualTo(root.get("recruitmentCount"), recruitmentMax);
 	}
 
-	public static Specification<Study> afterStartedAt(LocalDateTime recruitmentStartAt) {
+	public static Specification<Study> checkAfterStartedAt(LocalDateTime recruitmentStartAt) {
 		return (root, query, CriteriaBuilder) -> CriteriaBuilder.greaterThanOrEqualTo(root.get("recruitmentStartAt"), recruitmentStartAt);
 	}
 
-	public static Specification<Study> beforeClosededAt(LocalDateTime recruitmentEndAt) {
+	public static Specification<Study> checkBeforeClosedAt(LocalDateTime recruitmentEndAt) {
 		return (root, query, CriteriaBuilder) -> CriteriaBuilder.lessThanOrEqualTo(root.get("recruitmentEndAt"), recruitmentEndAt);
 	}
 
-	public static Specification<Study> equalsRecruitmentStatus(Boolean isRecruiting) {
+	public static Specification<Study> findByRecruitmentStatus(Boolean isRecruiting) {
 		if (isRecruiting) {
 			return (root, query, CriteriaBuilder) -> CriteriaBuilder.equal(root.get("recruitmentStatus"), RecruitmentStatus.RECRUITING);
 		} else {
