@@ -152,6 +152,7 @@ public class StudyService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudyPostSearchRequest request) {
 		if (request.recruitmentMin() > request.recruitmentMax()) {
 			throw new CustomException(ErrorCode.STUDY_SEARCH_PERSONNEL_MISCONDITION);
