@@ -152,16 +152,17 @@ public class StudyService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudyPostSearchRequest request) {
 		if (request.recruitmentMin() > request.recruitmentMax()) {
 			throw new CustomException(ErrorCode.STUDY_SEARCH_PERSONNEL_MISCONDITION);
 		}
 
-		Specification<Study> spec = Specification.where(StudySpecification.biggerThanRecruitmentMin(request.recruitmentMin()))
-			.and(StudySpecification.smallerThanRecruitmentMax(request.recruitmentMax()))
-			.and(StudySpecification.afterStartedAt(request.recruitmentStartAt()))
-			.and(StudySpecification.beforeClosededAt(request.recruitmentEndAt()))
-			.and(StudySpecification.equalsRecruitmentStatus(request.isRecruiting()))
+		Specification<Study> spec = Specification.where(StudySpecification.checkBiggerThanRecruitmentMin(request.recruitmentMin()))
+			.and(StudySpecification.checkSmallerThanRecruitmentMax(request.recruitmentMax()))
+			.and(StudySpecification.checkAfterStartedAt(request.recruitmentStartAt()))
+			.and(StudySpecification.checkBeforeClosedAt(request.recruitmentEndAt()))
+			.and(StudySpecification.findByRecruitmentStatus(request.isRecruiting()))
 			.and(StudySpecification.containsTitleOrContent(request.searchWord()));
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
