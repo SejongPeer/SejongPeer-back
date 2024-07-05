@@ -16,9 +16,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "study_relation", uniqueConstraints = {
-	@jakarta.persistence.UniqueConstraint(columnNames = {"member_id", "study_id"})
-})
 public class StudyRelation extends BaseAuditEntity {
 
 	@Id
