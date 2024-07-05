@@ -12,6 +12,8 @@ import com.sejong.sejongpeer.domain.study.dto.response.*;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
+import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
+import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.global.util.MemberUtil;
@@ -36,6 +38,7 @@ public class StudyService {
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
+	private final StudyRelationRepository studyRelationRepository;
 	private final MemberUtil memberUtil;
 
 	public StudyCreateResponse createStudy(final StudyCreateRequest studyCreateRequest) {
@@ -135,7 +138,9 @@ public class StudyService {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		String categoryName = getCategoryNameByStudyType(study);
-		return StudyPostInfoResponse.fromStudy(study, categoryName);
+
+		Long acceptedApplicantsCount = studyRelationRepository.countByStudyAndStatus(study, StudyMatchingStatus.ACCEPT);
+		return StudyPostInfoResponse.fromStudy(study, categoryName, acceptedApplicantsCount);
 	}
 
 	private String getCategoryNameByStudyType(Study study) {
