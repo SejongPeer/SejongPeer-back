@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.studyrelation.service;
 
+import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
@@ -15,6 +16,8 @@ import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationReposi
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -28,9 +31,17 @@ public class StudyRelationService {
 		Study study = studyRepository.findById(studyApplyRequest.studyId())
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-		StudyRelation studyapplication = StudyRelation.createStudyRelations(memberUtil.getCurrentMember(),study);
-		studyRelationRepository.save(studyapplication);
+		Member loginMember = memberUtil.getCurrentMember();
 
-		return StudyRelationCreateResponse.from(studyapplication);
+		List<StudyRelation> studyRelations = studyRelationRepository.findByMemberAndStudy(loginMember, study);
+		if (!studyRelations.isEmpty()) {
+			throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+		}
+
+		StudyRelation newStudyapplication = StudyRelation.createStudyRelations(loginMember,study);
+
+		studyRelationRepository.save(newStudyapplication);
+
+		return StudyRelationCreateResponse.from(newStudyapplication);
 	}
 }
