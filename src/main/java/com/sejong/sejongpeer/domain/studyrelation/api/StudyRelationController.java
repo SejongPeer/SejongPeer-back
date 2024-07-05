@@ -1,13 +1,11 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
+import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
+import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCreateResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.sejong.sejongpeer.domain.studyrelation.service.StudyRelationService;
 
@@ -23,10 +21,12 @@ public class StudyRelationController {
 
 	private final StudyRelationService studyRelationService;
 
-	@Operation(summary = "스터디 신청", description = "스터디를 신청합니다.")
+	@Operation(summary = "스터디 지원", description = "스터디를 지원합니다.")
 	@PostMapping
-	public ResponseEntity<?> createStudyRelation(@RequestParam("studyId") Long studyId) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(null);
+	public ResponseEntity<StudyRelationCreateResponse> createStudyRelation(@Valid @RequestBody StudyApplyRequest studyApplyRequest) {
+		StudyRelationCreateResponse response = studyRelationService.applyStudy(studyApplyRequest);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(response);
 	}
 
 	@Operation(summary = "스터디 취소", description = "스터디 신청을 취소합니다.")
