@@ -56,6 +56,7 @@ public enum ErrorCode {
 	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
 	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
 	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
+	DUPLICATED_STUDY_APPLICATION(HttpStatus.CONFLICT, "이미 해당 스터디에 지원한 이력이 있습니다."),
 
 	// 버디 등록 거절
 	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 일정시간 동안 버디를 등록할 수 없습니다."),
