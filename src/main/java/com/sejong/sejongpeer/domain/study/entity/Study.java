@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
@@ -78,6 +79,9 @@ public class Study extends BaseAuditEntity {
 
 	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Scrap> scraps = new ArrayList<>();
+
+	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<StudyRelation> studyRelations = new ArrayList<>();
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private Study(
