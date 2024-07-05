@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.study.dto.response;
 
-import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 
 public record StudyPostInfoResponse(
@@ -11,7 +10,8 @@ public record StudyPostInfoResponse(
 	String recruitmentEnd,
 	String content,
 	String categoryName,
-	Long numberOfApplicants
+	Long numberOfApplicants,
+	String imgUrl
 ) {
 	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, Long numberOfApplicants) {
 		return new StudyPostInfoResponse(
@@ -22,7 +22,8 @@ public record StudyPostInfoResponse(
 			study.getRecruitmentEndAt().toString().substring(0, 10),
 			study.getContent(),
 			categoryName,
-			numberOfApplicants
+			numberOfApplicants,
+			study.getImageUrl()
 		);
 	}
 
