@@ -10,9 +10,10 @@ public record StudyPostInfoResponse(
 	String recruitmentStart,
 	String recruitmentEnd,
 	String content,
-	String categoryName
+	String categoryName,
+	Long numberOfApplicants
 ) {
-	public static StudyPostInfoResponse fromStudy(Study study, String categoryName) {
+	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, Long numberOfApplicants) {
 		return new StudyPostInfoResponse(
 			study.getTitle(),
 			study.getMember().getCollegeMajor().getMajor(),
@@ -20,7 +21,8 @@ public record StudyPostInfoResponse(
 			study.getRecruitmentStartAt().toString().substring(0, 10),
 			study.getRecruitmentEndAt().toString().substring(0, 10),
 			study.getContent(),
-			categoryName
+			categoryName,
+			numberOfApplicants
 		);
 	}
 
