@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/scraps")
+@RequestMapping("/api/v1/scraps")
 public class ScrapController {
 
 	private final ScrapService scrapService;
