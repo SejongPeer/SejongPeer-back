@@ -67,15 +67,20 @@ public class Study extends BaseAuditEntity {
 	private String imageUrl;
 
 	@Comment("오픈카카오톡 링크")
+	@Column(length = 100, nullable = false)
 	private String kakaoLink;
 
 	@Comment("질문 링크")
+	@Column(length = 100, nullable = false)
 	private String questionLink;
 
 	@Comment("스터디 방식")
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private StudyMethod method;
 
 	@Comment("모임 빈도")
+	@Column(nullable = false)
 	private Integer frequency;
 
 	@Enumerated(EnumType.STRING)

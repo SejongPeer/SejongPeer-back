@@ -20,15 +20,10 @@ public record ExternalActivityStudyCreateRequest(
 	@Schema(description = "스터디 내용") String content,
 	@Schema(description = "모집 인원") Integer recruitmentCount,
 
-	@NotBlank(message = "스터디 종류은 비워둘 수 없습니다.")
-	@Schema(description = "스터디 종류") StudyType type,
-
-	@NotBlank(message = "모집 상태는 비워둘 수 없습니다.")
-	@Schema(description = "모집 상태") RecruitmentStatus status,
-	@NotBlank(message = "스터디 방식은 비워둘 수 없습니다.")
+	@NotNull(message = "스터디 방식은 비워둘 수 없습니다.")
 	@Schema(description = "스터디 방식") StudyMethod method,
 
-	@NotBlank(message = "모집빈도는 비워둘 수 없습니다.")
+	@NotNull(message = "모집빈도는 비워둘 수 없습니다.")
 	@Schema(description = "모집빈도") Integer frequency,
 
 	@NotBlank(message = "카카오톡 오픈채팅 링크는 비워둘 수 없습니다.")
