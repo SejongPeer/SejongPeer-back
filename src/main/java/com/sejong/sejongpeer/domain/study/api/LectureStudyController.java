@@ -53,7 +53,7 @@ public class LectureStudyController {
 		return lectureStudyService.findSliceStudy(size, lastId);
 	}
 
-	@Operation(summary = "스터디 단건 삭제", description = "스터디 한 개를 삭제합니다.")
+	@Operation(summary = "교내 스터디 단건 삭제", description = "교내 스터디 게시글 한 개를 삭제합니다.")
 	@DeleteMapping("/{studyId}")
 	public void studyDelete(@PathVariable Long studyId) {
 		lectureStudyService.deleteStudy(studyId);

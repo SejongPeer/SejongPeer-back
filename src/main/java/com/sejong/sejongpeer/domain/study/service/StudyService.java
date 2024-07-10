@@ -41,14 +41,6 @@ public class StudyService {
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberUtil memberUtil;
 
-	public StudyCreateResponse createStudy(final StudyCreateRequest studyCreateRequest) {
-		final Member member = memberUtil.getCurrentMember();
-
-		Study study = createStudyEntity(member, studyCreateRequest);
-		Study saveStudy = studyRepository.save(study);
-		return StudyCreateResponse.from(saveStudy);
-	}
-
 	private Study createStudyEntity(final Member member, final StudyCreateRequest studyCreateRequest) {
 		return Study.createStudy(
 			studyCreateRequest.title(),
@@ -58,15 +50,6 @@ public class StudyService {
 			studyCreateRequest.recruitmentStartAt(),
 			studyCreateRequest.recruitmentEndAt(),
 			member);
-	}
-
-	@Transactional(readOnly = true)
-	public StudyFindResponse findOneStudy(final Long studyId) {
-		Study study =
-			studyRepository
-				.findById(studyId)
-				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
-		return StudyFindResponse.from(study);
 	}
 
 	@Transactional(readOnly = true)
@@ -88,10 +71,6 @@ public class StudyService {
 			studyUpdateRequest.recruitmentStartAt(),
 			studyUpdateRequest.recruitmentEndAt());
 		return StudyUpdateResponse.from(study);
-	}
-
-	public void deleteStudy(final Long studyId) {
-		studyRepository.deleteById(studyId);
 	}
 
 	@Transactional(readOnly = true)
