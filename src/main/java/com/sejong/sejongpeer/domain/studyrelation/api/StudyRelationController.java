@@ -59,5 +59,4 @@ public class StudyRelationController {
 	public void earlyCloseRegistration(@PathVariable Long studyId) {
 		studyRelationService.earlyCloseRegistration(studyId);
 	}
-
 }

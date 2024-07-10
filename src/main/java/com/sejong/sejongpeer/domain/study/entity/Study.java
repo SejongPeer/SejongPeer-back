@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
+import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import org.hibernate.annotations.Comment;
 
@@ -54,6 +56,9 @@ public class Study extends BaseAuditEntity {
 	@Comment("모집 인원")
 	private Integer recruitmentCount;
 
+	@Comment("참여 인원")
+	private Integer participantsCount;
+
 	@Comment("스터디 유형")
 	@Enumerated(EnumType.STRING)
 	private StudyType type;
@@ -66,7 +71,21 @@ public class Study extends BaseAuditEntity {
 	private String imageUrl;
 
 	@Comment("오픈카카오톡 링크")
+	@Column(length = 100, nullable = false)
 	private String kakaoLink;
+
+	@Comment("질문 링크")
+	@Column(length = 100, nullable = false)
+	private String questionLink;
+
+	@Comment("스터디 방식")
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private StudyMethod method;
+
+	@Comment("모임 빈도")
+	@Column(nullable = false)
+	private Frequency frequency;
 
 	@Enumerated(EnumType.STRING)
 	private ImageUploadStatus uploadStatus;
@@ -93,23 +112,29 @@ public class Study extends BaseAuditEntity {
 		String content,
 		Integer recruitmentCount,
 		StudyType type,
-		RecruitmentStatus recruitmentStatus,
 		String imageUrl,
-		ImageUploadStatus uploadStatus,
+		String kakaoLink,
+		String questionLink,
+		StudyMethod method,
+		Frequency frequency,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
-		String kakaoLink,
 		Member member) {
 		this.title = title;
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;
 		this.type = type;
-		this.uploadStatus = uploadStatus;
-		this.recruitmentStatus = recruitmentStatus;
+		this.participantsCount = 0;
+		this.uploadStatus = ImageUploadStatus.NONE; // 상태값 초기화
+		this.recruitmentStatus = RecruitmentStatus.RECRUITING; // 상태값 초기화
 		this.imageUrl = imageUrl;
+		this.kakaoLink = kakaoLink;
+		this.questionLink = questionLink;
+		this.method = method;
+		this.frequency = frequency;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
-		this.kakaoLink = kakaoLink;
+
 		this.member = member;
 	}
 
@@ -119,6 +144,9 @@ public class Study extends BaseAuditEntity {
 		Integer recruitmentCount,
 		StudyType type,
 		String kakaoLink,
+		String questionLink,
+		StudyMethod method,
+		Frequency frequency,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {
@@ -128,8 +156,9 @@ public class Study extends BaseAuditEntity {
 			.recruitmentCount(recruitmentCount)
 			.type(type)
 			.kakaoLink(kakaoLink)
-			.uploadStatus(ImageUploadStatus.NONE)
-			.recruitmentStatus(RecruitmentStatus.RECRUITING)
+			.questionLink(questionLink)
+			.method(method)
+			.frequency(frequency)
 			.recruitmentStartAt(recruitmentStartAt)
 			.recruitmentEndAt(recruitmentEndAt)
 			.member(member)
@@ -141,11 +170,12 @@ public class Study extends BaseAuditEntity {
 			.content(vo.content())
 			.recruitmentCount(vo.recruitmentCount())
 			.type(vo.type())
-			.uploadStatus(ImageUploadStatus.NONE)
-			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(vo.recruitmentStartAt())
 			.recruitmentEndAt(vo.recruitmentEndAt())
 			.kakaoLink(vo.kakaoLink())
+			.questionLink(vo.questionLink())
+			.method(vo.method())
+			.frequency(vo.frequency())
 			.member(member)
 			.build();
 	}
