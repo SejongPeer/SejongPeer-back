@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import org.hibernate.annotations.Comment;
@@ -81,7 +82,7 @@ public class Study extends BaseAuditEntity {
 
 	@Comment("모임 빈도")
 	@Column(nullable = false)
-	private Integer frequency;
+	private Frequency frequency;
 
 	@Enumerated(EnumType.STRING)
 	private ImageUploadStatus uploadStatus;
@@ -113,7 +114,7 @@ public class Study extends BaseAuditEntity {
 		String kakaoLink,
 		String questionLink,
 		StudyMethod method,
-		Integer frequency,
+		Frequency frequency,
 		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
@@ -128,7 +129,7 @@ public class Study extends BaseAuditEntity {
 		this.kakaoLink = kakaoLink;
 		this.questionLink = questionLink;
 		this.method = method;
-		this.frequency =frequency;
+		this.frequency = frequency;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
 
@@ -143,7 +144,7 @@ public class Study extends BaseAuditEntity {
 		String kakaoLink,
 		String questionLink,
 		StudyMethod method,
-		Integer frequency,
+		Frequency frequency,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {

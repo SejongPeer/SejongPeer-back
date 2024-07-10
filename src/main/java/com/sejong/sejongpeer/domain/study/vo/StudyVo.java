@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sejong.sejongpeer.domain.study.dto.request.ExternalActivityStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
+import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
@@ -31,7 +32,7 @@ public record StudyVo(
 	@Schema(description = "스터디 방식") StudyMethod method,
 
 	@NotNull(message = "모집빈도는 비워둘 수 없습니다.")
-	@Schema(description = "모집빈도") Integer frequency,
+	@Schema(description = "모집빈도") Frequency frequency,
 
 	@NotBlank(message = "카카오톡 오픈채팅 링크는 비워둘 수 없습니다.")
 	@Schema(description = "카카오톡 채팅 링크") String kakaoLink,
