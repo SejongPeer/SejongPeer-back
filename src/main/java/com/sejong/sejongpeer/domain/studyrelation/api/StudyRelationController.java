@@ -1,16 +1,23 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
-import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
-import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCreateResponse;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
+import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCreateResponse;
 import com.sejong.sejongpeer.domain.studyrelation.service.StudyRelationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "7-2. [스터디 신청현황]", description = "스터디 신청 현황 API입니다.")
@@ -46,4 +53,11 @@ public class StudyRelationController {
 	public ResponseEntity<?> rejectStudyRelation() {
 		return null;
 	}
+
+	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
+	@PatchMapping("/{studyId}/early-close")
+	public void earlyCloseRegistration(@PathVariable Long studyId) {
+		studyRelationService.earlyCloseRegistration(studyId);
+	}
+
 }

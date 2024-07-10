@@ -18,6 +18,7 @@ public record StudyCreateRequest(
 	@NotBlank(message = "스터디 내용은 비워둘 수 없습니다.") @Schema(description = "스터디 내용") String content,
 	@Schema(description = "모집 인원") Integer recruitmentCount,
 	@Schema(description = "스터디 유형 (ex. 공모전, 대외활동 등등") StudyType type,
+	@NotBlank(message = "오픈 카카오톡 링크는 비워둘 수 없습니다.") String kakaoLink,
 	@NotNull(message = "모집 시작 시간은 비워둘 수 없습니다.")
 	@JsonFormat(
 		shape = JsonFormat.Shape.STRING,
