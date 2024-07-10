@@ -47,6 +47,7 @@ public class StudyService {
 			studyCreateRequest.content(),
 			studyCreateRequest.recruitmentCount(),
 			studyCreateRequest.type(),
+			studyCreateRequest.kakaoLink(),
 			studyCreateRequest.recruitmentStartAt(),
 			studyCreateRequest.recruitmentEndAt(),
 			member);

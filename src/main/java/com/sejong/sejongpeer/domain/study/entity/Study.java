@@ -9,7 +9,6 @@ import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.scrap.entity.Scrap;
 import com.sejong.sejongpeer.domain.study.entity.type.ImageUploadStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
@@ -66,6 +65,9 @@ public class Study extends BaseAuditEntity {
 	@Comment("스터디 이미지")
 	private String imageUrl;
 
+	@Comment("오픈카카오톡 링크")
+	private String kakaoLink;
+
 	@Enumerated(EnumType.STRING)
 	private ImageUploadStatus uploadStatus;
 
@@ -74,9 +76,6 @@ public class Study extends BaseAuditEntity {
 
 	@Comment("모집 마감 기간")
 	private LocalDateTime recruitmentEndAt;
-
-	@Comment("오픈카카오톡 링크")
-	private String kakaoLink;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -119,6 +118,7 @@ public class Study extends BaseAuditEntity {
 		String content,
 		Integer recruitmentCount,
 		StudyType type,
+		String kakaoLink,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {
@@ -127,6 +127,7 @@ public class Study extends BaseAuditEntity {
 			.content(content)
 			.recruitmentCount(recruitmentCount)
 			.type(type)
+			.kakaoLink(kakaoLink)
 			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(recruitmentStartAt)
