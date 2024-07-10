@@ -3,6 +3,9 @@ package com.sejong.sejongpeer.domain.study.dto.request;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
+import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
+import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -16,6 +19,25 @@ public record LectureStudyCreateRequest(
 	@NotBlank(message = "스터디 내용은 비워둘 수 없습니다.")
 	@Schema(description = "스터디 내용") String content,
 	@Schema(description = "모집 인원") Integer recruitmentCount,
+
+	@NotBlank(message = "스터디 종류은 비워둘 수 없습니다.")
+	@Schema(description = "스터디 종류") StudyType type,
+
+	@NotBlank(message = "모집 상태는 비워둘 수 없습니다.")
+	@Schema(description = "모집 상태") RecruitmentStatus status,
+	@NotBlank(message = "스터디 방식은 비워둘 수 없습니다.")
+	@Schema(description = "스터디 방식") StudyMethod method,
+
+	@NotBlank(message = "모집빈도는 비워둘 수 없습니다.")
+	@Schema(description = "모집빈도") Integer frequency,
+
+	@NotBlank(message = "카카오톡 오픈채팅 링크는 비워둘 수 없습니다.")
+	@Schema(description = "카카오톡 채팅 링크") String kakaoLink,
+	@Schema(description = "질문 링크") String questionLink,
+
+	@NotNull(message = "강의 ID는 비워둘 수 없습니다.")
+	@Schema(description = "강의 ID") Long lectureId,
+
 	@NotNull(message = "모집 시작 시간은 비워둘 수 없습니다.")
 	@JsonFormat(
 		shape = JsonFormat.Shape.STRING,
@@ -33,13 +55,7 @@ public record LectureStudyCreateRequest(
 	@Schema(
 		description = "모집 마감 시간",
 		defaultValue = "2023-01-03 00:00:00",
-		type = "string") LocalDateTime recruitmentEndAt,
-	// 모집상태
-	@NotBlank(message = "모집 상태는 비워둘 수 없습니다.")
-	@NotBlank(message = "스터디 방식은 비워둘 수 없습니다.")
-	@NotBlank(message = "카카오톡 오픈채팅 링크는 비워둘 수 없습니다.")
-	@Schema(description = "카카오톡 오픈채팅 링크") String kakaoLink,
-	@NotNull(message = "강의 ID는 비워둘 수 없습니다.")
-	@Schema(description = "강의 ID") Long lectureId
+		type = "string") LocalDateTime recruitmentEndAt
+
 ) {
 }

@@ -41,18 +41,6 @@ public class StudyService {
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberUtil memberUtil;
 
-	private Study createStudyEntity(final Member member, final StudyCreateRequest studyCreateRequest) {
-		return Study.createStudy(
-			studyCreateRequest.title(),
-			studyCreateRequest.content(),
-			studyCreateRequest.recruitmentCount(),
-			studyCreateRequest.type(),
-			studyCreateRequest.kakaoLink(),
-			studyCreateRequest.recruitmentStartAt(),
-			studyCreateRequest.recruitmentEndAt(),
-			member);
-	}
-
 	@Transactional(readOnly = true)
 	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
 		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);

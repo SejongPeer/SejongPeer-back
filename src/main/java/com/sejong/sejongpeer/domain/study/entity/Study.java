@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import org.hibernate.annotations.Comment;
 
@@ -68,6 +69,15 @@ public class Study extends BaseAuditEntity {
 	@Comment("오픈카카오톡 링크")
 	private String kakaoLink;
 
+	@Comment("질문 링크")
+	private String questionLink;
+
+	@Comment("스터디 방식")
+	private StudyMethod method;
+
+	@Comment("모임 빈도")
+	private Integer frequency;
+
 	@Enumerated(EnumType.STRING)
 	private ImageUploadStatus uploadStatus;
 
@@ -95,10 +105,13 @@ public class Study extends BaseAuditEntity {
 		StudyType type,
 		RecruitmentStatus recruitmentStatus,
 		String imageUrl,
+		String kakaoLink,
+		String questionLink,
+		StudyMethod method,
+		Integer frequency,
 		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
-		String kakaoLink,
 		Member member) {
 		this.title = title;
 		this.content = content;
@@ -107,9 +120,13 @@ public class Study extends BaseAuditEntity {
 		this.uploadStatus = uploadStatus;
 		this.recruitmentStatus = recruitmentStatus;
 		this.imageUrl = imageUrl;
+		this.kakaoLink = kakaoLink;
+		this.questionLink = questionLink;
+		this.method = method;
+		this.frequency =frequency;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
-		this.kakaoLink = kakaoLink;
+
 		this.member = member;
 	}
 
@@ -119,6 +136,9 @@ public class Study extends BaseAuditEntity {
 		Integer recruitmentCount,
 		StudyType type,
 		String kakaoLink,
+		String questionLink,
+		StudyMethod method,
+		Integer frequency,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {
@@ -128,6 +148,9 @@ public class Study extends BaseAuditEntity {
 			.recruitmentCount(recruitmentCount)
 			.type(type)
 			.kakaoLink(kakaoLink)
+			.questionLink(questionLink)
+			.method(method)
+			.frequency(frequency)
 			.uploadStatus(ImageUploadStatus.NONE)
 			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(recruitmentStartAt)
@@ -146,6 +169,9 @@ public class Study extends BaseAuditEntity {
 			.recruitmentStartAt(vo.recruitmentStartAt())
 			.recruitmentEndAt(vo.recruitmentEndAt())
 			.kakaoLink(vo.kakaoLink())
+			.questionLink(vo.questionLink())
+			.method(vo.method())
+			.frequency(vo.frequency())
 			.member(member)
 			.build();
 	}
