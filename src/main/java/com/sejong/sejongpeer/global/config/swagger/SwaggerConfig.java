@@ -1,7 +1,6 @@
 package com.sejong.sejongpeer.global.config.swagger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -11,11 +10,8 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import jakarta.servlet.ServletContext;
-
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,11 +29,11 @@ public class SwaggerConfig {
 
 	@Bean
 	public OpenAPI openAPI(ServletContext servletContext) {
-		Server server =
-			new Server().url(servletContext.getContextPath()).description(API_DESCRIPTION);
+		Server server = new Server().url(servletContext.getContextPath()).description(API_DESCRIPTION);
 		return new OpenAPI()
 			.servers(List.of(server))
-			.addSecurityItem(securityRequirement())
+			.addSecurityItem(accessTokenSecurityRequirement())
+			.addSecurityItem(refreshTokenSecurityRequirement())
 			.components(authSetting())
 			.info(swaggerInfo());
 	}
@@ -51,7 +47,13 @@ public class SwaggerConfig {
 					.scheme("bearer")
 					.bearerFormat("JWT")
 					.in(SecurityScheme.In.HEADER)
-					.name("Authorization"));
+					.name("Authorization"))
+			.addSecuritySchemes(
+				"refreshToken",
+				new SecurityScheme()
+					.type(SecurityScheme.Type.APIKEY)
+					.in(SecurityScheme.In.HEADER)
+					.name("Refresh-token"));
 	}
 
 	private Info swaggerInfo() {
@@ -66,9 +68,15 @@ public class SwaggerConfig {
 			.license(license);
 	}
 
-	private SecurityRequirement securityRequirement() {
+	private SecurityRequirement accessTokenSecurityRequirement() {
 		SecurityRequirement securityRequirement = new SecurityRequirement();
 		securityRequirement.addList("accessToken");
+		return securityRequirement;
+	}
+
+	private SecurityRequirement refreshTokenSecurityRequirement() {
+		SecurityRequirement securityRequirement = new SecurityRequirement();
+		securityRequirement.addList("refreshToken");
 		return securityRequirement;
 	}
 

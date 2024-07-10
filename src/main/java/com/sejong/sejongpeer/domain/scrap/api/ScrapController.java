@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.scrap.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "8. [스크랩]", description = "스터디 스크랩 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/scraps")
