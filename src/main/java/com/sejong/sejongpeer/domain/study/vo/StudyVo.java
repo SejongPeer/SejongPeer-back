@@ -26,8 +26,6 @@ public record StudyVo(
 	@NotNull(message = "스터디 종류은 비워둘 수 없습니다.")
 	@Schema(description = "스터디 종류") StudyType type,
 
-	@NotBlank(message = "모집 상태는 비워둘 수 없습니다.")
-	@Schema(description = "모집 상태") RecruitmentStatus status,
 	@NotBlank(message = "스터디 방식은 비워둘 수 없습니다.")
 	@Schema(description = "스터디 방식") StudyMethod method,
 
@@ -63,7 +61,6 @@ public record StudyVo(
 			request.content(),
 			request.recruitmentCount(),
 			StudyType.LECTURE,
-			RecruitmentStatus.RECRUITING,
 			request.method(),
 			request.frequency(),
 			request.kakaoLink(),
@@ -79,7 +76,6 @@ public record StudyVo(
 			request.content(),
 			request.recruitmentCount(),
 			StudyType.EXTERNAL_ACTIVITY,
-			RecruitmentStatus.RECRUITING,
 			request.method(),
 			request.frequency(),
 			request.kakaoLink(),

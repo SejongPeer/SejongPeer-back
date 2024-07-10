@@ -56,6 +56,9 @@ public class Study extends BaseAuditEntity {
 	@Comment("모집 인원")
 	private Integer recruitmentCount;
 
+	@Comment("참여 인원")
+	private Integer participantsCount;
+
 	@Comment("스터디 유형")
 	@Enumerated(EnumType.STRING)
 	private StudyType type;
@@ -109,13 +112,11 @@ public class Study extends BaseAuditEntity {
 		String content,
 		Integer recruitmentCount,
 		StudyType type,
-		RecruitmentStatus recruitmentStatus,
 		String imageUrl,
 		String kakaoLink,
 		String questionLink,
 		StudyMethod method,
 		Frequency frequency,
-		ImageUploadStatus uploadStatus,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt,
 		Member member) {
@@ -123,8 +124,9 @@ public class Study extends BaseAuditEntity {
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;
 		this.type = type;
-		this.uploadStatus = uploadStatus;
-		this.recruitmentStatus = recruitmentStatus;
+		this.participantsCount = 0;
+		this.uploadStatus = ImageUploadStatus.NONE; // 상태값 초기화
+		this.recruitmentStatus = RecruitmentStatus.RECRUITING; // 상태값 초기화
 		this.imageUrl = imageUrl;
 		this.kakaoLink = kakaoLink;
 		this.questionLink = questionLink;
@@ -157,8 +159,6 @@ public class Study extends BaseAuditEntity {
 			.questionLink(questionLink)
 			.method(method)
 			.frequency(frequency)
-			.uploadStatus(ImageUploadStatus.NONE)
-			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(recruitmentStartAt)
 			.recruitmentEndAt(recruitmentEndAt)
 			.member(member)
@@ -170,8 +170,6 @@ public class Study extends BaseAuditEntity {
 			.content(vo.content())
 			.recruitmentCount(vo.recruitmentCount())
 			.type(vo.type())
-			.uploadStatus(ImageUploadStatus.NONE)
-			.recruitmentStatus(RecruitmentStatus.RECRUITING)
 			.recruitmentStartAt(vo.recruitmentStartAt())
 			.recruitmentEndAt(vo.recruitmentEndAt())
 			.kakaoLink(vo.kakaoLink())
