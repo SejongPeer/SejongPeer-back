@@ -33,7 +33,6 @@ public class HonbabService {
 	private final MemberRepository memberRepository;
 	private final HonbabMatchedRepository honbabMatchedRepository;
 	private final HonbabMatchingService honbabMatchingService;
-	private final MemberUtil memberUtil;
 	private final SecurityUtil securityUtil;
 
 	public void registerHonbab(RegisterHonbabRequest request) {
@@ -84,7 +83,7 @@ public class HonbabService {
 	}
 
 	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
-		Long activeHonbabCount = honbabRepository.countByStatusInProgressHonbab();
+		Long activeHonbabCount = honbabRepository.countByStatus(HonbabStatus.IN_PROGRESS);
 		return ActiveCustomersCountResponse.of(activeHonbabCount);
 	}
 

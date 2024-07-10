@@ -35,5 +35,4 @@ public class Lecture {
 
 	@OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<LectureStudy> lectureStudies = new ArrayList<>();
-
 }

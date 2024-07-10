@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "6. [혼밥]", description = "세종혼밥짝꿍 API")
+@Tag(name = "4. [혼밥]", description = "세종혼밥짝꿍 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/honbab")
@@ -48,7 +48,7 @@ public class HonbabController {
 		return honbabService.getPartnerInfo();
 	}
 
-	@Operation(summary = "혼밥 상대를 찾고있는 이용자 수 요청", description = "IN_PROGRESS인 상태인 혼밥 이용자")
+	@Operation(summary = "혼밥 탈출 매칭 중인 이용자 수 요청", description = "IN_PROGRESS 상태인 이용자 수 반환")
 	@GetMapping("/active-count")
 	public ActiveCustomersCountResponse getCurrentlyActiveHonbabCount() {
 		return honbabService.getCurrentlyActiveHonbabCount();
