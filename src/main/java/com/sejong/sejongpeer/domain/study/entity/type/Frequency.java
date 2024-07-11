@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Frequency {
 
-	WEEKLY_1_2("주 1~2회"),
-	WEEKLY_3_4("주 3~4회"),
-	WEEKLY_5_MORE("주 5회 이상");
+	ONCE_OR_TWICE_A_WEEK("주 1~2회"),
+	THREE_TO_FOUR_TIMES_A_WEEK("주 3~4회"),
+	FIVE_OR_MORE_TIMES_A_WEEK("주 5회 이상");
 
 	private final String value;
 }

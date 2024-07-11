@@ -88,6 +88,7 @@ public class Study extends BaseAuditEntity {
 
 	@Comment("모임 빈도")
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private Frequency frequency;
 
 	@Enumerated(EnumType.STRING)
