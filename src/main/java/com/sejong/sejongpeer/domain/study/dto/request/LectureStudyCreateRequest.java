@@ -34,7 +34,7 @@ public record LectureStudyCreateRequest(
 	@Schema(description = "강의 ID") Long lectureId,
 
 	@Schema(description = "태그 리스트") List<String> tags,
-
+	@Schema(description = "임시 이미지 리스트") List<String> images,
 	@NotNull(message = "모집 시작 시간은 비워둘 수 없습니다.")
 	@JsonFormat(
 		shape = JsonFormat.Shape.STRING,
