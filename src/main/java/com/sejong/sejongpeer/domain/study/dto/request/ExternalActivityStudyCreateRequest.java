@@ -1,12 +1,11 @@
 package com.sejong.sejongpeer.domain.study.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
-import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
-import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +32,8 @@ public record ExternalActivityStudyCreateRequest(
 
 	@NotNull(message = "대외활동 ID는 비워둘 수 없습니다.")
 	@Schema(description = "대외활동 ID") Long externalActivityId,
+
+	@Schema(description = "태그 리스트") List<String> tags,
 
 	@NotNull(message = "모집 시작 시간은 비워둘 수 없습니다.")
 	@JsonFormat(

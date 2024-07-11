@@ -34,6 +34,8 @@ public class LectureStudyService {
 	private final LectureStudyRepository lectureStudyRepository;
 	private final MemberRepository memberRepository;
 
+	private final TagService tagService;
+
 	public StudyCreateResponse createStudy(LectureStudyCreateRequest request) {
 		String memberId = securityUtil.getCurrentMemberId();
 
@@ -48,6 +50,8 @@ public class LectureStudyService {
 		StudyVo vo = StudyVo.from(request);
 		Study study = Study.create(member, vo);
 		Study saveStudy = studyRepository.save(study);
+
+		tagService.setTagAndStudyTagMap(vo.tags(), saveStudy);
 
 		LectureStudy lectureStudy = LectureStudy.create(lecture, saveStudy);
 		lectureStudyRepository.save(lectureStudy);

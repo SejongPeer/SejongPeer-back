@@ -1,12 +1,12 @@
 package com.sejong.sejongpeer.domain.study.vo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sejong.sejongpeer.domain.study.dto.request.ExternalActivityStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.LectureStudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
-import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 
@@ -36,6 +36,7 @@ public record StudyVo(
 	@Schema(description = "카카오톡 채팅 링크") String kakaoLink,
 	@Schema(description = "질문 링크") String questionLink,
 
+	@Schema(description = "태그 리스트") List<String> tags,
 	@NotNull(message = "모집 시작 시간은 비워둘 수 없습니다.")
 	@JsonFormat(
 		shape = JsonFormat.Shape.STRING,
@@ -65,6 +66,7 @@ public record StudyVo(
 			request.frequency(),
 			request.kakaoLink(),
 			request.questionLink(),
+			request.tags(),
 			request.recruitmentStartAt(),
 			request.recruitmentEndAt()
 		);
@@ -80,6 +82,7 @@ public record StudyVo(
 			request.frequency(),
 			request.kakaoLink(),
 			request.questionLink(),
+			request.tags(),
 			request.recruitmentStartAt(),
 			request.recruitmentEndAt()
 		);
