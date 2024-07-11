@@ -1,6 +1,8 @@
 package com.sejong.sejongpeer.domain.image.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
@@ -188,13 +190,18 @@ public class ImageService {
 		return expiration;
 	}
 
-	public String uploadFile(MultipartFile file) throws IOException {
-		String fileName = file.getOriginalFilename();
-		ObjectMetadata metadata = new ObjectMetadata();
-		metadata.setContentLength(file.getSize());
-		metadata.setContentType(file.getContentType());
+	public String uploadFile(String base64Image, String fileName) throws IOException {
 
-		amazonS3.putObject(s3Properties.bucket(), fileName, file.getInputStream(), metadata);
+		String base64ImageData = base64Image.replaceFirst("^data:image/[^;]+;base64,", "");
+
+		byte[] imageBytes = Base64.getDecoder().decode(base64ImageData);
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
+
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentLength(imageBytes.length);
+		metadata.setContentType("image/png");
+
+		amazonS3.putObject(s3Properties.bucket(), fileName, inputStream, metadata);
 
 		return amazonS3.getUrl(s3Properties.bucket(), fileName).toExternalForm();
 	}

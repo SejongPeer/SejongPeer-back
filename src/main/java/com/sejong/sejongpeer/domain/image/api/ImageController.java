@@ -50,9 +50,8 @@ public class ImageController {
 		summary = "스터디 게시글 별 이미지 업로드",
 		description = "스터디 이미지를 클라우드에 업로드하여 이미지 경로를 반환합니다.")
 	@PostMapping("/study/upload")
-	public StudyImageUrlResponse uploadStudyImage(@ModelAttribute StudyImageUploadRequest request) throws IOException {
-		MultipartFile file = request.file();
-		String url = imageService.uploadFile(file);
+	public StudyImageUrlResponse uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws IOException {
+		String url = imageService.uploadFile(request.base64Image(), request.fileName());
 		return new StudyImageUrlResponse(url);
 	}
 }
