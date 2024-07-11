@@ -11,6 +11,9 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,6 +33,14 @@ public class S3Config {
 		return AmazonS3ClientBuilder.standard()
 			.withCredentials(new AWSStaticCredentialsProvider(awsCredentialsProvider()))
 			.withRegion(s3Properties.region())
+			.build();
+	}
+
+	@Bean
+	public S3Client s3Client() {
+		return S3Client.builder()
+			.region(Region.of(s3Properties.region()))
+			.credentialsProvider(ProfileCredentialsProvider.create())
 			.build();
 	}
 }

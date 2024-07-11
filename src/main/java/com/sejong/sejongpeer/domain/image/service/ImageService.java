@@ -1,8 +1,10 @@
 package com.sejong.sejongpeer.domain.image.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,8 @@ import com.sejong.sejongpeer.global.util.SpringEnvironmentUtil;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,7 @@ public class ImageService {
 	private final SpringEnvironmentUtil springEnvironmentUtil;
 	private final S3Properties s3Properties;
 	private final AmazonS3 amazonS3;
+	private final S3Client s3Client;
 	private final ImageRepository imageRepository;
 	private final StudyRepository studyRepository;
 	private final MemberRepository memberRepository;
@@ -181,6 +186,17 @@ public class ImageService {
 		expTimeMillis += 1000 * 60 * 30;
 		expiration.setTime(expTimeMillis);
 		return expiration;
+	}
+
+	public String uploadFile(MultipartFile file) throws IOException {
+		String fileName = file.getOriginalFilename();
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentLength(file.getSize());
+		metadata.setContentType(file.getContentType());
+
+		amazonS3.putObject(s3Properties.bucket(), fileName, file.getInputStream(), metadata);
+
+		return amazonS3.getUrl(s3Properties.bucket(), fileName).toExternalForm();
 	}
 
 }
