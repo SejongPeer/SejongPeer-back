@@ -57,11 +57,13 @@ public enum ErrorCode {
 
 	// Lecture
 	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
+	LECTURE_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교내 수업 스터디 게시글을 찾을 수 없습니다."),
+	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
 
 	// ExternalActivity
 	EXTERNAL_ACTIVITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 외부활동을 찾을 수 없습니다."),
 	LECTURE_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 교내 수업이 없습니다."),
-	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
+	EXTERNAL_ACTIVITY_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교외 활동 스터디 게시글을 찾을 수 없습니다."),
 	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
 	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
 	DUPLICATED_STUDY_APPLICATION(HttpStatus.CONFLICT, "이미 해당 스터디에 지원한 이력이 있습니다."),
