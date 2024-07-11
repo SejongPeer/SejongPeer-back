@@ -72,6 +72,7 @@ public class ImageService {
 
 		imageRepository.save(
 			Image.createImage(
+				study,
 				ImageType.STUDY,
 				request.studyId(),
 				imageKey,
