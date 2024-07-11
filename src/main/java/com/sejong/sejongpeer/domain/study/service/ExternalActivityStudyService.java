@@ -28,8 +28,8 @@ public class ExternalActivityStudyService {
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
 	private final MemberRepository memberRepository;
-
 	private final SecurityUtil securityUtil;
+	private final TagService tagService;
 
 	public StudyCreateResponse createStudy(ExternalActivityStudyCreateRequest request) {
 		String memberId = securityUtil.getCurrentMemberId();
@@ -43,9 +43,12 @@ public class ExternalActivityStudyService {
 		Study study = Study.create(member, vo);
 		Study savedStudy = studyRepository.save(study);
 
+		tagService.setTagAndStudyTagMap(vo.tags(), savedStudy);
+
 		ExternalActivityStudy externalActivityStudy = ExternalActivityStudy.create(externalActivity, savedStudy);
 		externalActivityStudyRepository.save(externalActivityStudy);
 
 		return StudyCreateResponse.from(savedStudy);
 	}
+
 }

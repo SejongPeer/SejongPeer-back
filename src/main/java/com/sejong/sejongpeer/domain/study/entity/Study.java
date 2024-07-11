@@ -2,7 +2,10 @@ package com.sejong.sejongpeer.domain.study.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
@@ -106,6 +109,9 @@ public class Study extends BaseAuditEntity {
 	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<StudyRelation> studyRelations = new ArrayList<>();
 
+	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<StudyTagMap> studyTagMaps = new HashSet<>();
+
 	@Builder(access = AccessLevel.PRIVATE)
 	private Study(
 		String title,
@@ -124,7 +130,7 @@ public class Study extends BaseAuditEntity {
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;
 		this.type = type;
-		this.participantsCount = 0;
+		this.participantsCount = 0; // 상태값 초기화
 		this.uploadStatus = ImageUploadStatus.NONE; // 상태값 초기화
 		this.recruitmentStatus = RecruitmentStatus.RECRUITING; // 상태값 초기화
 		this.imageUrl = imageUrl;
@@ -134,7 +140,6 @@ public class Study extends BaseAuditEntity {
 		this.frequency = frequency;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
-
 		this.member = member;
 	}
 
@@ -209,4 +214,10 @@ public class Study extends BaseAuditEntity {
 		this.uploadStatus = ImageUploadStatus.COMPLETE;
 		this.imageUrl = imageUrl;
 	}
+
+	public void addStudyTagMap(StudyTagMap tagMap) {
+		this.studyTagMaps.add(tagMap);
+		tagMap.setStudy(this);
+	}
+
 }
