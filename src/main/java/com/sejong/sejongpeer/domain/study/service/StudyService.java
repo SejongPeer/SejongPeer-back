@@ -39,6 +39,7 @@ public class StudyService {
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
 	private final StudyRelationRepository studyRelationRepository;
+	private final MemberUtil memberUtil;
 
 
 	public StudyUpdateResponse updateStudy(final StudyUpdateRequest studyUpdateRequest, final Long studyId) {
@@ -58,6 +59,12 @@ public class StudyService {
 	public void deleteStudy(final Long studyId) {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+		Member loginMember = memberUtil.getCurrentMember();
+
+		if (!loginMember.equals(study.getMember())) {
+			throw new CustomException(ErrorCode.STUDY_CANNOT_DELETED);
+		}
 
 		if (StudyType.LECTURE.equals(study.getType())) {
 			LectureStudy targetLectureStudy = lectureStudyRepository.findByStudy(study)

@@ -51,6 +51,7 @@ public enum ErrorCode {
 	MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
 
 	// Study
+	STUDY_CANNOT_DELETED(HttpStatus.BAD_REQUEST, "스터디 게시글 작성자만 해당 게시글을 삭제할 수 있습니다."),
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),
 	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
