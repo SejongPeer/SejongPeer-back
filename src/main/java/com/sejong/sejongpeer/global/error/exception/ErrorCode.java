@@ -51,17 +51,20 @@ public enum ErrorCode {
 	MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
 
 	// Study
+	STUDY_CANNOT_DELETED(HttpStatus.BAD_REQUEST, "스터디 게시글 작성자만 해당 게시글을 삭제할 수 있습니다."),
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),
 	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
 
 	// Lecture
 	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
+	LECTURE_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교내 수업 스터디 게시글을 찾을 수 없습니다."),
+	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
 
 	// ExternalActivity
 	EXTERNAL_ACTIVITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 외부활동을 찾을 수 없습니다."),
 	LECTURE_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 교내 수업이 없습니다."),
-	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
+	EXTERNAL_ACTIVITY_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교외 활동 스터디 게시글을 찾을 수 없습니다."),
 	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
 	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
 	DUPLICATED_STUDY_APPLICATION(HttpStatus.CONFLICT, "이미 해당 스터디에 지원한 이력이 있습니다."),

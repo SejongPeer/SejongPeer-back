@@ -41,11 +41,6 @@ public class StudyService {
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberUtil memberUtil;
 
-	@Transactional(readOnly = true)
-	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
-		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
-		return studySlice.map(StudyFindResponse::from);
-	}
 
 	public StudyUpdateResponse updateStudy(final StudyUpdateRequest studyUpdateRequest, final Long studyId) {
 		Study study =
@@ -60,6 +55,33 @@ public class StudyService {
 			studyUpdateRequest.recruitmentStartAt(),
 			studyUpdateRequest.recruitmentEndAt());
 		return StudyUpdateResponse.from(study);
+	}
+	public void deleteStudy(final Long studyId) {
+		Study study = studyRepository.findById(studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+		Member loginMember = memberUtil.getCurrentMember();
+
+		if (!loginMember.equals(study.getMember())) {
+			throw new CustomException(ErrorCode.STUDY_CANNOT_DELETED);
+		}
+
+		if (StudyType.LECTURE.equals(study.getType())) {
+			LectureStudy targetLectureStudy = lectureStudyRepository.findByStudy(study)
+				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_STUDY_NOT_FOUND));
+
+			lectureStudyRepository.delete(targetLectureStudy);
+			studyRepository.delete(study);
+		}
+
+		if (StudyType.EXTERNAL_ACTIVITY.equals(study.getType())) {
+			ExternalActivityStudy targetExternalActivityStudy = externalActivityStudyRepository.findByStudy(study)
+				.orElseThrow(() -> new CustomException(ErrorCode.EXTERNAL_ACTIVITY_STUDY_NOT_FOUND));
+
+			externalActivityStudyRepository.delete(targetExternalActivityStudy);
+			studyRepository.delete(study);
+		}
+
 	}
 
 	@Transactional(readOnly = true)

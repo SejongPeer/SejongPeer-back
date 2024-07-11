@@ -74,8 +74,4 @@ public class LectureStudyService {
 		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
 		return studySlice.map(StudyFindResponse::from);
 	}
-
-	public void deleteStudy(final Long studyId) {
-		studyRepository.deleteById(studyId);
-	}
 }

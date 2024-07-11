@@ -3,13 +3,7 @@ package com.sejong.sejongpeer.domain.study.api;
 import java.util.List;
 
 import org.springframework.data.domain.Slice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
@@ -35,6 +29,12 @@ public class StudyController {
 	public void updateStudy(
 		@Valid @RequestBody StudyUpdateRequest request, @PathVariable Long studyId) {
 		studyService.updateStudy(request, studyId);
+	}
+
+	@Operation(summary = "스터디 단건 삭제", description = "스터디 게시글 한 개를 삭제합니다.")
+	@DeleteMapping("/{studyId}")
+	public void deleteStudy(@PathVariable Long studyId) {
+		studyService.deleteStudy(studyId);
 	}
 
 	@Operation(summary = "게시글 목록 조회", description = "학교 수업 스터디 혹은 수업 외 활동 게시글 전체 목록을 반환합니다.")
