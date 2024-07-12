@@ -43,6 +43,7 @@ jobs:
           touch ./application-infra.yml
           touch ./application-dev.yml
           touch ./application-security.yml
+          touch ./application-storage.yml
           touch ./.env
           
           # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
@@ -52,6 +53,7 @@ jobs:
           echo "$APPLICATION_DEV" > ./application-dev.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
           echo "$APPLICATION_INFRA" > ./application-infra.yml
+          echo "$APPLICATION_STORAGE" > ./application-storage.yml
           echo "$ENV" >./.env
 
         env:
@@ -61,6 +63,7 @@ jobs:
           APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
+          APPLICATION_STORAGE: ${{ secrets.APPLICATION_STORAGE }}
           ENV: ${{ secrets.ENV }}
         shell: bash
 
