@@ -1,7 +1,9 @@
 package com.sejong.sejongpeer.domain.image.dto.request;
 
 
+import java.util.List;
+
 public record StudyImageUploadRequest(
 	Long studyId,
-	String base64Image
+	List<String> base64ImagesList
 ) { }

@@ -2,13 +2,15 @@ package com.sejong.sejongpeer.domain.image.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadRequest;
+import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -192,8 +194,29 @@ public class ImageService {
 		return expiration;
 	}
 
-	public String uploadFile(Long studyId, String base64Image) throws IOException {
+	public List<StudyImageUrlResponse> uploadFiles(Long studyId, StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
+		List<String> base64ImagesList = request.base64ImagesList();
+		List<CompletableFuture<StudyImageUrlResponse>> futures = new ArrayList<>();
 
+		for (String base64Image : base64ImagesList) {
+			futures.add(CompletableFuture.supplyAsync(() -> {
+				try {
+					return uploadFile(studyId, base64Image);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}));
+		}
+
+		List<StudyImageUrlResponse> responses = new ArrayList<>();
+		for (CompletableFuture<StudyImageUrlResponse> future : futures) {
+			responses.add(future.get());
+		}
+
+		return responses;
+	}
+
+	private StudyImageUrlResponse uploadFile(Long studyId, String base64Image) throws IOException {
 		String extension = "";
 		Pattern pattern = Pattern.compile("^data:image/([a-zA-Z]+);base64,");
 		Matcher matcher = pattern.matcher(base64Image);
@@ -215,18 +238,18 @@ public class ImageService {
 
 		amazonS3.putObject(s3Properties.bucket(), fullFileName, inputStream, metadata);
 
-		String base44ToS3url = amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
+		String base64ToS3url = amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
 
 		Study study = findStudyById(studyId);
 
-		imageRepository.save(
+		Image savedImage = imageRepository.save(
 			Image.createBase64ToImage(
 				study,
-				base44ToS3url
+				base64ToS3url
 			)
 		);
 
-		return base44ToS3url;
+		return new StudyImageUrlResponse(savedImage.getId(), base64ToS3url);
 	}
 
 }

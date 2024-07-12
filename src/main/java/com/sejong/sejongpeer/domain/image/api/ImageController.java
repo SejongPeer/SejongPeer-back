@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Tag(name = "6. [이미지]", description = "이미지 API")
 @RestController
@@ -50,8 +52,7 @@ public class ImageController {
 		summary = "스터디 게시글 별 이미지 업로드",
 		description = "스터디 이미지를 클라우드에 업로드하여 이미지 경로를 반환합니다.")
 	@PostMapping("/study/upload")
-	public StudyImageUrlResponse uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws IOException {
-		String url = imageService.uploadFile(request.studyId(), request.base64Image());
-		return new StudyImageUrlResponse(url);
+	public List<StudyImageUrlResponse> uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
+		return imageService.uploadFiles(request.studyId(), request);
 	}
 }
