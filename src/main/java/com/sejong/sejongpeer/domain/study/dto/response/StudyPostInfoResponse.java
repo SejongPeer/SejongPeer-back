@@ -1,6 +1,10 @@
 package com.sejong.sejongpeer.domain.study.dto.response;
 
+import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
 import com.sejong.sejongpeer.domain.study.entity.Study;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record StudyPostInfoResponse(
 	String title,
@@ -11,7 +15,7 @@ public record StudyPostInfoResponse(
 	String content,
 	String categoryName,
 	Long numberOfApplicants,
-	String imgUrl
+	List<StudyImageUrlResponse> imgUrlList
 ) {
 	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, Long numberOfApplicants) {
 		return new StudyPostInfoResponse(
@@ -23,7 +27,7 @@ public record StudyPostInfoResponse(
 			study.getContent(),
 			categoryName,
 			numberOfApplicants,
-			study.getImageUrl()
+			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList())
 		);
 	}
 
