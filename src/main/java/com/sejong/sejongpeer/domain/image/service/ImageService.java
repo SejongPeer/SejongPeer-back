@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.stereotype.Service;
@@ -192,6 +194,13 @@ public class ImageService {
 
 	public String uploadFile(String base64Image, String fileName) throws IOException {
 
+		String extension = "";
+		Pattern pattern = Pattern.compile("^data:image/([a-zA-Z]+);base64,");
+		Matcher matcher = pattern.matcher(base64Image);
+		if (matcher.find()) {
+			extension = matcher.group(1);
+		}
+
 		String base64ImageData = base64Image.replaceFirst("^data:image/[^;]+;base64,", "");
 
 		byte[] imageBytes = Base64.getDecoder().decode(base64ImageData);
@@ -199,11 +208,13 @@ public class ImageService {
 
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setContentLength(imageBytes.length);
-		metadata.setContentType("image/png");
+		metadata.setContentType("image/" + extension);
 
-		amazonS3.putObject(s3Properties.bucket(), fileName, inputStream, metadata);
+		String fullFileName = fileName + "." + extension;
 
-		return amazonS3.getUrl(s3Properties.bucket(), fileName).toExternalForm();
+		amazonS3.putObject(s3Properties.bucket(), fullFileName, inputStream, metadata);
+
+		return amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
 	}
 
 }
