@@ -1,8 +1,16 @@
 package com.sejong.sejongpeer.domain.image.service;
 
-import java.util.Date;
-import java.util.UUID;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadRequest;
+import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +38,8 @@ import com.sejong.sejongpeer.global.util.SpringEnvironmentUtil;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +49,7 @@ public class ImageService {
 	private final SpringEnvironmentUtil springEnvironmentUtil;
 	private final S3Properties s3Properties;
 	private final AmazonS3 amazonS3;
+	private final S3Client s3Client;
 	private final ImageRepository imageRepository;
 	private final StudyRepository studyRepository;
 	private final MemberRepository memberRepository;
@@ -72,6 +83,7 @@ public class ImageService {
 
 		imageRepository.save(
 			Image.createImage(
+				study,
 				ImageType.STUDY,
 				request.studyId(),
 				imageKey,
@@ -180,6 +192,64 @@ public class ImageService {
 		expTimeMillis += 1000 * 60 * 30;
 		expiration.setTime(expTimeMillis);
 		return expiration;
+	}
+
+	public List<StudyImageUrlResponse> uploadFiles(Long studyId, StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
+		List<String> base64ImagesList = request.base64ImagesList();
+		List<CompletableFuture<StudyImageUrlResponse>> futures = new ArrayList<>();
+
+		for (String base64Image : base64ImagesList) {
+			futures.add(CompletableFuture.supplyAsync(() -> {
+				try {
+					return uploadFile(studyId, base64Image);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}));
+		}
+
+		List<StudyImageUrlResponse> responses = new ArrayList<>();
+		for (CompletableFuture<StudyImageUrlResponse> future : futures) {
+			responses.add(future.get());
+		}
+
+		return responses;
+	}
+
+	private StudyImageUrlResponse uploadFile(Long studyId, String base64Image) throws IOException {
+		String extension = "";
+		Pattern pattern = Pattern.compile("^data:image/([a-zA-Z]+);base64,");
+		Matcher matcher = pattern.matcher(base64Image);
+		if (matcher.find()) {
+			extension = matcher.group(1);
+		}
+
+		String base64ImageData = base64Image.replaceFirst("^data:image/[^;]+;base64,", "");
+
+		byte[] imageBytes = Base64.getDecoder().decode(base64ImageData);
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
+
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentLength(imageBytes.length);
+		metadata.setContentType("image/" + extension);
+
+		String randomFileName = generateUUID();
+		String fullFileName = randomFileName + "." + extension;
+
+		amazonS3.putObject(s3Properties.bucket(), fullFileName, inputStream, metadata);
+
+		String base64ToS3url = amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
+
+		Study study = findStudyById(studyId);
+
+		Image savedImage = imageRepository.save(
+			Image.createBase64ToImage(
+				study,
+				base64ToS3url
+			)
+		);
+
+		return new StudyImageUrlResponse(savedImage.getId(), base64ToS3url);
 	}
 
 }
