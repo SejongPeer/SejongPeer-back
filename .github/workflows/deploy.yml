@@ -1,4 +1,4 @@
-# Workflow의 이름을 지정합니다.
+# main branch workflow
 name: SejongPeer - BackEnd - CD
 
 on:
