@@ -58,7 +58,6 @@ dependencies {
 
 	// AWS
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	implementation 'software.amazon.awssdk:s3:2.23.19'
 
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly "com.mysql:mysql-connector-j:8.2.0"

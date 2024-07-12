@@ -1,10 +1,9 @@
 package com.sejong.sejongpeer.domain.image.api;
 
-import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadRequest;
-import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.image.dto.request.StudyImageCreateRequest;
 import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadCompleteRequest;
@@ -15,18 +14,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Tag(name = "6. [이미지]", description = "이미지 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/image")
 public class ImageController {
-	private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
 	private final ImageService imageService;
 
@@ -46,13 +39,5 @@ public class ImageController {
 	public void uploadedStudyImage(
 		@Valid @RequestBody StudyImageUploadCompleteRequest request) {
 		imageService.uploadCompleteStudyImage(request);
-	}
-
-	@Operation(
-		summary = "스터디 게시글 별 이미지 업로드",
-		description = "스터디 이미지를 클라우드에 업로드하여 이미지 경로를 반환합니다.")
-	@PostMapping("/study/upload")
-	public List<StudyImageUrlResponse> uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
-		return imageService.uploadFiles(request.studyId(), request);
 	}
 }

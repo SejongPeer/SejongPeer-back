@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.sejong.sejongpeer.domain.image.entity.Image;
 import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
@@ -113,9 +112,6 @@ public class Study extends BaseAuditEntity {
 
 	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<StudyTagMap> studyTagMaps = new HashSet<>();
-
-	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Image> images = new ArrayList<>();
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private Study(
