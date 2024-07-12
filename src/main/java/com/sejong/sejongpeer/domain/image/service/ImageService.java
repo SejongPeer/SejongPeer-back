@@ -192,7 +192,7 @@ public class ImageService {
 		return expiration;
 	}
 
-	public String uploadFile(String base64Image, String fileName) throws IOException {
+	public String uploadFile(Long studyId, String base64Image) throws IOException {
 
 		String extension = "";
 		Pattern pattern = Pattern.compile("^data:image/([a-zA-Z]+);base64,");
@@ -210,11 +210,23 @@ public class ImageService {
 		metadata.setContentLength(imageBytes.length);
 		metadata.setContentType("image/" + extension);
 
-		String fullFileName = fileName + "." + extension;
+		String randomFileName = generateUUID();
+		String fullFileName = randomFileName + "." + extension;
 
 		amazonS3.putObject(s3Properties.bucket(), fullFileName, inputStream, metadata);
 
-		return amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
+		String base44ToS3url = amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
+
+		Study study = findStudyById(studyId);
+
+		imageRepository.save(
+			Image.createBase64ToImage(
+				study,
+				base44ToS3url
+			)
+		);
+
+		return base44ToS3url;
 	}
 
 }

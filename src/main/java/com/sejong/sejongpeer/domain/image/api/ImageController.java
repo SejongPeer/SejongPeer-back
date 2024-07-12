@@ -51,7 +51,7 @@ public class ImageController {
 		description = "스터디 이미지를 클라우드에 업로드하여 이미지 경로를 반환합니다.")
 	@PostMapping("/study/upload")
 	public StudyImageUrlResponse uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws IOException {
-		String url = imageService.uploadFile(request.base64Image(), request.fileName());
+		String url = imageService.uploadFile(request.studyId(), request.base64Image());
 		return new StudyImageUrlResponse(url);
 	}
 }

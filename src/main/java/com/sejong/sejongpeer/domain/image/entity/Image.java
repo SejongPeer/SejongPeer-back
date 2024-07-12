@@ -20,6 +20,8 @@ public class Image extends BaseAuditEntity {
 	@Column(name = "image_id")
 	private Long id;
 
+	private String imgUrl;
+
 	@Enumerated(EnumType.STRING)
 	private ImageType imageType;
 
@@ -39,12 +41,14 @@ public class Image extends BaseAuditEntity {
 	private Image(
 		Long id,
 		Study study,
+		String imgUrl,
 		ImageType imageType,
 		Long targetId,
 		String imageKey,
 		ImageFileExtension imageFileExtension) {
 		this.id = id;
 		this.study = study;
+		this.imgUrl = imgUrl;
 		this.imageType = imageType;
 		this.targetId = targetId;
 		this.imageKey = imageKey;
@@ -63,6 +67,15 @@ public class Image extends BaseAuditEntity {
 			.targetId(targetId)
 			.imageKey(imageKey)
 			.imageFileExtension(imageFileExtension)
+			.build();
+	}
+
+	public static Image createBase64ToImage(
+		Study study,
+		String imgUrl) {
+		return Image.builder()
+			.study(study)
+			.imgUrl(imgUrl)
 			.build();
 	}
 }
