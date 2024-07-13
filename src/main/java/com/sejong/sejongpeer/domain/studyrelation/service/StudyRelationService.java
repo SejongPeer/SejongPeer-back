@@ -2,6 +2,8 @@ package com.sejong.sejongpeer.domain.studyrelation.service;
 
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
+import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class StudyRelationService {
 	private final StudyRepository studyRepository;
 	private final SmsService smsService;
 	private final StudyRelationRepository studyRelationRepository;
+	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
 
 	public StudyRelationCreateResponse applyStudy(StudyApplyRequest studyApplyRequest) {
@@ -47,6 +50,22 @@ public class StudyRelationService {
 		studyRelationRepository.save(newStudyapplication);
 
 		return StudyRelationCreateResponse.from(newStudyapplication);
+	}
+
+	public void updateStudyMatchingStatus(StudyMatchingRequest request) {
+		Member studyApplicant = memberRepository.findByNickname(request.applicantNickname())
+			.orElseThrow(() -> new CustomException(ErrorCode.NICKNAME_IS_NULL));
+
+		StudyRelation studyResume = studyRelationRepository.findByMemberIdAndStudyId(studyApplicant.getId(), request.studyId())
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_APPLY_HISTORY_NOT_FOUND));
+
+		if (request.isAccept()) {
+			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
+		} else {
+			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
+		}
+
+		studyRelationRepository.save(studyResume);
 	}
 
 	public void earlyCloseRegistration(final Long studyId) {
