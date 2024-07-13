@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
+import com.sejong.sejongpeer.domain.study.dto.request.StudyMatchingRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,16 +43,10 @@ public class StudyRelationController {
 		return null;
 	}
 
-	@Operation(summary = "스터디 수락", description = "스터디 신청을 수락합니다.")
-	@PutMapping("/accept")
-	public ResponseEntity<?> acceptStudyRelation() {
-		return null;
-	}
-
-	@Operation(summary = "스터디 거부", description = "스터디 신청을 거부합니다.")
-	@PutMapping("/reject")
-	public ResponseEntity<?> rejectStudyRelation() {
-		return null;
+	@Operation(summary = "스터디 지원자 수락/거절", description = "자신이 개설한 스터디 지원자의 스터디 신청에 대해 수락/거절을 처리합니다.")
+	@PutMapping("/matching/status")
+	public void processStudyMatchingStatus(@Valid @RequestBody StudyMatchingRequest request) {
+		studyRelationService.updateStudyMatchingStatus(request);
 	}
 
 	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
