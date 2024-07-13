@@ -1,6 +1,6 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
-import com.sejong.sejongpeer.domain.study.dto.request.StudyMatchingRequest;
+import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

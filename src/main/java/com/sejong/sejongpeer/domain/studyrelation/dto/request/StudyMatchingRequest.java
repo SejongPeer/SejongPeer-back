@@ -1,4 +1,4 @@
-package com.sejong.sejongpeer.domain.study.dto.request;
+package com.sejong.sejongpeer.domain.studyrelation.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
