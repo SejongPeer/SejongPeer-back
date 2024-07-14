@@ -7,8 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.study.entity.Tag;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
+import com.sejong.sejongpeer.domain.study.service.TagService;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
+import com.sejong.sejongpeer.domain.studyrelation.dto.response.AppliedStudyResponse;
 import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCreateResponse;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
@@ -30,6 +33,7 @@ public class StudyRelationService {
 	private final SmsService smsService;
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberUtil memberUtil;
+	private final TagService tagService;
 
 	public StudyRelationCreateResponse applyStudy(StudyApplyRequest studyApplyRequest) {
 		Study study = studyRepository.findById(studyApplyRequest.studyId())
@@ -71,5 +75,18 @@ public class StudyRelationService {
 			study.getMember().getPhoneNumber(),
 			SmsText.valueOf(SmsText.STUDY_RECRUITMENT_COMPLETED + study.getStudy().getKakaoLink())
 		);
+	}
+
+	public List<AppliedStudyResponse> getAppliedStudies() {
+		Member loginMember = memberUtil.getCurrentMember();
+		List<StudyRelation> studyRelations = loginMember.getStudyRelations();
+
+		return studyRelations.stream()
+			.map(studyRelation -> {
+				Study study = studyRelation.getStudy();
+				List<Tag> tags = tagService.getTagsByStudy(study);
+				return AppliedStudyResponse.of(study, tags);
+			})
+			.toList();
 	}
 }

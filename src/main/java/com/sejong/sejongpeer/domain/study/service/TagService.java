@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,5 +55,12 @@ public class TagService {
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("Error hashing tag name", e);
 		}
+	}
+
+	public List<Tag> getTagsByStudy(Study study) {
+		Set<StudyTagMap> studyTagMaps = study.getStudyTagMaps();
+		return studyTagMaps.stream()
+			.map(StudyTagMap::getTag)
+			.toList();
 	}
 }

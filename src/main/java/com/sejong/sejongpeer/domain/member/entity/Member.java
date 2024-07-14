@@ -13,6 +13,7 @@ import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
 import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.entity.type.Status;
 import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -82,6 +83,9 @@ public class Member extends BaseAuditEntity {
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Honbab> honbabs = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<StudyRelation> studyRelations = new ArrayList<>();
 
 	@Builder
 	private Member(
