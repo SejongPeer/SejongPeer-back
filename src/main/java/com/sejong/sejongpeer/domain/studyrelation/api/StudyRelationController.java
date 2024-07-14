@@ -65,7 +65,7 @@ public class StudyRelationController {
 	}
 
 	@Operation(summary = "지원한 스터디 조회", description = "지원한 스터디를 전부 조회합니다")
-	@GetMapping("/appied")
+	@GetMapping("/applied")
 	public List<AppliedStudyResponse> getAllAppliedStudies() {
 		return 	studyRelationService.getAppliedStudies();
 	}

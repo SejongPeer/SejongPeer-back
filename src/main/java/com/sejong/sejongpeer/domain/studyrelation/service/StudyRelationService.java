@@ -78,7 +78,7 @@ public class StudyRelationService {
 	}
 
 	public List<AppliedStudyResponse> getAppliedStudies() {
-		Member loginMember = memberUtil.getCurrentMember();
+		final Member loginMember = memberUtil.getCurrentMember();
 		List<StudyRelation> studyRelations = loginMember.getStudyRelations();
 
 		return studyRelations.stream()
