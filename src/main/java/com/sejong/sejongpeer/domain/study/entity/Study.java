@@ -225,4 +225,8 @@ public class Study extends BaseAuditEntity {
 		tagMap.setStudy(this);
 	}
 
+	public void addParticipantsCount() {
+		this.participantsCount++;
+	}
+
 }

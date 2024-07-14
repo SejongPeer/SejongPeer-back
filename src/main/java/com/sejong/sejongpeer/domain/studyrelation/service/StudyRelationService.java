@@ -61,6 +61,9 @@ public class StudyRelationService {
 
 		if (request.isAccept()) {
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
+			Study appliedStudy = studyResume.getStudy();
+			appliedStudy.addParticipantsCount();
+			studyRepository.save(appliedStudy);
 		} else {
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
 		}
