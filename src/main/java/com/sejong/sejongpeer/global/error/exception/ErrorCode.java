@@ -35,7 +35,7 @@ public enum ErrorCode {
 
 	// 조회 에러
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
-	NICKNAME_IS_NULL(HttpStatus.BAD_REQUEST, "닉네임이 존재하지 않습니다."),
+	NICKNAME_IS_NULL(HttpStatus.NOT_FOUND, "닉네임이 존재하지 않습니다."),
 	PHONE_NUMBER_IS_NULL(HttpStatus.BAD_REQUEST, "전화번호가 존재하지 않습니다."),
 	KAKAO_ACCOUNT_IS_NULL(HttpStatus.BAD_REQUEST, "카카오 ID가 존재하지 않습니다."),
 
@@ -55,6 +55,7 @@ public enum ErrorCode {
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),
 	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
+	STUDY_APPLY_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 이 스터디 게시글에 대한 지원 이력이 없습니다."),
 
 	// Lecture
 	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
