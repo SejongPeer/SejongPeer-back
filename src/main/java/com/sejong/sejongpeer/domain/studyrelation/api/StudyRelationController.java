@@ -1,9 +1,11 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
+import java.util.List;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
+import com.sejong.sejongpeer.domain.studyrelation.dto.response.AppliedStudyResponse;
 import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCreateResponse;
 import com.sejong.sejongpeer.domain.studyrelation.service.StudyRelationService;
 
@@ -53,5 +56,11 @@ public class StudyRelationController {
 	@PatchMapping("/{studyId}/early-close")
 	public void earlyCloseRegistration(@PathVariable Long studyId) {
 		studyRelationService.earlyCloseRegistration(studyId);
+	}
+
+	@Operation(summary = "지원한 스터디 조회", description = "지원한 스터디를 전부 조회합니다")
+	@GetMapping("/applied")
+	public List<AppliedStudyResponse> getAllAppliedStudies() {
+		return 	studyRelationService.getAppliedStudies();
 	}
 }
