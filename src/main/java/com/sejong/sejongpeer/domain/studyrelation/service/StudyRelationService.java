@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.studyrelation.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -7,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
-import com.sejong.sejongpeer.domain.study.entity.Tag;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.domain.study.service.TagService;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
@@ -81,12 +81,14 @@ public class StudyRelationService {
 		final Member loginMember = memberUtil.getCurrentMember();
 		List<StudyRelation> studyRelations = loginMember.getStudyRelations();
 
-		return studyRelations.stream()
-			.map(studyRelation -> {
+
+		List<AppliedStudyResponse> list = new ArrayList<>();
+		studyRelations.stream()
+			.forEach(studyRelation -> {
 				Study study = studyRelation.getStudy();
-				List<Tag> tags = tagService.getTagsByStudy(study);
-				return AppliedStudyResponse.of(study, tags);
-			})
-			.toList();
+				List<String> tags = tagService.getTagsNameByStudy(study);
+				list.add(AppliedStudyResponse.of(study, tags));
+			});
+		return list;
 	}
 }

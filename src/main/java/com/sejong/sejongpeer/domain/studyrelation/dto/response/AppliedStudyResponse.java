@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.study.entity.Study;
-import com.sejong.sejongpeer.domain.study.entity.Tag;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 
@@ -15,11 +14,11 @@ public record AppliedStudyResponse(
 	Integer participantsCount,
 	StudyType type,
 
-	List<Tag> tags,
+	List<String> tags,
 	RecruitmentStatus recruitmentStatus,
 	LocalDateTime recruitmentStartAt,
 	LocalDateTime recruitmentEndAt) {
-	public static AppliedStudyResponse of(Study study, List<Tag> tags) {
+	public static AppliedStudyResponse of(Study study, List<String> tags) {
 		return new AppliedStudyResponse(
 			study.getId(),
 			study.getTitle(),

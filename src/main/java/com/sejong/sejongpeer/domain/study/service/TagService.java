@@ -57,10 +57,10 @@ public class TagService {
 		}
 	}
 
-	public List<Tag> getTagsByStudy(Study study) {
+	public List<String> getTagsNameByStudy(Study study) {
 		Set<StudyTagMap> studyTagMaps = study.getStudyTagMaps();
 		return studyTagMaps.stream()
-			.map(StudyTagMap::getTag)
+			.map(studyTagMap -> studyTagMap.getTag().getName())
 			.toList();
 	}
 }
