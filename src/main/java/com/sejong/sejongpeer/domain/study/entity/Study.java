@@ -194,13 +194,19 @@ public class Study extends BaseAuditEntity {
 		String title,
 		String content,
 		Integer recruitmentCount,
-		StudyType type,
+		StudyMethod method,
+		Frequency frequency,
+		String kakoLink,
+		String questionLink,
 		LocalDateTime recruitmentStartAt,
 		LocalDateTime recruitmentEndAt) {
 		this.title = title;
 		this.content = content;
 		this.recruitmentCount = recruitmentCount;
-		this.type = type;
+		this.method = method;
+		this.frequency = frequency;
+		this.kakaoLink = kakoLink;
+		this.questionLink = questionLink;
 		this.recruitmentStartAt = recruitmentStartAt;
 		this.recruitmentEndAt = recruitmentEndAt;
 	}

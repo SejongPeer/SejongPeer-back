@@ -47,11 +47,15 @@ public class StudyService {
 			studyRepository
 				.findById(studyId)
 				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
 		study.updateStudy(
 			studyUpdateRequest.title(),
 			studyUpdateRequest.content(),
 			studyUpdateRequest.recruitmentCount(),
-			studyUpdateRequest.type(),
+			studyUpdateRequest.method(),
+			studyUpdateRequest.frequency(),
+			studyUpdateRequest.kakaoLink(),
+			studyUpdateRequest.questionLink(),
 			studyUpdateRequest.recruitmentStartAt(),
 			studyUpdateRequest.recruitmentEndAt());
 		return StudyUpdateResponse.from(study);
