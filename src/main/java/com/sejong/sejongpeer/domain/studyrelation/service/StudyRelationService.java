@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.studyrelation.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
@@ -10,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
+import com.sejong.sejongpeer.domain.study.service.TagService;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyApplyRequest;
+import com.sejong.sejongpeer.domain.studyrelation.dto.response.AppliedStudyResponse;
 import com.sejong.sejongpeer.domain.studyrelation.dto.response.StudyRelationCreateResponse;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
@@ -33,6 +36,7 @@ public class StudyRelationService {
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
+	private final TagService tagService;
 
 	public StudyRelationCreateResponse applyStudy(StudyApplyRequest studyApplyRequest) {
 		Study study = studyRepository.findById(studyApplyRequest.studyId())
@@ -93,5 +97,20 @@ public class StudyRelationService {
 			study.getMember().getPhoneNumber(),
 			SmsText.valueOf(SmsText.STUDY_RECRUITMENT_COMPLETED + study.getStudy().getKakaoLink())
 		);
+	}
+
+	public List<AppliedStudyResponse> getAppliedStudies() {
+		final Member loginMember = memberUtil.getCurrentMember();
+		List<StudyRelation> studyRelations = loginMember.getStudyRelations();
+
+
+		List<AppliedStudyResponse> list = new ArrayList<>();
+		studyRelations.stream()
+			.forEach(studyRelation -> {
+				Study study = studyRelation.getStudy();
+				List<String> tags = tagService.getTagsNameByStudy(study);
+				list.add(AppliedStudyResponse.of(study, tags));
+			});
+		return list;
 	}
 }
