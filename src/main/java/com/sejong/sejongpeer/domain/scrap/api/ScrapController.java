@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.scrap.api;
 
+import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCountResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +25,18 @@ public class ScrapController {
 
 	private final ScrapService scrapService;
 
-	@Operation(summary = "스터디 스크랩 조회", description = "스터디를 스크랩한 정보를 조회합니다.")
+	@Operation(summary = "로그인한 유저의 스크랩 수 조회", description = "자신이 스크랩한 게시글 수를 반환합니다.")
 	@GetMapping("/study")
 	public StudyScrapResponse findScrap(
 		@RequestBody StudyScrapCreateRequest request
 	) {
 		return scrapService.findOneStudyScrap(request);
+	}
+
+	@Operation(summary = "게시글 별 스크랩 수 조회", description = "스터디를 스크랩한 유저가 몇 명인지 반환합니다.")
+	@GetMapping("/study/{studyId}")
+	public StudyScrapCountResponse getScrapCountByStudyPost(@PathVariable Long studyId) {
+		return scrapService.getScrapCountByStudyPost(studyId);
 	}
 
 	@Operation(summary = "스터디 스크랩 추가", description = "스터디를 스크랩합니다.")

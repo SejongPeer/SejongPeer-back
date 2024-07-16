@@ -10,4 +10,6 @@ import com.sejong.sejongpeer.domain.study.entity.Study;
 
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 	List<Scrap> findByTypeAndStudy(ScrapType type, Study study);
+
+	Long countByStudy(Study study);
 }
