@@ -14,7 +14,8 @@ public record StudyPostInfoResponse(
 	String recruitmentEnd,
 	String content,
 	String categoryName,
-	Long numberOfApplicants,
+	Long numberOfAcceptedApplicants,
+	Integer totalRecruitmentCount,
 	List<StudyImageUrlResponse> imgUrlList
 ) {
 	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, Long numberOfApplicants) {
@@ -27,6 +28,7 @@ public record StudyPostInfoResponse(
 			study.getContent(),
 			categoryName,
 			numberOfApplicants,
+			study.getRecruitmentCount(),
 			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList())
 		);
 	}
