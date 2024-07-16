@@ -69,9 +69,9 @@ public class LectureStudyService {
 		return StudyFindResponse.from(study);
 	}
 
-	@Transactional(readOnly = true)
-	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
-		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
-		return studySlice.map(StudyFindResponse::from);
-	}
+//	@Transactional(readOnly = true)
+//	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
+//		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
+//		return studySlice.map(StudyFindResponse::from);
+//	}
 }

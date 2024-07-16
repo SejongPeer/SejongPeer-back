@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.scrap.application;
 
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCountResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +35,20 @@ public class ScrapService {
 		Study study = studyRepository.findById(request.studyId()).orElseThrow(
 			() -> new CustomException(ErrorCode.STUDY_NOT_FOUND)
 		);
-		
+
 		List<Scrap> scraps = scrapRepository.findByTypeAndStudy(ScrapType.STUDY, study);
 		boolean isScrap = scraps.stream()
 			.anyMatch(scrap -> scrap.getMember().equals(member));
 
 		return StudyScrapResponse.of(isScrap, scraps.size());
+	}
+
+	public StudyScrapCountResponse getScrapCountByStudyPost(final Long studyId) {
+		Study study = studyRepository.findById(studyId).orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+		Long scrapCount = scrapRepository.countByStudy(study);
+
+		return StudyScrapCountResponse.of(scrapCount.intValue());
 	}
 
 	public Long createScrap(Long studyId) {
