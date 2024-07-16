@@ -16,6 +16,9 @@ public record StudyPostInfoResponse(
 	String categoryName,
 	Integer participantCount,
 	Integer totalRecruitmentCount,
+	String studyFrequency,
+	String studyMethod,
+	String questionKakaoLink,
 	List<StudyImageUrlResponse> imgUrlList
 ) {
 	public static StudyPostInfoResponse fromStudy(Study study, String categoryName) {
@@ -29,6 +32,9 @@ public record StudyPostInfoResponse(
 			categoryName,
 			study.getParticipantsCount(),
 			study.getRecruitmentCount(),
+			study.getFrequency().getValue(),
+			study.getMethod().getValue(),
+			study.getQuestionLink(),
 			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList())
 		);
 	}
