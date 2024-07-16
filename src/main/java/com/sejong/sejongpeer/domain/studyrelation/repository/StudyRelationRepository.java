@@ -15,8 +15,8 @@ public interface StudyRelationRepository
 
 	List<StudyRelation> findByMemberAndStudy(Member member, Study study);
 
-	Long countByStudyAndStatus(Study study, StudyMatchingStatus status);
 	List<StudyRelation> findByStudyId(Long studyId);
+	List<StudyRelation> findByMember(Member member);
 
 	Optional<StudyRelation> findByMemberIdAndStudyId(String memberId, Long studyId);
 }

@@ -14,10 +14,11 @@ public record StudyPostInfoResponse(
 	String recruitmentEnd,
 	String content,
 	String categoryName,
-	Long numberOfApplicants,
+	Integer participantCount,
+	Integer totalRecruitmentCount,
 	List<StudyImageUrlResponse> imgUrlList
 ) {
-	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, Long numberOfApplicants) {
+	public static StudyPostInfoResponse fromStudy(Study study, String categoryName) {
 		return new StudyPostInfoResponse(
 			study.getTitle(),
 			study.getMember().getCollegeMajor().getMajor(),
@@ -26,7 +27,8 @@ public record StudyPostInfoResponse(
 			study.getRecruitmentEndAt().toString().substring(0, 10),
 			study.getContent(),
 			categoryName,
-			numberOfApplicants,
+			study.getParticipantsCount(),
+			study.getRecruitmentCount(),
 			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList())
 		);
 	}

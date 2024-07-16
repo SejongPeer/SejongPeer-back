@@ -1,7 +1,6 @@
 package com.sejong.sejongpeer.domain.study.service;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.study.dto.request.StudyCreateRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
@@ -12,7 +11,6 @@ import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.repository.ExternalActivityStudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
-import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
 import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
@@ -47,11 +45,15 @@ public class StudyService {
 			studyRepository
 				.findById(studyId)
 				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
 		study.updateStudy(
 			studyUpdateRequest.title(),
 			studyUpdateRequest.content(),
 			studyUpdateRequest.recruitmentCount(),
-			studyUpdateRequest.type(),
+			studyUpdateRequest.method(),
+			studyUpdateRequest.frequency(),
+			studyUpdateRequest.kakaoLink(),
+			studyUpdateRequest.questionLink(),
 			studyUpdateRequest.recruitmentStartAt(),
 			studyUpdateRequest.recruitmentEndAt());
 		return StudyUpdateResponse.from(study);
@@ -129,8 +131,7 @@ public class StudyService {
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		String categoryName = getCategoryNameByStudyType(study);
 
-		Long acceptedApplicantsCount = studyRelationRepository.countByStudyAndStatus(study, StudyMatchingStatus.ACCEPT);
-		return StudyPostInfoResponse.fromStudy(study, categoryName, acceptedApplicantsCount);
+		return StudyPostInfoResponse.fromStudy(study, categoryName);
 	}
 
 	private String getCategoryNameByStudyType(Study study) {
