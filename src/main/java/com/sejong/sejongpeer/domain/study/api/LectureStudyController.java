@@ -46,10 +46,10 @@ public class LectureStudyController {
 		return lectureStudyService.findOneStudy(studyId);
 	}
 
-	@Operation(summary = "스터디 리스트 조회", description = "스터디 리스트를 조회합니다.")
-	@GetMapping
-	public Slice<StudyFindResponse> studyFindSlice(
-		@RequestParam int size, @RequestParam(required = false) Long lastId) {
-		return lectureStudyService.findSliceStudy(size, lastId);
-	}
+//	@Operation(summary = "스터디 리스트 조회", description = "스터디 리스트를 조회합니다.")
+//	@GetMapping
+//	public Slice<StudyFindResponse> studyFindSlice(
+//		@RequestParam int size, @RequestParam(required = false) Long lastId) {
+//		return lectureStudyService.findSliceStudy(size, lastId);
+//	}
 }
