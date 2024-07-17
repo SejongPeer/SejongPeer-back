@@ -40,11 +40,11 @@ public class StudyRelationController {
 			.body(response);
 	}
 
-//	@Operation(summary = "스터디 취소", description = "스터디 신청을 취소합니다.")
-//	@DeleteMapping
-//	public ResponseEntity<?> deleteStudyRelation() {
-//		return null;
-//	}
+	@Operation(summary = "스터디 지원 취소", description = "지원했던 스터디 신청을 취소합니다.")
+	@DeleteMapping("/{studyId}")
+	public void deleteStudyRelation(@PathVariable Long studyId) {
+		studyRelationService.deleteStudyApplicationHistory(studyId);
+	}
 
 	@Operation(summary = "스터디 지원자 수락/거절", description = "자신이 개설한 스터디 지원자의 스터디 신청에 대해 수락/거절을 처리합니다.")
 	@PatchMapping("/matching/status")

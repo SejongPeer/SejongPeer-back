@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class StudyRelationService {
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
+	private final SecurityUtil securityUtil;
 	private final TagService tagService;
 
 	public StudyRelationCreateResponse applyStudy(StudyApplyRequest studyApplyRequest) {
@@ -54,6 +56,16 @@ public class StudyRelationService {
 		studyRelationRepository.save(newStudyapplication);
 
 		return StudyRelationCreateResponse.from(newStudyapplication);
+	}
+
+	public void deleteStudyApplicationHistory(final Long studyId) {
+		String loginMemberId = securityUtil.getCurrentMemberId();
+
+		StudyRelation studyApplicationHistory = studyRelationRepository.findByMemberIdAndStudyId(loginMemberId, studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
+
+		studyRelationRepository.delete(studyApplicationHistory);
+
 	}
 
 	public void updateStudyMatchingStatus(StudyMatchingRequest request) {
