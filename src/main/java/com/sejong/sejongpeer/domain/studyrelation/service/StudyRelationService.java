@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.studyrelation.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,14 @@ public class StudyRelationService {
 
 		List<StudyRelation> studyRelations = studyRelationRepository.findByMemberAndStudy(loginMember, study);
 		if (!studyRelations.isEmpty()) {
-			throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+			StudyRelation lastRelation = studyRelations.get(0);
+			if (lastRelation.getCanceledAt() != null &&
+				lastRelation.getCanceledAt().isAfter(LocalDateTime.now().minusHours(1))) {
+				throw new CustomException(ErrorCode.CANNOT_REAPPLY_WITHIN_AN_HOUR);
+			}
+			if (!lastRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+				throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+			}
 		}
 
 		StudyRelation newStudyapplication = StudyRelation.createStudyRelations(loginMember,study);
@@ -64,7 +72,9 @@ public class StudyRelationService {
 		StudyRelation studyApplicationHistory = studyRelationRepository.findByMemberIdAndStudyId(loginMemberId, studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
 
-		studyRelationRepository.delete(studyApplicationHistory);
+		studyApplicationHistory.registerCanceledAt(LocalDateTime.now());
+		studyApplicationHistory.changeStudyMatchingStatus(StudyMatchingStatus.CANCEL);
+		studyRelationRepository.save(studyApplicationHistory);
 
 	}
 
@@ -119,9 +129,11 @@ public class StudyRelationService {
 		List<AppliedStudyResponse> list = new ArrayList<>();
 		studyRelations.stream()
 			.forEach(studyRelation -> {
-				Study study = studyRelation.getStudy();
-				List<String> tags = tagService.getTagsNameByStudy(study);
-				list.add(AppliedStudyResponse.of(study, tags));
+				if(!studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+					Study study = studyRelation.getStudy();
+					List<String> tags = tagService.getTagsNameByStudy(study);
+					list.add(AppliedStudyResponse.of(study, tags));
+				}
 			});
 		return list;
 	}
