@@ -1,10 +1,12 @@
 package com.sejong.sejongpeer.domain.studyrelation.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
+import com.sejong.sejongpeer.global.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class StudyRelationService {
 	private final StudyRelationRepository studyRelationRepository;
 	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
+	private final SecurityUtil securityUtil;
 	private final TagService tagService;
 
 	public StudyRelationCreateResponse applyStudy(StudyApplyRequest studyApplyRequest) {
@@ -46,7 +49,14 @@ public class StudyRelationService {
 
 		List<StudyRelation> studyRelations = studyRelationRepository.findByMemberAndStudy(loginMember, study);
 		if (!studyRelations.isEmpty()) {
-			throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+			StudyRelation lastRelation = studyRelations.get(0);
+			if (lastRelation.getCanceledAt() != null &&
+				lastRelation.getCanceledAt().isAfter(LocalDateTime.now().minusHours(1))) {
+				throw new CustomException(ErrorCode.CANNOT_REAPPLY_WITHIN_AN_HOUR);
+			}
+			if (!lastRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+				throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+			}
 		}
 
 		StudyRelation newStudyapplication = StudyRelation.createStudyRelations(loginMember,study);
@@ -54,6 +64,18 @@ public class StudyRelationService {
 		studyRelationRepository.save(newStudyapplication);
 
 		return StudyRelationCreateResponse.from(newStudyapplication);
+	}
+
+	public void deleteStudyApplicationHistory(final Long studyId) {
+		String loginMemberId = securityUtil.getCurrentMemberId();
+
+		StudyRelation studyApplicationHistory = studyRelationRepository.findByMemberIdAndStudyId(loginMemberId, studyId)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
+
+		studyApplicationHistory.registerCanceledAt(LocalDateTime.now());
+		studyApplicationHistory.changeStudyMatchingStatus(StudyMatchingStatus.CANCEL);
+		studyRelationRepository.save(studyApplicationHistory);
+
 	}
 
 	public void updateStudyMatchingStatus(StudyMatchingRequest request) {
@@ -107,9 +129,11 @@ public class StudyRelationService {
 		List<AppliedStudyResponse> list = new ArrayList<>();
 		studyRelations.stream()
 			.forEach(studyRelation -> {
-				Study study = studyRelation.getStudy();
-				List<String> tags = tagService.getTagsNameByStudy(study);
-				list.add(AppliedStudyResponse.of(study, tags));
+				if(!studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+					Study study = studyRelation.getStudy();
+					List<String> tags = tagService.getTagsNameByStudy(study);
+					list.add(AppliedStudyResponse.of(study, tags));
+				}
 			});
 		return list;
 	}

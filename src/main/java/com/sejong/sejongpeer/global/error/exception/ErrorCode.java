@@ -56,6 +56,7 @@ public enum ErrorCode {
 	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),
 	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
 	STUDY_APPLY_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 이 스터디 게시글에 대한 지원 이력이 없습니다."),
+	CANNOT_REAPPLY_WITHIN_AN_HOUR(HttpStatus.FORBIDDEN, "스터디 게시글을 지원했다가 취소한 유저는 1시간 동안 같은 스터디를 지원할 수 없습니다."),
 
 	// Lecture
 	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),

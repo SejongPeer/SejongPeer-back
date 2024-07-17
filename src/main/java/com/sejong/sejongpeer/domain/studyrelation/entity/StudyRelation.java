@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,6 +24,8 @@ public class StudyRelation extends BaseAuditEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+
+	private LocalDateTime canceledAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -52,5 +56,9 @@ public class StudyRelation extends BaseAuditEntity {
 
 	public void changeStudyMatchingStatus(StudyMatchingStatus status) {
 		this.status = status;
+	}
+
+	public void registerCanceledAt(LocalDateTime localDateTime) {
+		this.canceledAt = localDateTime;
 	}
 }
