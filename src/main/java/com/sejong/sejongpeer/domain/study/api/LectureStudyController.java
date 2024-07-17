@@ -40,11 +40,11 @@ public class LectureStudyController {
 			.body(response);
 	}
 
-	@Operation(summary = "스터디 단건 조회", description = "스터디 한 개를 조회합니다.")
-	@GetMapping("/{studyId}")
-	public StudyFindResponse studyFindOne(@PathVariable Long studyId) {
-		return lectureStudyService.findOneStudy(studyId);
-	}
+//	@Operation(summary = "스터디 단건 조회", description = "스터디 한 개를 조회합니다.")
+//	@GetMapping("/{studyId}")
+//	public StudyFindResponse studyFindOne(@PathVariable Long studyId) {
+//		return lectureStudyService.findOneStudy(studyId);
+//	}
 
 //	@Operation(summary = "스터디 리스트 조회", description = "스터디 리스트를 조회합니다.")
 //	@GetMapping
