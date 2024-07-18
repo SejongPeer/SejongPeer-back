@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "3-1. [학교수업 스터디]", description = "학교수업 스터디 관련 API입니다.")
+@Tag(name = "5-2. [학교수업 스터디 생성]", description = "학교수업 스터디 게시글 작성 관련 API입니다.")
 @RestController
 @RequestMapping("/api/v1/study/lecture")
 @RequiredArgsConstructor

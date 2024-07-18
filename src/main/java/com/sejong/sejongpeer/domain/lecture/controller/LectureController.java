@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sejong.sejongpeer.domain.lecture.dto.CollegeLectureProfessorResponse;
 import com.sejong.sejongpeer.domain.lecture.service.LectureService;
 
-@Tag(name = "5. [수업]", description = "수업 관련 API입니다.")
+@Tag(name = "5-1. [수업 정보]", description = "개설되는 수업 관련 API입니다.")
 @RestController
 @RequestMapping("/api/v1/colleges")
 @RequiredArgsConstructor

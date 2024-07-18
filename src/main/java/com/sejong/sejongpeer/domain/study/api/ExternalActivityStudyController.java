@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "3-2. [대외활동 스터디]", description = "대외활동 스터디 관련 API입니다.")
+@Tag(name = "5-2. [대외활동 스터디 생성]", description = "대외활동 스터디 게시글 작성 API입니다.")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/study/external-activity")

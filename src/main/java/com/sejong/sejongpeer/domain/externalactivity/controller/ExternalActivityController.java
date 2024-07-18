@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "7. [교외 활동]", description = "교외 활동 관련 API입니다.")
+@Tag(name = "5-1. [교외 활동 종류 정보]", description = "교외 활동 카테고리 관련 API입니다.")
 @RestController
 @RequestMapping("/api/v1/external-activity")
 @RequiredArgsConstructor
