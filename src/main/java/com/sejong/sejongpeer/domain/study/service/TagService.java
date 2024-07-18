@@ -15,6 +15,8 @@ import com.sejong.sejongpeer.domain.study.entity.Tag;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.StudyTagMapRepository;
 import com.sejong.sejongpeer.domain.study.repository.TagRepository;
+import com.sejong.sejongpeer.global.error.exception.CustomException;
+import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,7 +55,7 @@ public class TagService {
 			byte[] hash = digest.digest(tagName.getBytes());
 			return Base64.getEncoder().encodeToString(hash);
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Error hashing tag name", e);
+			throw new CustomException(ErrorCode.CANNOT_CHANGE_TO_HASHNAME);
 		}
 	}
 
