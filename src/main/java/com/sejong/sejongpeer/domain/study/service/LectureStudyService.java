@@ -1,6 +1,5 @@
 package com.sejong.sejongpeer.domain.study.service;
 
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,7 @@ public class LectureStudyService {
 	private final TagService tagService;
 
 	public StudyCreateResponse createStudy(LectureStudyCreateRequest request) {
-		String memberId = securityUtil.getCurrentMemberId();
+		final String memberId = securityUtil.getCurrentMemberId();
 
 		Member member =
 			memberRepository
@@ -68,10 +67,4 @@ public class LectureStudyService {
 
 		return StudyFindResponse.from(study);
 	}
-
-//	@Transactional(readOnly = true)
-//	public Slice<StudyFindResponse> findSliceStudy(int size, Long lastId) {
-//		Slice<Study> studySlice = studyRepository.findStudySlice(size, lastId);
-//		return studySlice.map(StudyFindResponse::from);
-//	}
 }

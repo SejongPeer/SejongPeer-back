@@ -32,7 +32,7 @@ public class ExternalActivityStudyService {
 	private final TagService tagService;
 
 	public StudyCreateResponse createStudy(ExternalActivityStudyCreateRequest request) {
-		String memberId = securityUtil.getCurrentMemberId();
+		final String memberId = securityUtil.getCurrentMemberId();
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
