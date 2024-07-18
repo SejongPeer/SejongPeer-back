@@ -46,7 +46,7 @@ public class StudyRelationService {
 		Study study = studyRepository.findById(studyApplyRequest.studyId())
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-		Member loginMember = memberUtil.getCurrentMember();
+		final Member loginMember = memberUtil.getCurrentMember();
 
 		List<StudyRelation> studyRelations = studyRelationRepository.findByMemberAndStudy(loginMember, study);
 		if (!studyRelations.isEmpty()) {
@@ -68,7 +68,7 @@ public class StudyRelationService {
 	}
 
 	public void deleteStudyApplicationHistory(final Long studyId) {
-		String loginMemberId = securityUtil.getCurrentMemberId();
+		final String loginMemberId = securityUtil.getCurrentMemberId();
 
 		StudyRelation studyApplicationHistory = studyRelationRepository.findByMemberIdAndStudyId(loginMemberId, studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
