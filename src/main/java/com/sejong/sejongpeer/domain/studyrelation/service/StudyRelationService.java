@@ -48,17 +48,19 @@ public class StudyRelationService {
 
 		Member loginMember = memberUtil.getCurrentMember();
 
-		List<StudyRelation> studyRelations = studyRelationRepository.findByMemberAndStudy(loginMember, study);
-		if (!studyRelations.isEmpty()) {
-			StudyRelation lastRelation = studyRelations.get(0);
-			if (lastRelation.getCanceledAt() != null &&
-				lastRelation.getCanceledAt().isAfter(LocalDateTime.now().minusHours(1))) {
-				throw new CustomException(ErrorCode.CANNOT_REAPPLY_WITHIN_AN_HOUR);
-			}
-			if (!lastRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
-				throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
-			}
+		StudyRelation lastRelation = studyRelationRepository.findTopByMemberAndStudyOrderByIdDesc(loginMember, study)
+			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
+
+
+		if (lastRelation.getCanceledAt() != null &&
+			lastRelation.getCanceledAt().isAfter(LocalDateTime.now().minusHours(1))) {
+			throw new CustomException(ErrorCode.CANNOT_REAPPLY_WITHIN_AN_HOUR);
 		}
+
+		if (!lastRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+			throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+		}
+
 
 		StudyRelation newStudyapplication = StudyRelation.createStudyRelations(loginMember,study);
 
@@ -70,7 +72,7 @@ public class StudyRelationService {
 	public void deleteStudyApplicationHistory(final Long studyId) {
 		String loginMemberId = securityUtil.getCurrentMemberId();
 
-		StudyRelation studyApplicationHistory = studyRelationRepository.findByMemberIdAndStudyId(loginMemberId, studyId)
+		StudyRelation studyApplicationHistory = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(loginMemberId, studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
 
 		studyApplicationHistory.registerCanceledAt(LocalDateTime.now());
@@ -83,7 +85,7 @@ public class StudyRelationService {
 		Member studyApplicant = memberRepository.findByNickname(request.applicantNickname())
 			.orElseThrow(() -> new CustomException(ErrorCode.NICKNAME_IS_NULL));
 
-		StudyRelation studyResume = studyRelationRepository.findByMemberIdAndStudyId(studyApplicant.getId(), request.studyId())
+		StudyRelation studyResume = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(studyApplicant.getId(), request.studyId())
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_APPLY_HISTORY_NOT_FOUND));
 
 		if (request.isAccept()) {
