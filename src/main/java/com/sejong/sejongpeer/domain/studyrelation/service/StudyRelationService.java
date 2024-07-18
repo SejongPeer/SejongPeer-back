@@ -49,18 +49,18 @@ public class StudyRelationService {
 		final Member loginMember = memberUtil.getCurrentMember();
 
 		StudyRelation lastRelation = studyRelationRepository.findTopByMemberAndStudyOrderByIdDesc(loginMember, study)
-			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
+			.orElse(null);
 
+		if (lastRelation != null) {
+			if (lastRelation.getCanceledAt() != null &&
+				lastRelation.getCanceledAt().isAfter(LocalDateTime.now().minusHours(1))) {
+				throw new CustomException(ErrorCode.CANNOT_REAPPLY_WITHIN_AN_HOUR);
+			}
 
-		if (lastRelation.getCanceledAt() != null &&
-			lastRelation.getCanceledAt().isAfter(LocalDateTime.now().minusHours(1))) {
-			throw new CustomException(ErrorCode.CANNOT_REAPPLY_WITHIN_AN_HOUR);
+			if (!lastRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+				throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
+			}
 		}
-
-		if (!lastRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
-			throw new CustomException(ErrorCode.DUPLICATED_STUDY_APPLICATION);
-		}
-
 
 		StudyRelation newStudyapplication = StudyRelation.createStudyRelations(loginMember,study);
 
