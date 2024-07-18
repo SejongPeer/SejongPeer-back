@@ -88,6 +88,10 @@ public class StudyRelationService {
 		StudyRelation studyResume = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(studyApplicant.getId(), request.studyId())
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_APPLY_HISTORY_NOT_FOUND));
 
+		if (studyResume.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+			throw new CustomException(ErrorCode.INVALID_STUDY_MATHCING_STATUS_UPDATE_CONDITION);
+		}
+
 		if (request.isAccept()) {
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
 			Study appliedStudy = studyResume.getStudy();
