@@ -13,10 +13,10 @@ import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 public interface StudyRelationRepository
 	extends JpaRepository<StudyRelation, String>, StudyRelationRepositoryCustom {
 
-	List<StudyRelation> findByMemberAndStudy(Member member, Study study);
+	Optional<StudyRelation> findTopByMemberAndStudyOrderByIdDesc(Member member, Study study);
 
 	List<StudyRelation> findByStudyId(Long studyId);
 	List<StudyRelation> findByMember(Member member);
 
-	Optional<StudyRelation> findByMemberIdAndStudyId(String memberId, Long studyId);
+	Optional<StudyRelation> findTopByMemberIdAndStudyIdOrderByIdDesc(String memberId, Long studyId);
 }
