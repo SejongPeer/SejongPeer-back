@@ -58,7 +58,7 @@ public enum ErrorCode {
 	STUDY_APPLY_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 이 스터디 게시글에 대한 지원 이력이 없습니다."),
 	CANNOT_REAPPLY_WITHIN_AN_HOUR(HttpStatus.FORBIDDEN, "스터디 게시글을 지원했다가 취소한 유저는 1시간 동안 같은 스터디를 지원할 수 없습니다."),
 	INVALID_STUDY_MATHCING_STATUS_UPDATE_CONDITION(HttpStatus.BAD_REQUEST, "지원을 취소한 경우 수락/거절 처리를 할 수 없습니다."),
-
+	CANNOT_CHANGE_TO_HASHNAME(HttpStatus.CONFLICT, "태그 문자를 해시값으로 변환할 수 없습니다."),
 	// Lecture
 	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
 	LECTURE_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교내 수업 스터디 게시글을 찾을 수 없습니다."),
