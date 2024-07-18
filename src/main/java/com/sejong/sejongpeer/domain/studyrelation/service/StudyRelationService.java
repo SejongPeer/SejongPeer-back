@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyApplicantsListRespone;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import com.sejong.sejongpeer.global.util.SecurityUtil;
 import org.springframework.stereotype.Service;
@@ -136,5 +137,24 @@ public class StudyRelationService {
 				}
 			});
 		return list;
+	}
+
+	public List<StudyApplicantsListRespone> getApplicatnsList() {
+		final Member member = memberUtil.getCurrentMember();
+		List<Study> studyList = member.getStudies();
+
+
+		List<StudyApplicantsListRespone> respones = new ArrayList<>();
+
+		studyList.stream()
+			.forEach(study -> {
+				List<StudyRelation> relations = study.getStudyRelations();
+				List<Member> memberList = relations.stream()
+					.map(StudyRelation::getMember)
+					.toList();
+				respones.add(StudyApplicantsListRespone.of(study, memberList));
+			});
+
+		return respones;
 	}
 }

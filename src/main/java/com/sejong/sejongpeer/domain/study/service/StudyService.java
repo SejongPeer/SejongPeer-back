@@ -41,9 +41,11 @@ public class StudyService {
 
 
 	public StudyUpdateResponse updateStudy(final StudyUpdateRequest studyUpdateRequest, final Long studyId) {
+		Member member = memberUtil.getCurrentMember();
+
 		Study study =
 			studyRepository
-				.findById(studyId)
+				.findByMemberAndId(member, studyId)
 				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
 		study.updateStudy(

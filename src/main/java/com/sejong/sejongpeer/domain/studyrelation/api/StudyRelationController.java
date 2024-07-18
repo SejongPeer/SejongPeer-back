@@ -1,6 +1,8 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
 import java.util.List;
+
+import com.sejong.sejongpeer.domain.study.dto.response.StudyApplicantsListRespone;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,4 +64,11 @@ public class StudyRelationController {
 	public List<AppliedStudyResponse> getAllAppliedStudies() {
 		return 	studyRelationService.getAppliedStudies();
 	}
+
+	@Operation(summary = "작성한 스터디 지원자 리스트 조회", description = "마이페이지에서 게시글 마다 지원자의 리스트를 조회합니다.")
+	@GetMapping("/applicants")
+	public List<StudyApplicantsListRespone> getApplicatnsList(){
+		return studyRelationService.getApplicatnsList();
+	}
+
 }
