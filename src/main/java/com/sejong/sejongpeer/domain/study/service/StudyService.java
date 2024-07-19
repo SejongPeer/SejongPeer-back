@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.study.service;
 
 import com.sejong.sejongpeer.domain.member.entity.Member;
+import com.sejong.sejongpeer.domain.scrap.dao.ScrapRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyUpdateRequest;
 import com.sejong.sejongpeer.domain.study.dto.response.*;
@@ -11,7 +12,6 @@ import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.repository.ExternalActivityStudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
-import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.global.util.MemberUtil;
@@ -36,7 +36,7 @@ public class StudyService {
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
-	private final StudyRelationRepository studyRelationRepository;
+	private final ScrapRepository scrapRepository;
 	private final MemberUtil memberUtil;
 
 
@@ -117,10 +117,11 @@ public class StudyService {
 	private Slice<StudyTotalPostResponse> mapToStudyTotalPostResponse(Slice<Study> studySlice, StudyType studyType) {
 		return studySlice.map(study -> {
 			String categoryName = getCategoryNameByStudyType(study);
+			int scrapCount = getScrapCountByStudy(study);
 			if (studyType == StudyType.LECTURE) {
-				return StudyTotalPostResponse.fromLectureStudy(study, categoryName);
+				return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
 			} else if (studyType == StudyType.EXTERNAL_ACTIVITY) {
-				return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName);
+				return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
 			} else {
 				throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 			}
@@ -132,8 +133,8 @@ public class StudyService {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		String categoryName = getCategoryNameByStudyType(study);
-
-		return StudyPostInfoResponse.fromStudy(study, categoryName);
+		int scrapCount = getScrapCountByStudy(study);
+		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount);
 	}
 
 	private String getCategoryNameByStudyType(Study study) {
@@ -169,15 +170,21 @@ public class StudyService {
 		return studyPage.stream()
 			.map(study -> {
 				String categoryName = getCategoryNameByStudyType(study);
+				int scrapCount = getScrapCountByStudy(study);
 				if (study.getType() == StudyType.LECTURE) {
-					return StudyTotalPostResponse.fromLectureStudy(study, categoryName);
+					return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
 				} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
-					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName);
+					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
 				} else {
 					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 				}
 			})
 			.collect(Collectors.toUnmodifiableList());
 
+	}
+
+	private int getScrapCountByStudy(Study study) {
+		Long scrapCount = scrapRepository.countByStudy(study);
+		return scrapCount.intValue();
 	}
 }
