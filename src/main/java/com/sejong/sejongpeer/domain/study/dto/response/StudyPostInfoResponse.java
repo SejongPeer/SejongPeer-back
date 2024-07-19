@@ -19,9 +19,10 @@ public record StudyPostInfoResponse(
 	String studyFrequency,
 	String studyMethod,
 	String questionKakaoLink,
-	List<StudyImageUrlResponse> imgUrlList
+	List<StudyImageUrlResponse> imgUrlList,
+	int scrapCount
 ) {
-	public static StudyPostInfoResponse fromStudy(Study study, String categoryName) {
+	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, int scrapCount) {
 		return new StudyPostInfoResponse(
 			study.getTitle(),
 			study.getMember().getCollegeMajor().getMajor(),
@@ -35,7 +36,8 @@ public record StudyPostInfoResponse(
 			study.getFrequency().getValue(),
 			study.getMethod().getValue(),
 			study.getQuestionLink(),
-			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList())
+			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList()),
+			scrapCount
 		);
 	}
 

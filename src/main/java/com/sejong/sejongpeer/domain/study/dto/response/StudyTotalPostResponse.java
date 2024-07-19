@@ -7,27 +7,30 @@ public record StudyTotalPostResponse(
 	String title,
 	String createdAt,
 	boolean hasImage,
-	String categoryName
+	String categoryName,
+	int scrapCount
 ) {
-	public static StudyTotalPostResponse fromLectureStudy(Study study, String lectureName) {
+	public static StudyTotalPostResponse fromLectureStudy(Study study, String lectureName, int scrapCount) {
 		boolean hasImage = study.getImageUrl() != null;
 		return new StudyTotalPostResponse(
 			study.getId(),
 			study.getTitle(),
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
-			lectureName
+			lectureName,
+			scrapCount
 		);
 	}
 
-	public static StudyTotalPostResponse fromExternalActivityStudy(Study study, String activityCategoryName) {
+	public static StudyTotalPostResponse fromExternalActivityStudy(Study study, String activityCategoryName, int scrapCount) {
 		boolean hasImage = study.getImageUrl() != null;
 		return new StudyTotalPostResponse(
 			study.getId(),
 			study.getTitle(),
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
-			activityCategoryName
+			activityCategoryName,
+			scrapCount
 		);
 	}
 }
