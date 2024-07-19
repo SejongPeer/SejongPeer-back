@@ -13,7 +13,8 @@ public enum SmsText {
 	MATCHING_AUTO_FAILED_DENIED("[세종피어]상대방이 24시간 내에 매칭 확정을 하지 않아 자동 거절처리되었습니다.\n" +
 		"다시 신청해주세요!"),
 	MATCHING_AUTO_FAILED_REJECT("[세종피어]24시간 내에 매칭확정을 하지 않아 거절처리 되었습니다. (1시간 제한 패널티)"),
-	STUDY_RECRUITMENT_COMPLETED("[세종피어]스터디 모집이 완료되었습니다!\n" + "스터디 카카오톡 링크 : ");
+	STUDY_RECRUITMENT_COMPLETED("[세종피어]스터디 모집이 완료되었습니다!\n" + "스터디 카카오톡 링크 : "),
+	STUDY_APPLY_ALARM("신청자 지원 알림, 수락여부를 결정하세요! sejongpeer.co.kr/mypage");
 
 	private final String value;
 

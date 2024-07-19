@@ -64,9 +64,15 @@ public class StudyRelationService {
 
 		StudyRelation newStudyapplication = StudyRelation.createStudyRelations(loginMember,study);
 
+		sendStudyApplicantAlarmToStudyWriter(newStudyapplication);
+
 		studyRelationRepository.save(newStudyapplication);
 
 		return StudyRelationCreateResponse.from(newStudyapplication);
+	}
+
+	private void sendStudyApplicantAlarmToStudyWriter(StudyRelation newStudyApplicaitonHistory) {
+		smsService.sendSms(newStudyApplicaitonHistory.getStudy().getMember().getPhoneNumber(), SmsText.STUDY_APPLY_ALARM);
 	}
 
 	public void deleteStudyApplicationHistory(final Long studyId) {
