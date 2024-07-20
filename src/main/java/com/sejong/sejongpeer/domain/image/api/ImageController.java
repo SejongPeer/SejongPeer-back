@@ -49,7 +49,7 @@ public class ImageController {
 //	}
 
 	@Operation(
-		summary = "스터디 게시글 별 이미지 업로드",
+		summary = "스터디 게시글 별 이미지 등록 및 수정",
 		description = "스터디 이미지를 클라우드에 업로드하여 이미지 경로를 반환합니다.")
 	@PostMapping("/study/upload")
 	public List<StudyImageUrlResponse> uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
