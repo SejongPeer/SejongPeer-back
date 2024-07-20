@@ -2,6 +2,8 @@ package com.sejong.sejongpeer.domain.study.dto.response;
 
 import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
 import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.study.entity.StudyTagMap;
+import com.sejong.sejongpeer.domain.study.entity.Tag;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +20,9 @@ public record StudyPostInfoResponse(
 	Integer totalRecruitmentCount,
 	String studyFrequency,
 	String studyMethod,
+	String finalKakaoLink,
 	String questionKakaoLink,
+	List<String> tags,
 	List<StudyImageUrlResponse> imgUrlList,
 	int scrapCount
 ) {
@@ -35,7 +39,9 @@ public record StudyPostInfoResponse(
 			study.getRecruitmentCount(),
 			study.getFrequency().getValue(),
 			study.getMethod().getValue(),
+			study.getKakaoLink(),
 			study.getQuestionLink(),
+			study.getStudyTagMaps().stream().map(StudyTagMap::getTag).map(Tag::getName).collect(Collectors.toUnmodifiableList()),
 			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList()),
 			scrapCount
 		);
