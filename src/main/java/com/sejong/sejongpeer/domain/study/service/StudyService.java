@@ -12,10 +12,15 @@ import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.repository.ExternalActivityStudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.LectureStudyRepository;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
+import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
+import com.sejong.sejongpeer.domain.studyrelation.entity.type.StudyMatchingStatus;
+import com.sejong.sejongpeer.domain.studyrelation.repository.StudyRelationRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.global.util.MemberUtil;
 
+import com.sejong.sejongpeer.infra.sms.service.SmsService;
+import com.sejong.sejongpeer.infra.sms.service.SmsText;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.*;
@@ -36,7 +41,9 @@ public class StudyService {
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
+	private final StudyRelationRepository studyRelationRepository;
 	private final ScrapRepository scrapRepository;
+	private final SmsService smsService;
 	private final MemberUtil memberUtil;
 
 
@@ -70,6 +77,9 @@ public class StudyService {
 			throw new CustomException(ErrorCode.STUDY_CANNOT_DELETED);
 		}
 
+		List<StudyRelation> allStudyApplicants = studyRelationRepository.findByStudyAndStatusNot(study, StudyMatchingStatus.CANCEL);
+		allStudyApplicants.stream().forEach(applicantHistory -> sendStudyDeletionAlarmToStudyApplicant(applicantHistory));
+
 		if (StudyType.LECTURE.equals(study.getType())) {
 			LectureStudy targetLectureStudy = lectureStudyRepository.findByStudy(study)
 				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_STUDY_NOT_FOUND));
@@ -86,6 +96,14 @@ public class StudyService {
 			studyRepository.delete(study);
 		}
 
+	}
+
+	private void sendStudyDeletionAlarmToStudyApplicant(StudyRelation studyRelation) {
+		Member studyApplicant = studyRelation.getMember();
+		Study studyPost = studyRelation.getStudy();
+		smsService.sendSms(
+			studyApplicant.getPhoneNumber(),
+			SmsText.valueOf("[" + studyPost.getTitle().substring(0,2) + "...]" + SmsText.STUDY_POST_DELETION_ALARM));
 	}
 
 	@Transactional(readOnly = true)
