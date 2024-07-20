@@ -1,6 +1,11 @@
 package com.sejong.sejongpeer.domain.study.dto.response;
 
 import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.study.entity.StudyTagMap;
+import com.sejong.sejongpeer.domain.study.entity.Tag;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record StudyTotalPostResponse(
 	Long id,
@@ -8,7 +13,8 @@ public record StudyTotalPostResponse(
 	String createdAt,
 	boolean hasImage,
 	String categoryName,
-	int scrapCount
+	int scrapCount,
+	List<String> tags
 ) {
 	public static StudyTotalPostResponse fromLectureStudy(Study study, String lectureName, int scrapCount) {
 		boolean hasImage = study.getImageUrl() != null;
@@ -18,7 +24,8 @@ public record StudyTotalPostResponse(
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
 			lectureName,
-			scrapCount
+			scrapCount,
+			study.getStudyTagMaps().stream().map(StudyTagMap::getTag).map(Tag::getName).collect(Collectors.toUnmodifiableList())
 		);
 	}
 
@@ -30,7 +37,8 @@ public record StudyTotalPostResponse(
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
 			activityCategoryName,
-			scrapCount
+			scrapCount,
+			study.getStudyTagMaps().stream().map(StudyTagMap::getTag).map(Tag::getName).collect(Collectors.toUnmodifiableList())
 		);
 	}
 }
