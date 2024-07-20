@@ -195,6 +195,10 @@ public class ImageService {
 	}
 
 	public List<StudyImageUrlResponse> uploadFiles(Long studyId, StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
+
+		List<Image> originalImages = imageRepository.findAllByStudyId(studyId);
+		imageRepository.deleteAll(originalImages);
+
 		List<String> base64ImagesList = request.base64ImagesList();
 		List<CompletableFuture<StudyImageUrlResponse>> futures = new ArrayList<>();
 
