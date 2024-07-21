@@ -17,7 +17,7 @@ public record StudyTotalPostResponse(
 	List<String> tags
 ) {
 	public static StudyTotalPostResponse fromLectureStudy(Study study, String lectureName, int scrapCount) {
-		boolean hasImage = study.getImageUrl() != null;
+		boolean hasImage = !study.getImages().isEmpty();
 		return new StudyTotalPostResponse(
 			study.getId(),
 			study.getTitle(),
@@ -30,7 +30,7 @@ public record StudyTotalPostResponse(
 	}
 
 	public static StudyTotalPostResponse fromExternalActivityStudy(Study study, String activityCategoryName, int scrapCount) {
-		boolean hasImage = study.getImageUrl() != null;
+		boolean hasImage = !study.getImages().isEmpty();
 		return new StudyTotalPostResponse(
 			study.getId(),
 			study.getTitle(),
