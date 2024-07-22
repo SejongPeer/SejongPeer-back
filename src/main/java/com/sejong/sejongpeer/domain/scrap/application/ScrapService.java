@@ -1,8 +1,12 @@
 package com.sejong.sejongpeer.domain.scrap.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCountResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
+import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
+import com.sejong.sejongpeer.domain.study.service.StudyService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +31,7 @@ public class ScrapService {
 
 	private final ScrapRepository scrapRepository;
 	private final StudyRepository studyRepository;
+	private final StudyService studyService;
 	private final MemberUtil memberUtil;
 
 	public StudyScrapResponse findOneStudyScrap(StudyScrapCreateRequest request) {
@@ -66,5 +71,27 @@ public class ScrapService {
 		);
 
 		scrapRepository.delete(scrap);
+	}
+
+	public List<StudyTotalPostResponse> getAllMyScrapStudyPosts() {
+		final Member loginMember = memberUtil.getCurrentMember();
+
+		List<Scrap> myAllScraps = scrapRepository.findAllByMember(loginMember);
+
+		return myAllScraps.stream()
+			.map(scrap -> scrap.getStudy())
+			.map(study -> {
+				String categoryName = studyService.getCategoryNameByStudyType(study);
+				int scrapCount = studyService.getScrapCountByStudy(study);
+				if (study.getType() == StudyType.LECTURE) {
+					return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
+				} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
+					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
+				} else {
+					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
+				}
+			})
+			.collect(Collectors.toUnmodifiableList());
+
 	}
 }

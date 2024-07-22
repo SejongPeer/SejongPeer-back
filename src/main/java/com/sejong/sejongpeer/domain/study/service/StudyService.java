@@ -155,7 +155,7 @@ public class StudyService {
 		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount);
 	}
 
-	private String getCategoryNameByStudyType(Study study) {
+	public String getCategoryNameByStudyType(Study study) {
 		if (study.getType() == StudyType.LECTURE) {
 			LectureStudy lectureStudy = lectureStudyRepository.findByStudy(study)
 				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
@@ -201,7 +201,7 @@ public class StudyService {
 
 	}
 
-	private int getScrapCountByStudy(Study study) {
+	public int getScrapCountByStudy(Study study) {
 		Long scrapCount = scrapRepository.countByStudy(study);
 		return scrapCount.intValue();
 	}

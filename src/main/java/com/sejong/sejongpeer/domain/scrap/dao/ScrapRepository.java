@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.scrap.dao;
 
 import java.util.List;
 
+import com.sejong.sejongpeer.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sejong.sejongpeer.domain.scrap.entity.Scrap;
@@ -12,4 +13,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 	List<Scrap> findByTypeAndStudy(ScrapType type, Study study);
 
 	Long countByStudy(Study study);
+
+	List<Scrap> findAllByMember(Member member);
 }
