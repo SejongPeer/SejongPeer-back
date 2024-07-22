@@ -12,6 +12,7 @@ public record StudyTotalPostResponse(
 	String title,
 	String createdAt,
 	boolean hasImage,
+	String recruitmentStatus,
 	String categoryName,
 	int scrapCount,
 	List<String> tags
@@ -23,6 +24,7 @@ public record StudyTotalPostResponse(
 			study.getTitle(),
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
+			study.getRecruitmentStatus().getValue(),
 			lectureName,
 			scrapCount,
 			study.getStudyTagMaps().stream().map(StudyTagMap::getTag).map(Tag::getName).collect(Collectors.toUnmodifiableList())
@@ -36,6 +38,7 @@ public record StudyTotalPostResponse(
 			study.getTitle(),
 			study.getCreatedAt().toString().substring(0, 10),
 			hasImage,
+			study.getRecruitmentStatus().getValue(),
 			activityCategoryName,
 			scrapCount,
 			study.getStudyTagMaps().stream().map(StudyTagMap::getTag).map(Tag::getName).collect(Collectors.toUnmodifiableList())
