@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.scrap.api;
 
 import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCountResponse;
+import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Tag(name = "8. [스크랩]", description = "스터디 스크랩 관련 API")
 @RestController
@@ -53,5 +56,11 @@ public class ScrapController {
 		@PathVariable Long scrapId
 	) {
 		scrapService.deleteScrap(scrapId);
+	}
+
+	@Operation(summary = "내가 스크랩한 게시글 목록 조회", description = "내가 좋아요한 교내/교외 스터디 게시글의 목록을 반환합니다.")
+	@GetMapping("/all")
+	public List<StudyTotalPostResponse> getAllMyScrapStudyPosts() {
+		return scrapService.getAllMyScrapStudyPosts();
 	}
 }
