@@ -3,8 +3,6 @@ package com.sejong.sejongpeer.domain.image.service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,7 +26,6 @@ import com.sejong.sejongpeer.domain.image.entity.type.ImageFileExtension;
 import com.sejong.sejongpeer.domain.image.entity.type.ImageType;
 import com.sejong.sejongpeer.domain.image.repository.ImageRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.global.common.constants.UrlConstants;
@@ -39,8 +36,6 @@ import com.sejong.sejongpeer.global.util.SpringEnvironmentUtil;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
 
 @Service
 @RequiredArgsConstructor
@@ -50,10 +45,8 @@ public class ImageService {
 	private final SpringEnvironmentUtil springEnvironmentUtil;
 	private final S3Properties s3Properties;
 	private final AmazonS3 amazonS3;
-	private final S3Client s3Client;
 	private final ImageRepository imageRepository;
 	private final StudyRepository studyRepository;
-	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
 
 	// 스터디 이미지 Presigned Url 생성
