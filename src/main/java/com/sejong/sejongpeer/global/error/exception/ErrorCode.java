@@ -50,28 +50,6 @@ public enum ErrorCode {
 	BUDDY_NOT_MATCHED(HttpStatus.CONFLICT, "매칭 성사된 버디가 아닙니다."),
 	MAX_BUDDY_REGISTRATION_EXCEEDED(HttpStatus.FORBIDDEN, "최대 등록 횟수를 초과했습니다."),
 
-	// Study
-	STUDY_CANNOT_DELETED(HttpStatus.BAD_REQUEST, "스터디 게시글 작성자만 해당 게시글을 삭제할 수 있습니다."),
-	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
-	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),
-	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
-	STUDY_APPLY_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 이 스터디 게시글에 대한 지원 이력이 없습니다."),
-	CANNOT_REAPPLY_WITHIN_AN_HOUR(HttpStatus.FORBIDDEN, "스터디 게시글을 지원했다가 취소한 유저는 1시간 동안 같은 스터디를 지원할 수 없습니다."),
-	INVALID_STUDY_MATHCING_STATUS_UPDATE_CONDITION(HttpStatus.BAD_REQUEST, "지원을 취소한 경우 수락/거절 처리를 할 수 없습니다."),
-	CANNOT_CHANGE_TO_HASHNAME(HttpStatus.CONFLICT, "태그 문자를 해시값으로 변환할 수 없습니다."),
-	// Lecture
-	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
-	LECTURE_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교내 수업 스터디 게시글을 찾을 수 없습니다."),
-	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
-
-	// ExternalActivity
-	EXTERNAL_ACTIVITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 외부활동을 찾을 수 없습니다."),
-	LECTURE_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 교내 수업이 없습니다."),
-	EXTERNAL_ACTIVITY_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교외 활동 스터디 게시글을 찾을 수 없습니다."),
-	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
-	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
-	DUPLICATED_STUDY_APPLICATION(HttpStatus.CONFLICT, "이미 해당 스터디에 지원한 이력이 있습니다."),
-
 	// 버디 등록 거절
 	REJECT_PENALTY(HttpStatus.FORBIDDEN, "짝매칭 이후 거절한 유저는 일정시간 동안 버디를 등록할 수 없습니다."),
 
@@ -80,11 +58,35 @@ public enum ErrorCode {
 	TARGET_HONBAB_NOT_FOUND(HttpStatus.NOT_FOUND, "혼밥 짝꿍을 찾을 수 없습니다."),
 	HONBAB_REGISTRATION_LIMIT(HttpStatus.CONFLICT, "혼밥 매칭 후 일정시간 동안 재신청을 할 수 없습니다."),
 
+	// Study 게시글 에러
+	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
+	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
+	STUDY_CANNOT_DELETED(HttpStatus.BAD_REQUEST, "스터디 게시글 작성자만 해당 게시글을 삭제할 수 있습니다."),
+	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
+	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
+	CANNOT_CHANGE_TO_HASHNAME(HttpStatus.CONFLICT, "태그 문자를 해시값으로 변환할 수 없습니다."),
+
+	// Study 지원 에러
+	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),
+	STUDY_APPLY_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 이 스터디 게시글에 대한 지원 이력이 없습니다."),
+	DUPLICATED_STUDY_APPLICATION(HttpStatus.CONFLICT, "이미 해당 스터디에 지원한 이력이 있습니다."),
+	CANNOT_REAPPLY_WITHIN_AN_HOUR(HttpStatus.FORBIDDEN, "스터디 게시글을 지원했다가 취소한 유저는 일정시간 동안 같은 스터디를 지원할 수 없습니다."),
+	INVALID_STUDY_MATHCING_STATUS_UPDATE_CONDITION(HttpStatus.BAD_REQUEST, "지원을 취소한 경우 수락/거절 처리를 할 수 없습니다."),
+
+	// Lecture
+	LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 강의를 찾을 수 없습니다."),
+	LECTURE_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교내 수업 스터디 게시글을 찾을 수 없습니다."),
+	LECTURE_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 교내 수업이 없습니다."),
+
+	// ExternalActivity
+	ACTIVITY_AND_STUDY_NOT_CONNECTED(HttpStatus.NOT_FOUND, "스터디 게시글에 대응되는 외부 활동 카테고리가 없습니다."),
+	EXTERNAL_ACTIVITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 외부활동을 찾을 수 없습니다."),
+	EXTERNAL_ACTIVITY_STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 교외 활동 스터디 게시글을 찾을 수 없습니다."),
+
 	// 이미지 에러
 	IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지 파일 형식을 찾을 수 없습니다."),
 	IMAGE_KEY_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지 키를 찾을 수 없습니다."),
 	STUDY_USER_MISMATCH(HttpStatus.FORBIDDEN, "스터디를 생성한 유저와 로그인한 계정이 일치하지 않습니다."),
-
 	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
 	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
 
