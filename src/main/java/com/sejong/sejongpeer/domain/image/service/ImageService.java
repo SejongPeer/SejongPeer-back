@@ -3,10 +3,9 @@ package com.sejong.sejongpeer.domain.image.service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadRequest;
@@ -27,7 +26,6 @@ import com.sejong.sejongpeer.domain.image.entity.type.ImageFileExtension;
 import com.sejong.sejongpeer.domain.image.entity.type.ImageType;
 import com.sejong.sejongpeer.domain.image.repository.ImageRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.study.repository.StudyRepository;
 import com.sejong.sejongpeer.global.common.constants.UrlConstants;
@@ -38,8 +36,6 @@ import com.sejong.sejongpeer.global.util.SpringEnvironmentUtil;
 import com.sejong.sejongpeer.infra.config.properties.S3Properties;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
 
 @Service
 @RequiredArgsConstructor
@@ -49,10 +45,8 @@ public class ImageService {
 	private final SpringEnvironmentUtil springEnvironmentUtil;
 	private final S3Properties s3Properties;
 	private final AmazonS3 amazonS3;
-	private final S3Client s3Client;
 	private final ImageRepository imageRepository;
 	private final StudyRepository studyRepository;
-	private final MemberRepository memberRepository;
 	private final MemberUtil memberUtil;
 
 	// 스터디 이미지 Presigned Url 생성
@@ -194,30 +188,21 @@ public class ImageService {
 		return expiration;
 	}
 
-	public List<StudyImageUrlResponse> uploadFiles(Long studyId, StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
-
+	public List<StudyImageUrlResponse> uploadFiles(Long studyId, StudyImageUploadRequest request) throws IOException {
 		List<Image> originalImages = imageRepository.findAllByStudyId(studyId);
 		imageRepository.deleteAll(originalImages);
 
 		List<String> base64ImagesList = request.base64ImagesList();
-		List<CompletableFuture<StudyImageUrlResponse>> futures = new ArrayList<>();
 
-		for (String base64Image : base64ImagesList) {
-			futures.add(CompletableFuture.supplyAsync(() -> {
+		return base64ImagesList.parallelStream()
+			.map(base64Image -> {
 				try {
 					return uploadFile(studyId, base64Image);
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
-			}));
-		}
-
-		List<StudyImageUrlResponse> responses = new ArrayList<>();
-		for (CompletableFuture<StudyImageUrlResponse> future : futures) {
-			responses.add(future.get());
-		}
-
-		return responses;
+			})
+			.collect(Collectors.toUnmodifiableList());
 	}
 
 	private StudyImageUrlResponse uploadFile(Long studyId, String base64Image) throws IOException {
@@ -229,7 +214,6 @@ public class ImageService {
 		}
 
 		String base64ImageData = base64Image.replaceFirst("^data:image/[^;]+;base64,", "");
-
 		byte[] imageBytes = Base64.getDecoder().decode(base64ImageData);
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
 
@@ -241,17 +225,10 @@ public class ImageService {
 		String fullFileName = randomFileName + "." + extension;
 
 		amazonS3.putObject(s3Properties.bucket(), fullFileName, inputStream, metadata);
-
 		String base64ToS3url = amazonS3.getUrl(s3Properties.bucket(), fullFileName).toExternalForm();
 
 		Study study = findStudyById(studyId);
-
-		Image savedImage = imageRepository.save(
-			Image.createBase64ToImage(
-				study,
-				base64ToS3url
-			)
-		);
+		Image savedImage = imageRepository.save(Image.createBase64ToImage(study, base64ToS3url));
 
 		return new StudyImageUrlResponse(savedImage.getId(), base64ToS3url);
 	}

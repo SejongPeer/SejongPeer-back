@@ -15,11 +15,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Tag(name = "6. [이미지]", description = "이미지 API")
 @RestController
@@ -52,7 +50,7 @@ public class ImageController {
 		summary = "스터디 게시글 별 이미지 등록 및 수정",
 		description = "스터디 이미지를 클라우드에 업로드하여 이미지 경로를 반환합니다.")
 	@PostMapping("/study/upload")
-	public List<StudyImageUrlResponse> uploadStudyImage(@RequestBody StudyImageUploadRequest request) throws ExecutionException, InterruptedException {
+	public List<StudyImageUrlResponse> uploadStudyImage(@Valid @RequestBody StudyImageUploadRequest request) throws IOException {
 		return imageService.uploadFiles(request.studyId(), request);
 	}
 }
