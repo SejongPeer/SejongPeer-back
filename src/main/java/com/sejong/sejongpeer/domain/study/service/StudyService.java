@@ -187,19 +187,21 @@ public class StudyService {
 		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
 
 		return studyPage.stream()
-			.map(study -> {
-				String categoryName = getCategoryNameByStudyType(study);
-				int scrapCount = getScrapCountByStudy(study);
-				if (study.getType() == StudyType.LECTURE) {
-					return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
-				} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
-					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
-				} else {
-					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
-				}
-			})
+			.map(study -> mapToCommonStudyTotalPostResponse(study))
 			.collect(Collectors.toUnmodifiableList());
 
+	}
+
+	public StudyTotalPostResponse mapToCommonStudyTotalPostResponse(Study study) {
+		String categoryName = getCategoryNameByStudyType(study);
+		int scrapCount = getScrapCountByStudy(study);
+		if (study.getType() == StudyType.LECTURE) {
+			return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
+		} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
+			return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
+		} else {
+			throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
+		}
 	}
 
 	public int getScrapCountByStudy(Study study) {
