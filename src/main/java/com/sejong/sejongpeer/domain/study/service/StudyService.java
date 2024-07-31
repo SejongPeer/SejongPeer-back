@@ -48,7 +48,7 @@ public class StudyService {
 
 
 	public StudyUpdateResponse updateStudy(final StudyUpdateRequest studyUpdateRequest, final Long studyId) {
-		Member member = memberUtil.getCurrentMember();
+		final Member member = memberUtil.getCurrentMember();
 
 		Study study =
 			studyRepository
@@ -67,11 +67,12 @@ public class StudyService {
 			studyUpdateRequest.recruitmentEndAt());
 		return StudyUpdateResponse.from(study);
 	}
+
 	public void deleteStudy(final Long studyId) {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-		Member loginMember = memberUtil.getCurrentMember();
+		final Member loginMember = memberUtil.getCurrentMember();
 
 		if (!loginMember.equals(study.getMember())) {
 			throw new CustomException(ErrorCode.STUDY_CANNOT_DELETED);
@@ -147,7 +148,7 @@ public class StudyService {
 	}
 
 	@Transactional(readOnly = true)
-	public StudyPostInfoResponse getOneStudyPostInfo(Long studyId) {
+	public StudyPostInfoResponse getOneStudyPostInfo(final Long studyId) {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		String categoryName = getCategoryNameByStudyType(study);
