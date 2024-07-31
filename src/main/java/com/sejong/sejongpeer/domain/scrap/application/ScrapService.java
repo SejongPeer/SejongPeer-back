@@ -79,8 +79,8 @@ public class ScrapService {
 		List<Scrap> myAllScraps = scrapRepository.findAllByMember(loginMember);
 
 		return myAllScraps.stream()
-			.map(scrap -> scrap.getStudy())
-			.map(study -> studyService.mapToCommonStudyTotalPostResponse(study))
+			.map(Scrap::getStudy)
+			.map(studyService::mapToCommonStudyTotalPostResponse)
 			.collect(Collectors.toUnmodifiableList());
 
 	}

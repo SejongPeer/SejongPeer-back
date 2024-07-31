@@ -79,7 +79,7 @@ public class StudyService {
 		}
 
 		List<StudyRelation> allStudyApplicants = studyRelationRepository.findByStudyAndStatusNot(study, StudyMatchingStatus.CANCEL);
-		allStudyApplicants.stream().forEach(applicantHistory -> sendStudyDeletionAlarmToStudyApplicant(applicantHistory));
+		allStudyApplicants.forEach(this::sendStudyDeletionAlarmToStudyApplicant);
 
 		if (StudyType.LECTURE.equals(study.getType())) {
 			LectureStudy targetLectureStudy = lectureStudyRepository.findByStudy(study)
@@ -187,7 +187,7 @@ public class StudyService {
 		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
 
 		return studyPage.stream()
-			.map(study -> mapToCommonStudyTotalPostResponse(study))
+			.map(this::mapToCommonStudyTotalPostResponse)
 			.collect(Collectors.toUnmodifiableList());
 
 	}
