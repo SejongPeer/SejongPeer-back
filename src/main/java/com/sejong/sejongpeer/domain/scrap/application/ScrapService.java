@@ -79,18 +79,8 @@ public class ScrapService {
 		List<Scrap> myAllScraps = scrapRepository.findAllByMember(loginMember);
 
 		return myAllScraps.stream()
-			.map(scrap -> scrap.getStudy())
-			.map(study -> {
-				String categoryName = studyService.getCategoryNameByStudyType(study);
-				int scrapCount = studyService.getScrapCountByStudy(study);
-				if (study.getType() == StudyType.LECTURE) {
-					return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
-				} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
-					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
-				} else {
-					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
-				}
-			})
+			.map(Scrap::getStudy)
+			.map(studyService::mapToCommonStudyTotalPostResponse)
 			.collect(Collectors.toUnmodifiableList());
 
 	}

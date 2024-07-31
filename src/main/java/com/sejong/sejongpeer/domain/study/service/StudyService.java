@@ -48,7 +48,7 @@ public class StudyService {
 
 
 	public StudyUpdateResponse updateStudy(final StudyUpdateRequest studyUpdateRequest, final Long studyId) {
-		Member member = memberUtil.getCurrentMember();
+		final Member member = memberUtil.getCurrentMember();
 
 		Study study =
 			studyRepository
@@ -67,18 +67,19 @@ public class StudyService {
 			studyUpdateRequest.recruitmentEndAt());
 		return StudyUpdateResponse.from(study);
 	}
+
 	public void deleteStudy(final Long studyId) {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-		Member loginMember = memberUtil.getCurrentMember();
+		final Member loginMember = memberUtil.getCurrentMember();
 
 		if (!loginMember.equals(study.getMember())) {
 			throw new CustomException(ErrorCode.STUDY_CANNOT_DELETED);
 		}
 
 		List<StudyRelation> allStudyApplicants = studyRelationRepository.findByStudyAndStatusNot(study, StudyMatchingStatus.CANCEL);
-		allStudyApplicants.stream().forEach(applicantHistory -> sendStudyDeletionAlarmToStudyApplicant(applicantHistory));
+		allStudyApplicants.forEach(this::sendStudyDeletionAlarmToStudyApplicant);
 
 		if (StudyType.LECTURE.equals(study.getType())) {
 			LectureStudy targetLectureStudy = lectureStudyRepository.findByStudy(study)
@@ -147,7 +148,7 @@ public class StudyService {
 	}
 
 	@Transactional(readOnly = true)
-	public StudyPostInfoResponse getOneStudyPostInfo(Long studyId) {
+	public StudyPostInfoResponse getOneStudyPostInfo(final Long studyId) {
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 		String categoryName = getCategoryNameByStudyType(study);
@@ -186,19 +187,21 @@ public class StudyService {
 		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
 
 		return studyPage.stream()
-			.map(study -> {
-				String categoryName = getCategoryNameByStudyType(study);
-				int scrapCount = getScrapCountByStudy(study);
-				if (study.getType() == StudyType.LECTURE) {
-					return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
-				} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
-					return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
-				} else {
-					throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
-				}
-			})
+			.map(this::mapToCommonStudyTotalPostResponse)
 			.collect(Collectors.toUnmodifiableList());
 
+	}
+
+	public StudyTotalPostResponse mapToCommonStudyTotalPostResponse(Study study) {
+		String categoryName = getCategoryNameByStudyType(study);
+		int scrapCount = getScrapCountByStudy(study);
+		if (study.getType() == StudyType.LECTURE) {
+			return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
+		} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
+			return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
+		} else {
+			throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
+		}
 	}
 
 	public int getScrapCountByStudy(Study study) {
