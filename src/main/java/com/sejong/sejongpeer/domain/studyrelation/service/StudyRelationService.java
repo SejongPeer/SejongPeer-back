@@ -114,9 +114,8 @@ public class StudyRelationService {
 	private void sendStudyRejectAlarmToStudyApplicant(StudyRelation studyRelation) {
 		Member studyRejectedApplicant = studyRelation.getMember();
 		Study studyPost = studyRelation.getStudy();
-		smsService.sendSms(
-			studyRejectedApplicant.getPhoneNumber(),
-			SmsText.valueOf("[" + studyPost.getTitle().substring(0,2) + "...]" + SmsText.STUDY_APPLY_REJECT_ALARM));
+		String formattedMessage = "[" + studyPost.getTitle().substring(0, 2) + "...]" + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
+		smsService.sendFormattedSms(studyRejectedApplicant.getPhoneNumber(), formattedMessage);
 	}
 
 	public void earlyCloseRegistration(final Long studyId) {

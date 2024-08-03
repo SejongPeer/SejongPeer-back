@@ -53,4 +53,23 @@ public class SmsService {
 			.bodyToMono(String.class)
 			.block();
 	}
+
+	public String sendFormattedSms(String receiver, String msg) {
+
+		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+		formData.add("key", apiKey);
+		formData.add("user_id", apiUserId);
+		formData.add("sender", sender);
+		formData.add("receiver", receiver);
+		formData.add("msg", msg);
+
+		return webClient
+			.post()
+			.uri("/send/")
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.body(BodyInserters.fromMultipartData(formData))
+			.retrieve()
+			.bodyToMono(String.class)
+			.block();
+	}
 }
