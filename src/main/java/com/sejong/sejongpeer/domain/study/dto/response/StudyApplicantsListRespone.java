@@ -2,13 +2,14 @@ package com.sejong.sejongpeer.domain.study.dto.response;
 
 import java.util.List;
 
-import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.study.entity.Study;
+import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
 
 public record StudyApplicantsListRespone(
 	Long studyId,
 
 	String studyTitle,
+	String recruitmentStatus,
 	List<Applicant> applicants
 
 ) {
@@ -16,23 +17,26 @@ public record StudyApplicantsListRespone(
 		String nickname,
 		String studentId,
 		Integer grade,
-		String major
+		String major,
+		String studyMatchingStatus
 	) {
 
 	}
-	public static StudyApplicantsListRespone of (Study study, List<Member> members) {
-		List<Applicant> applicantss = members.stream()
-			.map(member -> new Applicant(
-				member.getNickname(),
-				member.getStudentId(),
-				member.getGrade(),
-				member.getCollegeMajor().getMajor()
+	public static StudyApplicantsListRespone of (Study study, List<StudyRelation> studyRelations) {
+		List<Applicant> applicantss = studyRelations.stream()
+			.map(studyRelation -> new Applicant(
+				studyRelation.getMember().getNickname(),
+				studyRelation.getMember().getStudentId(),
+				studyRelation.getMember().getGrade(),
+				studyRelation.getMember().getCollegeMajor().getMajor(),
+				studyRelation.getStatus().getValue()
 			))
 			.toList();
 
 		return new StudyApplicantsListRespone(
 			study.getId(),
 			study.getTitle(),
+			study.getRecruitmentStatus().getValue(),
 			applicantss
 		);
 	}

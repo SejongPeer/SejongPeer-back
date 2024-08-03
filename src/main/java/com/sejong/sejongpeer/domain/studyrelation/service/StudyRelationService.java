@@ -171,10 +171,7 @@ public class StudyRelationService {
 		studyList.stream()
 			.forEach(study -> {
 				List<StudyRelation> relations = study.getStudyRelations();
-				List<Member> memberList = relations.stream()
-					.map(StudyRelation::getMember)
-					.toList();
-				respones.add(StudyApplicantsListRespone.of(study, memberList));
+				respones.add(StudyApplicantsListRespone.of(study, relations));
 			});
 
 		return respones;
