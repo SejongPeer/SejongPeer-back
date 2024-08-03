@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyApplicantsListRespone;
+import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import com.sejong.sejongpeer.global.util.SecurityUtil;
 import org.springframework.stereotype.Service;
@@ -126,6 +127,7 @@ public class StudyRelationService {
 		}
 
 		studyRelations.forEach(study -> {
+			study.getStudy().changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
 			if (study.getStatus() == StudyMatchingStatus.ACCEPT) {
 				sendStudyKakaoLink(study);
 			} else {
