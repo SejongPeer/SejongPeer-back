@@ -235,4 +235,8 @@ public class Study extends BaseAuditEntity {
 		this.participantsCount++;
 	}
 
+	public void changeStudyRecruitmentStatus(RecruitmentStatus status) {
+		this.recruitmentStatus = status;
+	}
+
 }
