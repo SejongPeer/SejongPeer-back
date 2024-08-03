@@ -54,7 +54,7 @@ public class StudyRelationController {
 	}
 
 	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
-	@PatchMapping("/{studyId}/early-close")
+	@PatchMapping("/early-close/{studyId}")
 	public void earlyCloseRegistration(@PathVariable Long studyId) {
 		studyRelationService.earlyCloseRegistration(studyId);
 	}
