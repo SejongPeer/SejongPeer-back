@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum StudyMatchingStatus {
 	PENDING("대기"),
 	ACCEPT("수락"),
-	REJECT("거부"),
+	REJECT("거절"),
 	CANCEL("취소");
 
 	private final String value;
