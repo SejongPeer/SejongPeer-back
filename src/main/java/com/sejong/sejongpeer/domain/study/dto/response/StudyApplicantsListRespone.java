@@ -10,6 +10,8 @@ public record StudyApplicantsListRespone(
 
 	String studyTitle,
 	String recruitmentStatus,
+	Integer recruitmentCount,
+	Integer participantsCount,
 	List<Applicant> applicants
 
 ) {
@@ -37,6 +39,8 @@ public record StudyApplicantsListRespone(
 			study.getId(),
 			study.getTitle(),
 			study.getRecruitmentStatus().getValue(),
+			study.getRecruitmentCount(),
+			study.getParticipantsCount(),
 			applicantss
 		);
 	}
