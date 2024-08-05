@@ -120,18 +120,24 @@ public class StudyRelationService {
 	}
 
 	public void earlyCloseRegistration(final Long studyId) {
+
+		final Member member = memberUtil.getCurrentMember();
+
+		Study study =
+			studyRepository
+				.findByMemberAndId(member, studyId)
+				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+		study.changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
+
 		List<StudyRelation> studyRelations = studyRelationRepository.findByStudyId(studyId);
 
-		if (studyRelations.isEmpty()) {
-			throw new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND);
-		}
+		studyRelations.forEach(studyRelation -> {
 
-		studyRelations.forEach(study -> {
-			study.getStudy().changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
-			if (study.getStatus() == StudyMatchingStatus.ACCEPT) {
-				sendStudyKakaoLink(study);
+			if (studyRelation.getStatus() == StudyMatchingStatus.ACCEPT) {
+				sendStudyKakaoLink(studyRelation);
 			} else {
-				study.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
+				studyRelation.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
 			}
 		});
 		studyRelationRepository.saveAll(studyRelations);
