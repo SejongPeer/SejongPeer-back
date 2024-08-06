@@ -65,6 +65,7 @@ public enum ErrorCode {
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
 	CANNOT_CHANGE_TO_HASHNAME(HttpStatus.CONFLICT, "태그 문자를 해시값으로 변환할 수 없습니다."),
+	STUDY_ALREADY_CLOSED(HttpStatus.CONFLICT, "이미 마감된 스터디 입니다."),
 
 	// Study 지원 에러
 	STUDY_RELATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 스터디의 신청내역을 찾을 수 없습니다."),

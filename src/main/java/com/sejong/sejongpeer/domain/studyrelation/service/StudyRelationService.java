@@ -128,12 +128,14 @@ public class StudyRelationService {
 				.findByMemberAndId(member, studyId)
 				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
+		if (study.getRecruitmentStatus().equals(RecruitmentStatus.CLOSED)) {
+			throw new CustomException(ErrorCode.STUDY_ALREADY_CLOSED);
+		}
+
 		study.changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
 
 		List<StudyRelation> studyRelations = studyRelationRepository.findByStudyId(studyId);
-
 		studyRelations.forEach(studyRelation -> {
-
 			if (studyRelation.getStatus() == StudyMatchingStatus.ACCEPT) {
 				sendStudyKakaoLink(studyRelation);
 			} else {
