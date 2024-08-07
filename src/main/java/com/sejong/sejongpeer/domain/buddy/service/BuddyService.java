@@ -38,15 +38,13 @@ public class BuddyService {
 	private final MemberUtil memberUtil;
 	private final SecurityUtil securityUtil;
 
-	public void registerBuddy(BuddyRegistrationRequest request) {
+	public Buddy registerBuddy(BuddyRegistrationRequest request) {
 		final Member member = memberUtil.getCurrentMember();
 
 		validatePossibleRegistration(member.getId());
 
 		Buddy buddy = Buddy.create(request, member);
-		buddyRepository.save(buddy);
-
-		matchingService.matchBuddyWhenRegister(buddy);
+		return buddyRepository.save(buddy);
 	}
 
 	public void cancelBuddy() {

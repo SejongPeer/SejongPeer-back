@@ -6,6 +6,7 @@ import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountRespo
 import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
+import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,11 @@ public class BuddyManagementFacade {
 
 	private final BuddyService buddyService;
 	private final BuddyMatchingService buddyMatchingService;
+	private final MatchingService matchingService;
 
 	public void registerBuddy(BuddyRegistrationRequest request) {
-		buddyService.registerBuddy(request);
+		Buddy newBuddy = buddyService.registerBuddy(request);
+		matchingService.matchBuddyWhenRegister(newBuddy);
 	}
 
 	public void cancelBuddy() {
