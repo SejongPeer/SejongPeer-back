@@ -146,9 +146,9 @@ public class StudyRelationService {
 	}
 
 	private void sendStudyKakaoLink(StudyRelation study){
-		smsService.sendSms(
+		smsService.sendFormattedSms(
 			study.getMember().getPhoneNumber(),
-			SmsText.valueOf(SmsText.STUDY_RECRUITMENT_COMPLETED + study.getStudy().getKakaoLink())
+			String.valueOf(SmsText.STUDY_RECRUITMENT_COMPLETED)+ study.getStudy().getKakaoLink()
 		);
 	}
 
