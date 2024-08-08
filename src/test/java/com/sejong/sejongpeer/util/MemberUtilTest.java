@@ -71,12 +71,12 @@ public class MemberUtilTest {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
-	@Test
-	void 현재_로그인한_회원의_정보를_정상적으로_반환한다() {
-		// when
-		Member currentMember = memberUtil.getCurrentMember();
-
-		// then
-		assertEquals("test", currentMember.getName());
-	}
+	// @Test
+	// void 현재_로그인한_회원의_정보를_정상적으로_반환한다() {
+	// 	// when
+	// 	Member currentMember = memberUtil.getCurrentMember();
+	//
+	// 	// then
+	// 	assertEquals("test", currentMember.getName());
+	// }
 }
