@@ -1,32 +1,29 @@
 package com.sejong.sejongpeer.domain.buddy.service;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.sejong.sejongpeer.domain.buddy.dto.request.BuddyRegistrationRequest;
-import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
-import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
-import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
 import com.sejong.sejongpeer.domain.buddy.dto.response.ActiveCustomersCountResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.CompletedPartnerInfoResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingPartnerInfoResponse;
+import com.sejong.sejongpeer.domain.buddy.dto.response.MatchingStatusResponse;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.type.BuddyStatus;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.BuddyMatched;
 import com.sejong.sejongpeer.domain.buddy.entity.buddymatched.type.BuddyMatchedStatus;
 import com.sejong.sejongpeer.domain.buddy.repository.BuddyRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
-import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 import com.sejong.sejongpeer.global.util.MemberUtil;
 import com.sejong.sejongpeer.global.util.SecurityUtil;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,22 +32,18 @@ public class BuddyService {
 	private static final int MAX_MATCHING_COMPLETED_BUDDIES = 3;
 	private static final int MATCH_BLOCK_HOUR = 1;
 
-	private final MatchingService matchingService;
 	private final BuddyRepository buddyRepository;
-	private final MemberRepository memberRepository;
 	private final BuddyMatchingService buddyMatchingService;
 	private final MemberUtil memberUtil;
 	private final SecurityUtil securityUtil;
 
-	public void registerBuddy(BuddyRegistrationRequest request) {
+	public Buddy registerBuddy(BuddyRegistrationRequest request) {
 		final Member member = memberUtil.getCurrentMember();
 
 		validatePossibleRegistration(member.getId());
 
 		Buddy buddy = Buddy.create(request, member);
-		buddyRepository.save(buddy);
-
-		matchingService.matchBuddyWhenRegister(buddy);
+		return buddyRepository.save(buddy);
 	}
 
 	public void cancelBuddy() {
