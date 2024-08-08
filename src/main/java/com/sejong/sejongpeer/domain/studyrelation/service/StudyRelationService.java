@@ -173,7 +173,6 @@ public class StudyRelationService {
 		final Member member = memberUtil.getCurrentMember();
 		List<Study> studyList = member.getStudies();
 
-
 		List<StudyApplicantsListRespone> respones = new ArrayList<>();
 
 		studyList.stream()
