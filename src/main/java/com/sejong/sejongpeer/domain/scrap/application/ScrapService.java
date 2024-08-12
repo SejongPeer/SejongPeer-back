@@ -3,9 +3,7 @@ package com.sejong.sejongpeer.domain.scrap.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCountResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
-import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,12 +46,10 @@ public class ScrapService {
 		return StudyScrapResponse.of(isScrap, scraps.size());
 	}
 
-	public StudyScrapCountResponse getScrapCountByStudyPost(final Long studyId) {
+	public Long getScrapCountByStudyPost(final Long studyId) {
 		Study study = studyRepository.findById(studyId).orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-		Long scrapCount = scrapRepository.countByStudy(study);
-
-		return StudyScrapCountResponse.of(scrapCount.intValue());
+		return scrapRepository.countByStudy(study);
 	}
 
 	public Long createScrap(Long studyId) {
