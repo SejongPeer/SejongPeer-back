@@ -1,10 +1,5 @@
 package com.sejong.sejongpeer.domain.member.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.annotations.UuidGenerator;
-
 import com.sejong.sejongpeer.domain.buddy.entity.buddy.Buddy;
 import com.sejong.sejongpeer.domain.college.entity.CollegeMajor;
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
@@ -14,19 +9,14 @@ import com.sejong.sejongpeer.domain.member.entity.type.Gender;
 import com.sejong.sejongpeer.domain.member.entity.type.Status;
 import com.sejong.sejongpeer.domain.study.entity.Study;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
