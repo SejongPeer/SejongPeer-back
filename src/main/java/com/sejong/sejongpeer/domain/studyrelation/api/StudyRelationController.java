@@ -1,6 +1,7 @@
 package com.sejong.sejongpeer.domain.studyrelation.api;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sejong.sejongpeer.domain.study.dto.response.StudyApplicantsListRespone;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
@@ -65,9 +66,9 @@ public class StudyRelationController {
 		return 	studyRelationService.getAppliedStudies();
 	}
 
-	@Operation(summary = "작성한 스터디 지원자 리스트 조회", description = "마이페이지에서 게시글 마다 대기상태인 지원자의 리스트를 조회합니다.")
+	@Operation(summary = "스터디 지원자 리스트 조회", description = "마이페이지에서 게시글 마다 대기상태인 지원자의 리스트를 조회합니다.")
 	@GetMapping("/applicants")
-	public List<StudyApplicantsListRespone> getApplicatnsList(){
+	public Map<String, List<StudyApplicantsListRespone>> getApplicatnsList(){
 		return studyRelationService.getApplicatnsList();
 	}
 
