@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
+import com.sejong.sejongpeer.domain.scrap.application.ScrapService;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyApplicantsListRespone;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
@@ -45,6 +46,7 @@ public class StudyRelationService {
 	private final MemberUtil memberUtil;
 	private final SecurityUtil securityUtil;
 	private final TagService tagService;
+	private final ScrapService scrapService;
 
 	public StudyRelationCreateResponse applyStudy(StudyApplyRequest studyApplyRequest) {
 		Study study = studyRepository.findById(studyApplyRequest.studyId())
@@ -159,14 +161,15 @@ public class StudyRelationService {
 		final Member loginMember = memberUtil.getCurrentMember();
 		List<StudyRelation> studyRelations = loginMember.getStudyRelations();
 
-
 		List<AppliedStudyResponse> list = new ArrayList<>();
 		studyRelations.stream()
 			.forEach(studyRelation -> {
 				if(!studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
 					Study study = studyRelation.getStudy();
+
+					Long scrapCount = scrapService.getScrapCountByStudyPost(study.getId());
 					List<String> tags = tagService.getTagsNameByStudy(study);
-					list.add(AppliedStudyResponse.of(study, tags));
+					list.add(AppliedStudyResponse.of(study, tags, scrapCount));
 				}
 			});
 		return list;

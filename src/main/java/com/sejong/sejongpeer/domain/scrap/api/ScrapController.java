@@ -1,19 +1,15 @@
 package com.sejong.sejongpeer.domain.scrap.api;
 
-import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCountResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sejong.sejongpeer.domain.scrap.application.ScrapService;
-import com.sejong.sejongpeer.domain.scrap.dto.request.StudyScrapCreateRequest;
-import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +34,7 @@ public class ScrapController {
 
 	@Operation(summary = "게시글 별 스크랩 수 조회", description = "스터디를 스크랩한 유저가 몇 명인지 반환합니다.")
 	@GetMapping("/study/{studyId}")
-	public StudyScrapCountResponse getScrapCountByStudyPost(@PathVariable Long studyId) {
+	public Long getScrapCountByStudyPost(@PathVariable Long studyId) {
 		return scrapService.getScrapCountByStudyPost(studyId);
 	}
 

@@ -13,12 +13,12 @@ public record AppliedStudyResponse(
 	Integer recruitmentCount,
 	Integer participantsCount,
 	StudyType type,
-
 	List<String> tags,
+	Long scrapCount,
 	RecruitmentStatus recruitmentStatus,
 	LocalDateTime recruitmentStartAt,
 	LocalDateTime recruitmentEndAt) {
-	public static AppliedStudyResponse of(Study study, List<String> tags) {
+	public static AppliedStudyResponse of(Study study, List<String> tags, Long scrapCount) {
 		return new AppliedStudyResponse(
 			study.getId(),
 			study.getTitle(),
@@ -26,6 +26,7 @@ public record AppliedStudyResponse(
 			study.getParticipantsCount(),
 			study.getType(),
 			tags,
+			scrapCount,
 			study.getRecruitmentStatus(),
 			study.getRecruitmentStartAt(),
 			study.getRecruitmentEndAt());
