@@ -59,6 +59,4 @@ public class StudyController {
 		@Valid @RequestBody StudyPostSearchRequest studyPostSearchRequest) {
 		return studyService.getAllStudyPostBySearch(page, size, studyPostSearchRequest);
 	}
-
-
 }

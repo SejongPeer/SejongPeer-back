@@ -2,11 +2,14 @@ package com.sejong.sejongpeer.domain.studyrelation.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyApplicantsListRespone;
 import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
+import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import com.sejong.sejongpeer.global.util.SecurityUtil;
 import org.springframework.stereotype.Service;
@@ -169,18 +172,30 @@ public class StudyRelationService {
 		return list;
 	}
 
-	public List<StudyApplicantsListRespone> getApplicatnsList() {
+	public Map<String, List<StudyApplicantsListRespone>> getApplicatnsList() {
 		final Member member = memberUtil.getCurrentMember();
 		List<Study> studyList = member.getStudies();
 
-		List<StudyApplicantsListRespone> respones = new ArrayList<>();
+		List<StudyApplicantsListRespone> lectureList = new ArrayList<>();
+		List<StudyApplicantsListRespone> externalList = new ArrayList<>();
 
 		studyList.stream()
 			.forEach(study -> {
 				List<StudyRelation> relations = study.getStudyRelations();
-				respones.add(StudyApplicantsListRespone.of(study, relations));
+				StudyApplicantsListRespone response =  StudyApplicantsListRespone.of(study, relations);
+
+				if (study.getType().equals(StudyType.LECTURE)) {
+					lectureList.add(response);
+				}
+				else {
+					externalList.add(response);
+				}
 			});
 
-		return respones;
+		Map<String, List<StudyApplicantsListRespone>> responseMap = new HashMap<>();
+		responseMap.put("lecture", lectureList);
+		responseMap.put("external", externalList);
+
+		return responseMap;
 	}
 }
