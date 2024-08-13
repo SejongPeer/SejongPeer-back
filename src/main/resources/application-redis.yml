@@ -1,0 +1,9 @@
+config:
+  activate:
+    on-profile: "redis"
+
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
