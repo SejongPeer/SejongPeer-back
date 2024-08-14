@@ -120,7 +120,7 @@ public class StudyRelationService {
 	private void sendStudyRejectAlarmToStudyApplicant(StudyRelation studyRelation) {
 		Member studyRejectedApplicant = studyRelation.getMember();
 		Study studyPost = studyRelation.getStudy();
-		String formattedMessage = "[" + studyPost.getTitle().substring(0, 2) + "...]" + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
+		String formattedMessage = "[" + studyPost.getTitle().substring(0, 10) + "...]" + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
 		smsService.sendFormattedSms(studyRejectedApplicant.getPhoneNumber(), formattedMessage);
 	}
 

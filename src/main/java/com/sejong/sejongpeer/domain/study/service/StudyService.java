@@ -104,7 +104,7 @@ public class StudyService {
 		Study studyPost = studyRelation.getStudy();
 		smsService.sendSms(
 			studyApplicant.getPhoneNumber(),
-			SmsText.valueOf("[" + studyPost.getTitle().substring(0,2) + "...]" + SmsText.STUDY_POST_DELETION_ALARM));
+			SmsText.valueOf("[" + studyPost.getTitle().substring(0,10) + "...]" + SmsText.STUDY_POST_DELETION_ALARM));
 	}
 
 	@Transactional(readOnly = true)
