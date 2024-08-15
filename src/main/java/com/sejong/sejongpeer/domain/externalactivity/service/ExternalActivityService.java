@@ -18,7 +18,7 @@ public class ExternalActivityService {
 
 	private final ExternalActivityRepository externalActivityRepository;
 
-	@Cacheable(cacheNames = "getAllExternalActivityCategories", key = "#root.target + #root.methodName", sync = true, cacheManager = "redisCacheManager")
+	@Cacheable(cacheNames = "getAllExternalActivityCategories", key = "'ExternalActivityCategories'", cacheManager = "redisCacheManager")
 	public List<ExternalActivityCategoryResponse> getAllExternalActivityCategories() {
 		List<ExternalActivity> externalActivityList = externalActivityRepository.findAll();
 
