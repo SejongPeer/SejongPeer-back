@@ -29,7 +29,7 @@ public class RedisConfig {
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
 		redisTemplate.setConnectionFactory(connectionFactory);
 		return redisTemplate;
 	}
