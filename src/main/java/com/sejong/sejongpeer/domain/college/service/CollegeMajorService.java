@@ -4,10 +4,10 @@ import com.sejong.sejongpeer.domain.college.dto.CollegeMajorResponse;
 import com.sejong.sejongpeer.domain.college.repository.CollegeMajorRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ public class CollegeMajorService {
 
 	private final CollegeMajorRepository collegeMajorRepository;
 
-	@Transactional(readOnly = true)
+	@Cacheable(cacheNames = "getAllColleges", key = "'CollegeMajor'", cacheManager = "redisCacheManager")
 	public List<String> getAllColleges() {
 		return collegeMajorRepository.findAllColleges();
 	}
