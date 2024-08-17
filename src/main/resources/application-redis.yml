@@ -1,8 +1,8 @@
-config:
-  activate:
-    on-profile: "redis"
-
 spring:
+  config:
+    activate:
+      on-profile: "redis"
+
   data:
     redis:
       host: ${REDIS_HOST}
