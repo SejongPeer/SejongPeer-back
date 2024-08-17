@@ -25,7 +25,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
       # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
       - name: Make application.yml
         run: |
