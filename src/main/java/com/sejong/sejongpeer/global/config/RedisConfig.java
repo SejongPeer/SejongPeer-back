@@ -2,8 +2,9 @@ package com.sejong.sejongpeer.global.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sejong.sejongpeer.infra.config.properties.RedisProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,13 +15,10 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
 
-	@Value("${spring.data.redis.port}")
-	public int port;
-
-	@Value("${spring.data.redis.host}")
-	public String host;
+	private final RedisProperties redisProperties;
 
 	@Autowired
 	public ObjectMapper objectMapper;
@@ -37,8 +35,8 @@ public class RedisConfig {
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-		redisStandaloneConfiguration.setHostName(host);
-		redisStandaloneConfiguration.setPort(port);
+		redisStandaloneConfiguration.setHostName(redisProperties.host());
+		redisStandaloneConfiguration.setPort(redisProperties.port());
 		LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
 		return connectionFactory;
 	}
