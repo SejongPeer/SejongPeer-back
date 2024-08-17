@@ -104,3 +104,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name sejongpeer-code-deploy-app
           --s3-location bucket=sejongpeer-backend-app,bundleType=zip,key=sejongpeer-app.zip
+
