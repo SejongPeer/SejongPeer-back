@@ -26,20 +26,18 @@ public class RedisConfig {
 	public ObjectMapper objectMapper;
 
 	@Bean
-	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
-		redisTemplate.setConnectionFactory(connectionFactory);
-		return redisTemplate;
+	public RedisConnectionFactory redisConnectionFactory(){
+		return new LettuceConnectionFactory(redisProperties.host(), redisProperties.port());
 	}
 
 	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-		redisStandaloneConfiguration.setHostName(redisProperties.host());
-		redisStandaloneConfiguration.setPort(redisProperties.port());
-		LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
-		return connectionFactory;
+	public RedisTemplate<String, Object> redisTemplate() {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+
+		redisTemplate.setKeySerializer(new StringRedisSerializer());
+		redisTemplate.setValueSerializer(new StringRedisSerializer());
+
+		redisTemplate.setConnectionFactory(redisConnectionFactory());
+		return redisTemplate;
 	}
 }
