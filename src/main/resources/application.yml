@@ -1,6 +1,6 @@
 spring:
   config:
-    import: optional:file:.env[.properties]
+    import: optional:file:src/main/resources/.env[.properties]
   profiles:
     group:
       test: "test, storage"
