@@ -6,6 +6,7 @@ on:
     # main branch에 push(merge)될 경우 실행됩니다.
     branches:
       - main
+      - refactor/#312
 
 permissions:
   contents: read
@@ -24,7 +25,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
       # 프로젝트 저장소에 업로드하면 안되는 설정 파일들을 만들어줍니다.
       - name: Make application.yml
         run: |
@@ -38,6 +38,7 @@ jobs:
           touch ./application-dev.yml
           touch ./application-security.yml
           touch ./application-storage.yml
+          touch ./application-redis.yml
           touch ./.env
           
           # 등록해둔 Github Secrets의 내용을 이용해서 yml 파일의 내용을 써줍니다.
@@ -48,6 +49,7 @@ jobs:
           echo "$APPLICATION_SECURITY" > ./application-security.yml
           echo "$APPLICATION_INFRA" > ./application-infra.yml
           echo "$APPLICATION_STORAGE" > ./application-storage.yml
+          echo "APPLICATION_REDIS" > ./application-redis.yml
           echo "$ENV" >./.env
 
         env:
@@ -58,6 +60,7 @@ jobs:
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
           APPLICATION_STORAGE: ${{ secrets.APPLICATION_STORAGE }}
+          APPLICATION_REDIS: ${{ secrets.APPLICATION_REDIS }}
           ENV: ${{ secrets.ENV }}
         shell: bash
 
@@ -101,3 +104,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name sejongpeer-code-deploy-app
           --s3-location bucket=sejongpeer-backend-app,bundleType=zip,key=sejongpeer-app.zip
+

@@ -1,9 +1,11 @@
 spring:
+  config:
+    import: optional:file:src/main/resources/.env[.properties]
   profiles:
     group:
       test: "test, storage"
-      dev: "dev, datasource, storage, actuator"
-      prod: "prod, datasource, storage, actuator"
+      dev: "dev, datasource, storage, actuator, redis"
+      prod: "prod, datasource, storage, actuator, redis"
     include:
       - security
       - infra
