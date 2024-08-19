@@ -37,6 +37,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class StudyService {
+	private final String MESSAGE_ALARM_SEJONGPEER_PREFIX = "[세종피어] ";
+	private final String MESSAGE_ALARM_PARENTHESES_PREFIX = "(";
+	private final String MESSAGE_ALARM_PARENTHESES_POSTFIX = "...) ";
 
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
@@ -102,9 +105,14 @@ public class StudyService {
 	private void sendStudyDeletionAlarmToStudyApplicant(StudyRelation studyRelation) {
 		Member studyApplicant = studyRelation.getMember();
 		Study studyPost = studyRelation.getStudy();
-		smsService.sendSms(
+		smsService.sendFormattedSms(
 			studyApplicant.getPhoneNumber(),
-			SmsText.valueOf("[" + studyPost.getTitle().substring(0,10) + "...]" + SmsText.STUDY_POST_DELETION_ALARM));
+			MESSAGE_ALARM_SEJONGPEER_PREFIX +
+			MESSAGE_ALARM_PARENTHESES_PREFIX +
+			studyPost.getTitle().substring(0,10) +
+			MESSAGE_ALARM_PARENTHESES_POSTFIX +
+			SmsText.STUDY_POST_DELETION_ALARM.getValue()
+		);
 	}
 
 	@Transactional(readOnly = true)

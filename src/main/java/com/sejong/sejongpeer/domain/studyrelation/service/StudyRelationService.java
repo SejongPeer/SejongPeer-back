@@ -38,6 +38,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class StudyRelationService {
+	private final String MESSAGE_ALARM_SEJONGPEER_PREFIX = "[세종피어] ";
+	private final String MESSAGE_ALARM_PARENTHESES_PREFIX = "(";
+	private final String MESSAGE_ALARM_PARENTHESES_POSTFIX = "...) ";
 
 	private final StudyRepository studyRepository;
 	private final SmsService smsService;
@@ -120,7 +123,8 @@ public class StudyRelationService {
 	private void sendStudyRejectAlarmToStudyApplicant(StudyRelation studyRelation) {
 		Member studyRejectedApplicant = studyRelation.getMember();
 		Study studyPost = studyRelation.getStudy();
-		String formattedMessage = "[" + studyPost.getTitle().substring(0, 10) + "...]" + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
+		String formattedMessage = MESSAGE_ALARM_PARENTHESES_PREFIX +
+			studyPost.getTitle().substring(0, 10) + MESSAGE_ALARM_PARENTHESES_POSTFIX + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
 		smsService.sendFormattedSms(studyRejectedApplicant.getPhoneNumber(), formattedMessage);
 	}
 
@@ -150,10 +154,15 @@ public class StudyRelationService {
 		studyRelationRepository.saveAll(studyRelations);
 	}
 
-	private void sendStudyKakaoLink(StudyRelation study){
+	private void sendStudyKakaoLink(StudyRelation studyRelation){
 		smsService.sendFormattedSms(
-			study.getMember().getPhoneNumber(),
-			String.valueOf(SmsText.STUDY_RECRUITMENT_COMPLETED)+ study.getStudy().getKakaoLink()
+			studyRelation.getMember().getPhoneNumber(),
+			MESSAGE_ALARM_SEJONGPEER_PREFIX +
+				MESSAGE_ALARM_PARENTHESES_PREFIX +
+				studyRelation.getStudy().getTitle().substring(0,10) +
+				MESSAGE_ALARM_PARENTHESES_POSTFIX +
+				SmsText.STUDY_RECRUITMENT_COMPLETED.getValue() +
+				studyRelation.getStudy().getKakaoLink()
 		);
 	}
 
