@@ -4,6 +4,7 @@ import com.sejong.sejongpeer.domain.externalactivity.dto.ExternalActivityCategor
 import com.sejong.sejongpeer.domain.externalactivity.entity.ExternalActivity;
 import com.sejong.sejongpeer.domain.externalactivity.repository.ExternalActivityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ public class ExternalActivityService {
 
 	private final ExternalActivityRepository externalActivityRepository;
 
-	@Transactional(readOnly = true)
+	@Cacheable(cacheNames = "getAllExternalActivityCategories", key = "'ExternalActivityCategories'", cacheManager = "redisCacheManager")
 	public List<ExternalActivityCategoryResponse> getAllExternalActivityCategories() {
 		List<ExternalActivity> externalActivityList = externalActivityRepository.findAll();
 
