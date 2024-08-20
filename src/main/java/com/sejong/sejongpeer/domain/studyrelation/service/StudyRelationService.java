@@ -38,9 +38,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class StudyRelationService {
-	private final String MESSAGE_ALARM_SEJONGPEER_PREFIX = "[세종피어] ";
-	private final String MESSAGE_ALARM_PARENTHESES_PREFIX = "(";
-	private final String MESSAGE_ALARM_PARENTHESES_POSTFIX = "...) ";
+	private static final String MESSAGE_ALARM_SEJONGPEER_PREFIX = "[세종피어] ";
+	private static final String MESSAGE_ALARM_PARENTHESES_PREFIX = "(";
+	private static final String MESSAGE_ALARM_PARENTHESES_POSTFIX = "...) ";
 
 	private final StudyRepository studyRepository;
 	private final SmsService smsService;
