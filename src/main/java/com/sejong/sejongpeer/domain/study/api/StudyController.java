@@ -2,6 +2,7 @@ package com.sejong.sejongpeer.domain.study.api;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +55,10 @@ public class StudyController {
 	@Operation(summary = "게시글 검색", description = "검색 조건에 해당하는 모든 게시글을 반환합니다.")
 	@GetMapping("/post/search")
 	public List<StudyTotalPostResponse> searchPosts(
+		@Valid @NotNull @RequestParam(name = "studyType") StudyType studyType,
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "20") int size,
 		@Valid @RequestBody StudyPostSearchRequest studyPostSearchRequest) {
-		return studyService.getAllStudyPostBySearch(page, size, studyPostSearchRequest);
+		return studyService.getAllStudyPostBySearch(studyType, page, size, studyPostSearchRequest);
 	}
 }

@@ -1,5 +1,9 @@
 package com.sejong.sejongpeer.domain.study.service;
 
+import com.sejong.sejongpeer.domain.externalactivity.entity.ExternalActivity;
+import com.sejong.sejongpeer.domain.externalactivity.repository.ExternalActivityRepository;
+import com.sejong.sejongpeer.domain.lecture.entity.Lecture;
+import com.sejong.sejongpeer.domain.lecture.repository.LectureRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.scrap.dao.ScrapRepository;
 import com.sejong.sejongpeer.domain.study.dto.request.StudyPostSearchRequest;
@@ -37,10 +41,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class StudyService {
-	private final String MESSAGE_ALARM_SEJONGPEER_PREFIX = "[세종피어] ";
-	private final String MESSAGE_ALARM_PARENTHESES_PREFIX = "(";
-	private final String MESSAGE_ALARM_PARENTHESES_POSTFIX = "...) ";
+	private static final String MESSAGE_ALARM_SEJONGPEER_PREFIX = "[세종피어] ";
+	private static final String MESSAGE_ALARM_PARENTHESES_PREFIX = "(";
+	private static final String MESSAGE_ALARM_PARENTHESES_POSTFIX = "...) ";
 
+	private final LectureRepository lectureRepository;
+	private final ExternalActivityRepository externalActivityRepository;
 	private final LectureStudyRepository lectureStudyRepository;
 	private final ExternalActivityStudyRepository externalActivityStudyRepository;
 	private final StudyRepository studyRepository;
@@ -179,15 +185,10 @@ public class StudyService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<StudyTotalPostResponse> getAllStudyPostBySearch(Integer page, Integer size, StudyPostSearchRequest request) {
-		if (request.recruitmentMin() > request.recruitmentMax()) {
-			throw new CustomException(ErrorCode.STUDY_SEARCH_PERSONNEL_MISCONDITION);
-		}
+	public List<StudyTotalPostResponse> getAllStudyPostBySearch(StudyType studyType, Integer page, Integer size, StudyPostSearchRequest request) {
 
-		Specification<Study> spec = Specification.where(StudySpecification.checkBiggerThanRecruitmentMin(request.recruitmentMin()))
-			.and(StudySpecification.checkSmallerThanRecruitmentMax(request.recruitmentMax()))
-			.and(StudySpecification.checkAfterStartedAt(request.recruitmentStartAt()))
-			.and(StudySpecification.checkBeforeClosedAt(request.recruitmentEndAt()))
+		Specification<Study> spec = Specification.where(StudySpecification.checkStudyTypeMatching(studyType))
+			.and(StudySpecification.checkRecruitmentPersonnelMatch(request.recruitmentPersonnel()))
 			.and(StudySpecification.findByRecruitmentStatus(request.isRecruiting()))
 			.and(StudySpecification.containsTitleOrContent(request.searchWord()));
 
@@ -195,9 +196,36 @@ public class StudyService {
 		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
 
 		return studyPage.stream()
+			.filter(study -> isCategoryNameMatching(study, request.categoryId()))
 			.map(this::mapToCommonStudyTotalPostResponse)
 			.collect(Collectors.toUnmodifiableList());
 
+	}
+
+	private boolean isCategoryNameMatching(Study study, Long categoryId) {
+		if (categoryId == null) return true;
+
+		if (study.getType().equals(StudyType.LECTURE)) {
+			Lecture lecture = lectureRepository.findById(categoryId)
+				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_NOT_FOUND));
+			String lectureName = lecture.getName();
+
+			LectureStudy lectureStudy = lectureStudyRepository.findByStudy(study)
+				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
+			String studyCategoryName = lectureStudy.getLecture().getName();
+
+			return lectureName.equals(studyCategoryName);
+		} else {
+			ExternalActivity externalActivity = externalActivityRepository.findById(categoryId)
+				.orElseThrow(() -> new CustomException(ErrorCode.EXTERNAL_ACTIVITY_NOT_FOUND));
+			String externalActivityName = externalActivity.getName();
+
+			ExternalActivityStudy externalActivityStudy = externalActivityStudyRepository.findByStudy(study)
+				.orElseThrow(() -> new CustomException(ErrorCode.LECTURE_AND_STUDY_NOT_CONNECTED));
+			String studyCategoryName = externalActivityStudy.getExternalActivity().getName();
+
+			return externalActivityName.equals(studyCategoryName);
+		}
 	}
 
 	public StudyTotalPostResponse mapToCommonStudyTotalPostResponse(Study study) {

@@ -60,7 +60,6 @@ public enum ErrorCode {
 
 	// Study 게시글 에러
 	STUDY_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스터디 타입입니다."),
-	STUDY_SEARCH_PERSONNEL_MISCONDITION(HttpStatus.CONFLICT, "스터디 게시글 검색 시 모집 인원 하한선이 상한선을 초과할 수 없습니다."),
 	STUDY_CANNOT_DELETED(HttpStatus.BAD_REQUEST, "스터디 게시글 작성자만 해당 게시글을 삭제할 수 있습니다."),
 	STUDY_NOT_FOUND(HttpStatus.NOT_FOUND, "스터디를 찾을 수 없습니다."),
 	STUDY_NOT_OWNER(HttpStatus.FORBIDDEN, "스터디의 소유자가 아닙니다."),
