@@ -1,23 +1,33 @@
 package com.sejong.sejongpeer.domain.auth.entity;
 
+import com.sejong.sejongpeer.domain.member.entity.Member;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 
+@Entity
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@RedisHash(value = "refreshToken", timeToLive = 259200000L / 1000)
 public class RefreshToken {
 	@Id
+	@Column(columnDefinition = "char(36)")
 	private String memberId;
 
-	@Indexed
+	@MapsId
+	@OneToOne(fetch = FetchType.LAZY)
+	private Member member;
+
+	@Column(nullable = false)
 	private String token;
 
 	@Builder
-	private RefreshToken(String memberId, String token) {
-		this.memberId = memberId;
+	private RefreshToken(Member member, String token) {
+		this.member = member;
 		this.token = token;
 	}
 

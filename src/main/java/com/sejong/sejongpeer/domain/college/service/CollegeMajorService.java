@@ -18,7 +18,8 @@ public class CollegeMajorService {
 
 	private final CollegeMajorRepository collegeMajorRepository;
 
-	@Cacheable(cacheNames = "getAllColleges", key = "'CollegeMajor'", cacheManager = "redisCacheManager")
+//	@Cacheable(cacheNames = "getAllColleges", key = "'CollegeMajor'", cacheManager = "redisCacheManager")
+	@Transactional(readOnly = true)
 	public List<String> getAllColleges() {
 		return collegeMajorRepository.findAllColleges();
 	}

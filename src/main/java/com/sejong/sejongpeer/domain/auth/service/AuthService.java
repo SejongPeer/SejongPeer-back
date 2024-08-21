@@ -44,23 +44,23 @@ public class AuthService {
 		String accessToken = jwtProvider.generateAccessToken(member.getId());
 		String refreshToken = jwtProvider.generateRefreshToken(member.getId());
 
-		renewRefreshToken(member.getId(), refreshToken);
+		renewRefreshToken(member, refreshToken);
 
 		return SignInResponse.of(accessToken, refreshToken, member);
 	}
 
-	private void renewRefreshToken(String memberId, String token) {
-		RefreshToken refreshToken = refreshTokenRepository.findByMemberId(memberId).orElse(null);
+	private void renewRefreshToken(Member member, String token) {
+		RefreshToken refreshToken = refreshTokenRepository.findById(member.getId()).orElse(null);
 
 		if (refreshToken == null) { // 최초가입 후 로그인일 경우 Refresh Token 존재하지 않음
-			initRefreshToken(memberId, token);
+			initRefreshToken(member, token);
 		} else {
 			refreshToken.renewToken(token);
 		}
 	}
 
-	private void initRefreshToken(String memberId, String token) {
-		RefreshToken refreshToken = RefreshToken.builder().memberId(memberId).token(token).build();
+	private void initRefreshToken(Member member, String token) {
+		RefreshToken refreshToken = RefreshToken.builder().member(member).token(token).build();
 
 		refreshTokenRepository.save(refreshToken);
 	}
