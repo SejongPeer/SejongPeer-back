@@ -186,17 +186,16 @@ public class StudyService {
 
 	@Transactional(readOnly = true)
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(StudyType studyType, Integer page, Integer size, StudyPostSearchRequest request) {
-
 		Specification<Study> spec = Specification.where(StudySpecification.checkStudyTypeMatching(studyType))
-			.and(StudySpecification.checkRecruitmentPersonnelMatch(request.recruitmentPersonnel()))
-			.and(StudySpecification.findByRecruitmentStatus(request.isRecruiting()))
-			.and(StudySpecification.containsTitleOrContent(request.searchWord()));
+			.and(StudySpecification.checkRecruitmentPersonnelMatch(request.getRecruitmentPersonnel()))
+			.and(StudySpecification.findByRecruitmentStatus(request.getIsRecruiting()))
+			.and(StudySpecification.containsTitleOrContent(request.getSearchWord()));
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Slice<Study> studyPage = studyRepository.findAll(spec, pageable);
 
 		return studyPage.stream()
-			.filter(study -> isCategoryNameMatching(study, request.categoryId()))
+			.filter(study -> isCategoryNameMatching(study, request.getCategoryId()))
 			.map(this::mapToCommonStudyTotalPostResponse)
 			.collect(Collectors.toUnmodifiableList());
 
