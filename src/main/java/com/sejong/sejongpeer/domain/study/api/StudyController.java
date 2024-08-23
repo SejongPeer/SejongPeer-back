@@ -58,7 +58,7 @@ public class StudyController {
 		@Valid @NotNull @RequestParam(name = "studyType") StudyType studyType,
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "20") int size,
-		@Valid @RequestBody StudyPostSearchRequest studyPostSearchRequest) {
+		@ModelAttribute StudyPostSearchRequest studyPostSearchRequest) {
 		return studyService.getAllStudyPostBySearch(studyType, page, size, studyPostSearchRequest);
 	}
 }
