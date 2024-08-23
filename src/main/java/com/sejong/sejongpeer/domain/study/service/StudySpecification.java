@@ -40,9 +40,16 @@ public class StudySpecification {
 	}
 
 	public static Specification<Study> containsTitleOrContent(String searchWord) {
-		return (root, query, criteriaBuilder) -> criteriaBuilder.or(
-			criteriaBuilder.like(root.get("title"), "%" + searchWord + "%"),
-			criteriaBuilder.like(root.get("content"), "%" + searchWord + "%")
-		);
+		return (root, query, criteriaBuilder) -> {
+			if (searchWord == null) {
+				return criteriaBuilder.conjunction();
+			} else {
+				return criteriaBuilder.or(
+					criteriaBuilder.like(root.get("title"), "%" + searchWord + "%"),
+					criteriaBuilder.like(root.get("content"), "%" + searchWord + "%")
+				);
+			}
+		};
 	}
+
 }
