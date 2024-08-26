@@ -65,8 +65,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// Redis
-//	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// Cache
+	implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: '2.6.3'
 }
 
 tasks.named('bootBuildImage') {
