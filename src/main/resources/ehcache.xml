@@ -9,7 +9,7 @@
         maxEntriesLocalHeap="1000"
         maxEntriesLocalDisk="10000"
         eternal="false"
-        diskSpoolBufferSizeMD="20"
+        diskSpoolBufferSizeMB="20"
         timeToIdleSeconds="1800"  timeToLiveSeconds="1800"
         memoryStoreEvictionPolicy="LFU"
         transactionalMode="off" >
@@ -20,7 +20,7 @@
            maxEntriesLocalHeap="1000"
            maxEntriesLocalDisk="10000"
            eternal="false"
-           diskSpoolBufferSizeMD="20"
+           diskSpoolBufferSizeMB="20"
            timeToIdleSeconds="1800"  timeToLiveSeconds="1800"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off" >
