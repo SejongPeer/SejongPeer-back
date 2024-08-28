@@ -183,6 +183,8 @@ public class StudyRelationService {
 		final Member loginMember = memberUtil.getCurrentMember();
 		List<StudyRelation> studyRelations = loginMember.getStudyRelations();
 
+		studyRelations.sort((sr1, sr2) -> sr2.getStudy().getId().compareTo(sr1.getStudy().getId()));
+
 		List<AppliedStudyResponse> list = new ArrayList<>();
 		studyRelations.stream()
 			.forEach(studyRelation -> {
@@ -201,13 +203,15 @@ public class StudyRelationService {
 		final Member member = memberUtil.getCurrentMember();
 		List<Study> studyList = member.getStudies();
 
+		studyList.sort((s1, s2) -> s2.getId().compareTo(s1.getId()));
+
 		List<StudyApplicantsListRespone> lectureList = new ArrayList<>();
 		List<StudyApplicantsListRespone> externalList = new ArrayList<>();
 
 		studyList.stream()
 			.forEach(study -> {
 				List<StudyRelation> relations = study.getStudyRelations();
-				StudyApplicantsListRespone response =  StudyApplicantsListRespone.of(study, relations);
+				StudyApplicantsListRespone response = StudyApplicantsListRespone.of(study, relations);
 
 				if (study.getType().equals(StudyType.LECTURE)) {
 					lectureList.add(response);
