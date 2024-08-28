@@ -163,11 +163,18 @@ public class StudyService {
 
 	@Transactional(readOnly = true)
 	public StudyPostInfoResponse getOneStudyPostInfo(final Long studyId) {
+		final Member loginMember = memberUtil.getCurrentMember();
+
 		Study study = studyRepository.findById(studyId)
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
 		String categoryName = getCategoryNameByStudyType(study);
+
 		int scrapCount = getScrapCountByStudy(study);
-		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount);
+
+		boolean isApplied = studyRelationRepository.existsByMemberAndStudy(loginMember, study);
+
+		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount, isApplied);
 	}
 
 	public String getCategoryNameByStudyType(Study study) {

@@ -24,9 +24,10 @@ public record StudyPostInfoResponse(
 	String questionKakaoLink,
 	List<String> tags,
 	List<StudyImageUrlResponse> imgUrlList,
-	int scrapCount
+	int scrapCount,
+	boolean isApplied
 ) {
-	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, int scrapCount) {
+	public static StudyPostInfoResponse fromStudy(Study study, String categoryName, int scrapCount, boolean isApplied) {
 		return new StudyPostInfoResponse(
 			study.getTitle(),
 			study.getMember().getCollegeMajor().getMajor(),
@@ -43,7 +44,8 @@ public record StudyPostInfoResponse(
 			study.getQuestionLink(),
 			study.getStudyTagMaps().stream().map(StudyTagMap::getTag).map(Tag::getName).collect(Collectors.toUnmodifiableList()),
 			study.getImages().stream().map(StudyImageUrlResponse::fromImage).collect(Collectors.toUnmodifiableList()),
-			scrapCount
+			scrapCount,
+			isApplied
 		);
 	}
 
