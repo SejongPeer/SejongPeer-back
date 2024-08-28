@@ -123,8 +123,11 @@ public class StudyRelationService {
 	private void sendStudyRejectAlarmToStudyApplicant(StudyRelation studyRelation) {
 		Member studyRejectedApplicant = studyRelation.getMember();
 		Study studyPost = studyRelation.getStudy();
+		String title = studyPost.getTitle();
+		String subTitle = title.length() > 10 ? title.substring(0, 10) : title;
+
 		String formattedMessage = MESSAGE_ALARM_PARENTHESES_PREFIX +
-			studyPost.getTitle().substring(0, 10) + MESSAGE_ALARM_PARENTHESES_POSTFIX + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
+			subTitle + MESSAGE_ALARM_PARENTHESES_POSTFIX + SmsText.STUDY_APPLY_REJECT_ALARM.getValue();
 		smsService.sendFormattedSms(studyRejectedApplicant.getPhoneNumber(), formattedMessage);
 	}
 
