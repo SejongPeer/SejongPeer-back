@@ -108,12 +108,12 @@ public class StudyRelationService {
 		}
 
 		if (request.isAccept()) {
-			Study study = studyResume.getStudy();
-			if (study.getRecruitmentCount() <= study.getParticipantsCount()) {
+			Study appliedStudy = studyResume.getStudy();
+			if (appliedStudy.getRecruitmentCount() <= appliedStudy.getParticipantsCount()) {
+				appliedStudy.changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
 				throw new CustomException(ErrorCode.STUDY_APPLICANT_CANNOT_BE_ACCEPTED);
 			}
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
-			Study appliedStudy = studyResume.getStudy();
 			appliedStudy.addParticipantsCount();
 			studyRepository.save(appliedStudy);
 		} else {
