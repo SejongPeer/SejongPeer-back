@@ -172,7 +172,7 @@ public class StudyService {
 
 		int scrapCount = getScrapCountByStudy(study);
 
-		boolean isApplied = studyRelationRepository.existsByMemberAndStudy(loginMember, study);
+		boolean isApplied = studyRelationRepository.existsByMemberAndStudyAndStatusNot(loginMember, study, StudyMatchingStatus.CANCEL);
 
 		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount, isApplied);
 	}
