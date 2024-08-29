@@ -4,7 +4,7 @@ services:
   backend:
     build: .
     ports:
-      - "3000:8080"
+      - "8082:8080"
     container_name: sejongpeer-green
     environment:
       - TZ=Asia/Seoul
