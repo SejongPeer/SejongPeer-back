@@ -174,7 +174,9 @@ public class StudyService {
 
 		boolean isApplied = studyRelationRepository.existsByMemberAndStudyAndStatusNot(loginMember, study, StudyMatchingStatus.CANCEL);
 
-		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount, isApplied);
+		boolean isScraped = scrapRepository.existsByMemberAndStudy(loginMember, study);
+
+		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount, isApplied, isScraped);
 	}
 
 	public String getCategoryNameByStudyType(Study study) {
