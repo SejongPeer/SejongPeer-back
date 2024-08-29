@@ -1,4 +1,4 @@
-# main branch workflow
+# main branch zero downtime deployment workflow
 name: SejongPeer - BackEnd - CD
 
 on:
