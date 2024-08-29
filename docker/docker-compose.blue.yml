@@ -6,7 +6,7 @@ services:
     # 현재 디렉토리에서의 Dockerfile을 사용하여 Docker 이미지를 빌드
     build: .
     ports:
-      - "3000:8080"
+      - "8081:8080"
     # 컨테이너의 이름
     container_name: sejongpeer-blue
     environment:
