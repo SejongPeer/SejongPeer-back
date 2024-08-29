@@ -15,4 +15,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 	Long countByStudy(Study study);
 
 	List<Scrap> findAllByMember(Member member);
+
+	boolean existsByMemberAndStudy(Member member, Study study);
 }
