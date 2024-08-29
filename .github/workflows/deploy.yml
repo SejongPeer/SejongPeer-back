@@ -6,7 +6,6 @@ on:
     # main branch에 push(merge)될 경우 실행됩니다.
     branches:
       - main
-      - fix/#320
 
 permissions:
   contents: read
