@@ -3,6 +3,7 @@ package com.sejong.sejongpeer.domain.scrap.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCreateResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
 import com.sejong.sejongpeer.domain.study.service.StudyService;
 import org.springframework.stereotype.Service;
@@ -52,13 +53,15 @@ public class ScrapService {
 		return scrapRepository.countByStudy(study);
 	}
 
-	public Long createScrap(Long studyId) {
+	public StudyScrapCreateResponse createScrap(Long studyId) {
 		Study study = studyRepository.findById(studyId).orElseThrow(
 			() -> new CustomException(ErrorCode.STUDY_NOT_FOUND)
 		);
 
-		Scrap scrap = Scrap.createScrap(ScrapType.STUDY, memberUtil.getCurrentMember(), study);
-		return scrapRepository.save(scrap).getId();
+		Scrap newScrap = Scrap.createScrap(ScrapType.STUDY, memberUtil.getCurrentMember(), study);
+		scrapRepository.save(newScrap);
+
+		return StudyScrapCreateResponse.from(newScrap);
 	}
 
 	public void deleteScrap(Long scrapId) {

@@ -1,7 +1,10 @@
 package com.sejong.sejongpeer.domain.scrap.api;
 
+import com.sejong.sejongpeer.domain.scrap.dto.response.StudyScrapCreateResponse;
 import com.sejong.sejongpeer.domain.study.dto.response.StudyTotalPostResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,15 +43,16 @@ public class ScrapController {
 
 	@Operation(summary = "스터디 스크랩 추가", description = "스터디를 스크랩합니다.")
 	@PostMapping("/study/{studyId}")
-	public Long scrapCreate(
+	public ResponseEntity<StudyScrapCreateResponse> createScrap (
 		@PathVariable Long studyId
 	) {
-		return scrapService.createScrap(studyId);
+		StudyScrapCreateResponse response = scrapService.createScrap(studyId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@Operation(summary = "스터디 스크랩을 삭제", description = "스터디 스크랩을 삭제합니다.")
 	@DeleteMapping("/{scrapId}")
-	public void scrapDelete(
+	public void deleteScrap (
 		@PathVariable Long scrapId
 	) {
 		scrapService.deleteScrap(scrapId);
