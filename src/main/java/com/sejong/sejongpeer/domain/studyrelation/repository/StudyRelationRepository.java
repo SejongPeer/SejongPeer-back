@@ -20,7 +20,9 @@ public interface StudyRelationRepository
 
 	Optional<StudyRelation> findTopByMemberIdAndStudyIdOrderByIdDesc(String memberId, Long studyId);
 
-	List<StudyRelation> findByStudyAndStatusNot(Study study, StudyMatchingStatus status);
+	List<StudyRelation> findAllByStudyAndStatusNot(Study study, StudyMatchingStatus status);
 
 	boolean existsByMemberAndStudyAndStatusNot(Member member, Study study, StudyMatchingStatus status);
+
+	List<StudyRelation> findAllByStudyAndStatus(Study study, StudyMatchingStatus status);
 }
