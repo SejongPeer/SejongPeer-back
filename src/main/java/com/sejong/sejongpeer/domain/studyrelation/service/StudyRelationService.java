@@ -116,15 +116,15 @@ public class StudyRelationService {
 
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
 			appliedStudy.addParticipantsCount();
+			studyRepository.save(appliedStudy);
 
 			if (appliedStudy.getRecruitmentCount() <= appliedStudy.getParticipantsCount()) {
 				appliedStudy.changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
+				studyRepository.save(appliedStudy);
 
 				List<StudyRelation> appliedStudyHistory = studyRelationRepository.findAllByStudyAndStatus(appliedStudy, StudyMatchingStatus.ACCEPT);
 				appliedStudyHistory.forEach(this::sendStudyKakaoLink);
 			}
-
-			studyRepository.save(appliedStudy);
 		} else {
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
 			sendStudyRejectAlarmToStudyApplicant(studyResume);
