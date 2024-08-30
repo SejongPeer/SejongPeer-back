@@ -23,4 +23,6 @@ public interface StudyRelationRepository
 	List<StudyRelation> findByStudyAndStatusNot(Study study, StudyMatchingStatus status);
 
 	boolean existsByMemberAndStudyAndStatusNot(Member member, Study study, StudyMatchingStatus status);
+
+	List<StudyRelation> findAllByStudyAndStatus(Study study, StudyMatchingStatus status);
 }
