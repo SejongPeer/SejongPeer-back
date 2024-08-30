@@ -27,20 +27,6 @@ public class ScrapController {
 
 	private final ScrapService scrapService;
 
-//	@Operation(summary = "게시글 별 스크랩 수 조회 및 스크랩 여부 판별", description = "특정 스터디 게시글에 사용자가 스크랩을 했는지 여부와 해당 스터디의 총 스크랩 수를 반환합니다.")
-//	@GetMapping("/study")
-//	public StudyScrapResponse findScrap(
-//		@RequestBody StudyScrapCreateRequest request
-//	) {
-//		return scrapService.findOneStudyScrap(request);
-//	}
-
-	@Operation(summary = "게시글 별 스크랩 수 조회", description = "스터디를 스크랩한 유저가 몇 명인지 반환합니다.")
-	@GetMapping("/study/{studyId}")
-	public Long getScrapCountByStudyPost(@PathVariable Long studyId) {
-		return scrapService.getScrapCountByStudyPost(studyId);
-	}
-
 	@Operation(summary = "스터디 스크랩 추가", description = "스터디를 스크랩합니다.")
 	@PostMapping("/study/{studyId}")
 	public ResponseEntity<StudyScrapCreateResponse> createScrap (
