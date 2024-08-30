@@ -171,11 +171,13 @@ public class StudyRelationService {
 	}
 
 	private void sendStudyKakaoLink(StudyRelation studyRelation){
+		String title = studyRelation.getStudy().getTitle();
+		String subTitle = title.length() > 10 ? title.substring(0, 10) : title;
 		smsService.sendFormattedSms(
 			studyRelation.getMember().getPhoneNumber(),
 			MESSAGE_ALARM_SEJONGPEER_PREFIX +
 				MESSAGE_ALARM_PARENTHESES_PREFIX +
-				studyRelation.getStudy().getTitle().substring(0,10) +
+				subTitle +
 				MESSAGE_ALARM_PARENTHESES_POSTFIX +
 				SmsText.STUDY_RECRUITMENT_COMPLETED.getValue() +
 				studyRelation.getStudy().getKakaoLink()

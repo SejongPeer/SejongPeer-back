@@ -110,12 +110,12 @@ public class StudyService {
 
 	private void sendStudyDeletionAlarmToStudyApplicant(StudyRelation studyRelation) {
 		Member studyApplicant = studyRelation.getMember();
-		Study studyPost = studyRelation.getStudy();
+		String title = studyRelation.getStudy().getTitle();
+		String subTitle = title.length() > 10 ? title.substring(0, 10) : title;
 		smsService.sendFormattedSms(
 			studyApplicant.getPhoneNumber(),
 			MESSAGE_ALARM_SEJONGPEER_PREFIX +
-			MESSAGE_ALARM_PARENTHESES_PREFIX +
-			studyPost.getTitle().substring(0,10) +
+			MESSAGE_ALARM_PARENTHESES_PREFIX + subTitle +
 			MESSAGE_ALARM_PARENTHESES_POSTFIX +
 			SmsText.STUDY_POST_DELETION_ALARM.getValue()
 		);
