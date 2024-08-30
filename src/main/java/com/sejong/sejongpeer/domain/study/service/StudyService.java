@@ -87,7 +87,7 @@ public class StudyService {
 			throw new CustomException(ErrorCode.STUDY_CANNOT_DELETED);
 		}
 
-		List<StudyRelation> allStudyApplicants = studyRelationRepository.findByStudyAndStatusNot(study, StudyMatchingStatus.CANCEL);
+		List<StudyRelation> allStudyApplicants = studyRelationRepository.findAllByStudyAndStatusNot(study, StudyMatchingStatus.CANCEL);
 		allStudyApplicants.forEach(this::sendStudyDeletionAlarmToStudyApplicant);
 
 		if (StudyType.LECTURE.equals(study.getType())) {
