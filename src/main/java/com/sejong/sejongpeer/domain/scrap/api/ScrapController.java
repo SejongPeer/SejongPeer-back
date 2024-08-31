@@ -37,11 +37,11 @@ public class ScrapController {
 	}
 
 	@Operation(summary = "스터디 스크랩을 삭제", description = "스터디 스크랩을 삭제합니다.")
-	@DeleteMapping("/{scrapId}")
+	@DeleteMapping("/{studyId}")
 	public void deleteScrap (
-		@PathVariable Long scrapId
+		@PathVariable Long studyId
 	) {
-		scrapService.deleteScrap(scrapId);
+		scrapService.deleteScrap(studyId);
 	}
 
 	@Operation(summary = "내가 스크랩한 게시글 목록 조회", description = "내가 좋아요한 교내/교외 스터디 게시글의 목록을 반환합니다.")
