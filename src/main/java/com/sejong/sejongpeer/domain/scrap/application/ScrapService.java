@@ -53,7 +53,7 @@ public class ScrapService {
 			throw new CustomException(ErrorCode.SCRAP_CANNOT_BE_DUPLICATED);
 		}
 
-		Scrap newScrap = Scrap.createScrap(ScrapType.STUDY, memberUtil.getCurrentMember(), study);
+		Scrap newScrap = Scrap.createScrap(ScrapType.STUDY, loginMember, study);
 		scrapRepository.save(newScrap);
 
 		return StudyScrapCreateResponse.from(newScrap);
