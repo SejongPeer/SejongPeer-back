@@ -50,7 +50,7 @@ public class ScrapService {
 			.orElse(null);
 
 		if (existingScrap != null) {
-			throw new CustomException(ErrorCode.SCRAP_NOT_NOT_BE_DUPLICATED);
+			throw new CustomException(ErrorCode.SCRAP_CANNOT_BE_DUPLICATED);
 		}
 
 		Scrap newScrap = Scrap.createScrap(ScrapType.STUDY, memberUtil.getCurrentMember(), study);

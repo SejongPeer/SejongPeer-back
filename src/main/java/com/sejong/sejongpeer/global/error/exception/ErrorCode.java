@@ -92,7 +92,7 @@ public enum ErrorCode {
 	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
 
 	// 스크랩 에러
-	SCRAP_NOT_NOT_BE_DUPLICATED(HttpStatus.CONFLICT, "이미 스크랩한 게시글입니다."),
+	SCRAP_CANNOT_BE_DUPLICATED(HttpStatus.CONFLICT, "이미 스크랩한 게시글입니다."),
 	SCRAP_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 스크랩입니다.");
 
 	private final HttpStatus status;
