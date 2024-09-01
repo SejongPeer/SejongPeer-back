@@ -34,7 +34,7 @@ jobs:
           touch ./application-actuator.yml
           touch ./application-datasource.yml
           touch ./application-infra.yml
-          touch ./application-dev.yml
+          touch ./application-prod.yml
           touch ./application-security.yml
           touch ./application-storage.yml
           touch ./.env
@@ -43,7 +43,7 @@ jobs:
           echo "$APPLICATION" > ./application.yml
           echo "$APPLICATION_ACTUATOR" > ./application-actuator.yml
           echo "$APPLICATION_DATASOURCE" > ./application-datasource.yml
-          echo "$APPLICATION_DEV" > ./application-dev.yml
+          echo "$APPLICATION_PROD" > ./application-prod.yml
           echo "$APPLICATION_SECURITY" > ./application-security.yml
           echo "$APPLICATION_INFRA" > ./application-infra.yml
           echo "$APPLICATION_STORAGE" > ./application-storage.yml
@@ -53,7 +53,7 @@ jobs:
           APPLICATION: ${{ secrets.APPLICATION }}
           APPLICATION_ACTUATOR: ${{ secrets.APPLICATION_ACTUATOR }}
           APPLICATION_DATASOURCE: ${{ secrets.APPLICATION_DATASOURCE }}
-          APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
+          APPLICATION_PROD: ${{ secrets.APPLICATION_PROD }}
           APPLICATION_SECURITY: ${{ secrets.APPLICATION_SECURITY }}
           APPLICATION_INFRA: ${{ secrets.APPLICATION_INFRA }}
           APPLICATION_STORAGE: ${{ secrets.APPLICATION_STORAGE }}
