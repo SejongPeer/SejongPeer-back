@@ -76,7 +76,7 @@ public class ScrapService {
 
 		return myAllScraps.stream()
 			.map(Scrap::getStudy)
-			.map(studyService::mapToCommonStudyTotalPostResponse)
+			.map(study -> studyService.mapToCommonStudyTotalPostResponse(loginMember, study))
 			.collect(Collectors.toUnmodifiableList());
 
 	}

@@ -123,6 +123,8 @@ public class StudyService {
 
 	@Transactional(readOnly = true)
 	public Slice<StudyTotalPostResponse> getAllStudyPost(StudyType studyType, int page) {
+		final Member loginMember = memberUtil.getCurrentMember();
+
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime endDate = now.minusMonths(page * 6);
 		LocalDateTime startDate = endDate.minusMonths(6);
@@ -134,27 +136,29 @@ public class StudyService {
 			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate).intValue();
 			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.LECTURE, startDate, endDate, pageable);
-			return mapToStudyTotalPostResponse(studySlice, StudyType.LECTURE);
+			return mapToStudyTotalPostResponse(loginMember, studySlice, StudyType.LECTURE);
 		}
 
 		if (StudyType.EXTERNAL_ACTIVITY.equals(studyType)) {
 			int size = studyRepository.countByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate).intValue();
 			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 			studySlice = studyRepository.findByTypeAndCreatedAtBetween(StudyType.EXTERNAL_ACTIVITY, startDate, endDate, pageable);
-			return mapToStudyTotalPostResponse(studySlice, StudyType.EXTERNAL_ACTIVITY);
+			return mapToStudyTotalPostResponse(loginMember, studySlice, StudyType.EXTERNAL_ACTIVITY);
 		}
 
 		return new SliceImpl<>(Collections.emptyList(), Pageable.unpaged(), false);
 	}
 
-	private Slice<StudyTotalPostResponse> mapToStudyTotalPostResponse(Slice<Study> studySlice, StudyType studyType) {
+	private Slice<StudyTotalPostResponse> mapToStudyTotalPostResponse(Member loginMember, Slice<Study> studySlice, StudyType studyType) {
 		return studySlice.map(study -> {
 			String categoryName = getCategoryNameByStudyType(study);
 			int scrapCount = getScrapCountByStudy(study);
+			boolean isScraped = isStudyPostScrappedByMember(loginMember, study);
+
 			if (studyType == StudyType.LECTURE) {
-				return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
+				return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount, isScraped);
 			} else if (studyType == StudyType.EXTERNAL_ACTIVITY) {
-				return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
+				return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount, isScraped);
 			} else {
 				throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 			}
@@ -174,7 +178,7 @@ public class StudyService {
 
 		boolean isApplied = studyRelationRepository.existsByMemberAndStudyAndStatusNot(loginMember, study, StudyMatchingStatus.CANCEL);
 
-		boolean isScraped = scrapRepository.existsByMemberAndStudy(loginMember, study);
+		boolean isScraped = isStudyPostScrappedByMember(loginMember, study);
 
 		return StudyPostInfoResponse.fromStudy(study, categoryName, scrapCount, isApplied, isScraped);
 	}
@@ -195,6 +199,8 @@ public class StudyService {
 
 	@Transactional(readOnly = true)
 	public List<StudyTotalPostResponse> getAllStudyPostBySearch(StudyType studyType, Integer page, Integer size, StudyPostSearchRequest request) {
+		final Member loginMember = memberUtil.getCurrentMember();
+
 		Specification<Study> spec = Specification.where(StudySpecification.checkStudyTypeMatching(studyType))
 			.and(StudySpecification.checkRecruitmentPersonnelMatch(request.getRecruitmentPersonnel()))
 			.and(StudySpecification.findByRecruitmentStatus(request.getIsRecruiting()))
@@ -205,7 +211,7 @@ public class StudyService {
 
 		return studyPage.stream()
 			.filter(study -> isCategoryNameMatching(study, request.getCategoryId()))
-			.map(this::mapToCommonStudyTotalPostResponse)
+			.map(study -> mapToCommonStudyTotalPostResponse(loginMember, study))
 			.collect(Collectors.toUnmodifiableList());
 
 	}
@@ -236,13 +242,15 @@ public class StudyService {
 		}
 	}
 
-	public StudyTotalPostResponse mapToCommonStudyTotalPostResponse(Study study) {
+	public StudyTotalPostResponse mapToCommonStudyTotalPostResponse(Member loginMember, Study study) {
 		String categoryName = getCategoryNameByStudyType(study);
 		int scrapCount = getScrapCountByStudy(study);
+		boolean isScraped = isStudyPostScrappedByMember(loginMember, study);
+
 		if (study.getType() == StudyType.LECTURE) {
-			return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount);
+			return StudyTotalPostResponse.fromLectureStudy(study, categoryName, scrapCount, isScraped);
 		} else if (study.getType() == StudyType.EXTERNAL_ACTIVITY) {
-			return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount);
+			return StudyTotalPostResponse.fromExternalActivityStudy(study, categoryName, scrapCount, isScraped);
 		} else {
 			throw new CustomException(ErrorCode.STUDY_TYPE_NOT_FOUND);
 		}
@@ -251,5 +259,9 @@ public class StudyService {
 	public int getScrapCountByStudy(Study study) {
 		Long scrapCount = scrapRepository.countByStudy(study);
 		return scrapCount.intValue();
+	}
+
+	private boolean isStudyPostScrappedByMember(Member member, Study study) {
+		return scrapRepository.existsByMemberAndStudy(member, study);
 	}
 }
