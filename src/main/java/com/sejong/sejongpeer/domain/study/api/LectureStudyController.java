@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+
 @Tag(name = "5-2. [학교수업 스터디 생성]", description = "학교수업 스터디 게시글 작성 관련 API입니다.")
 @RestController
 @RequestMapping("/api/v1/study/lecture")
@@ -27,7 +29,7 @@ public class LectureStudyController {
 	@Operation(summary = "학교수업 스터디 생성", description = "학교수업 스터디를 생성합니다.")
 	@PostMapping
 	public ResponseEntity<StudyCreateResponse> createStudy(
-		@Valid @RequestBody LectureStudyCreateRequest request) {
+		@Valid @RequestBody LectureStudyCreateRequest request) throws IOException {
 		StudyCreateResponse response = lectureStudyService.createStudy(request);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
