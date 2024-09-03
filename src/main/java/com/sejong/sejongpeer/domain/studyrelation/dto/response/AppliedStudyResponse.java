@@ -16,9 +16,11 @@ public record AppliedStudyResponse(
 	List<String> tags,
 	Long scrapCount,
 	RecruitmentStatus recruitmentStatus,
+
+	boolean isScrappedStudy,
 	LocalDateTime recruitmentStartAt,
 	LocalDateTime recruitmentEndAt) {
-	public static AppliedStudyResponse of(Study study, List<String> tags, Long scrapCount) {
+	public static AppliedStudyResponse of(Study study, List<String> tags, Long scrapCount, 	boolean isScrappedStudy) {
 		return new AppliedStudyResponse(
 			study.getId(),
 			study.getTitle(),
@@ -28,6 +30,7 @@ public record AppliedStudyResponse(
 			tags,
 			scrapCount,
 			study.getRecruitmentStatus(),
+			isScrappedStudy,
 			study.getRecruitmentStartAt(),
 			study.getRecruitmentEndAt());
 	}

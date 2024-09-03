@@ -78,6 +78,9 @@ public class ScrapService {
 			.map(Scrap::getStudy)
 			.map(study -> studyService.mapToCommonStudyTotalPostResponse(loginMember, study))
 			.collect(Collectors.toUnmodifiableList());
+	}
 
+	public boolean hasMemberScrappedStudy(Member member, Study study) {
+		return scrapRepository.existsByMemberAndStudy(member, study);
 	}
 }

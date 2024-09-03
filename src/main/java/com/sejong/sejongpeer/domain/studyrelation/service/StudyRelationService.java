@@ -206,7 +206,9 @@ public class StudyRelationService {
 
 					Long scrapCount = scrapService.getScrapCountByStudyPost(study.getId());
 					List<String> tags = tagService.getTagsNameByStudy(study);
-					list.add(AppliedStudyResponse.of(study, tags, scrapCount));
+					boolean hasMemberScrappedStudy = scrapService.hasMemberScrappedStudy(loginMember, study);
+
+					list.add(AppliedStudyResponse.of(study, tags, scrapCount, hasMemberScrappedStudy));
 				}
 			});
 		return list;
