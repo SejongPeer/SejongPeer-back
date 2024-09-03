@@ -103,7 +103,7 @@ public class StudyRelationService {
 		StudyRelation studyResume = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(studyApplicant.getId(), request.studyId())
 			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_APPLY_HISTORY_NOT_FOUND));
 
-		boolean isAvailableApplication = true;
+		boolean isFulleApplication = false;
 		Map<String, Boolean> response = new HashMap<>();
 
 		if (studyResume.getStatus().equals(StudyMatchingStatus.CANCEL)) {
@@ -128,7 +128,7 @@ public class StudyRelationService {
 				List<StudyRelation> appliedStudyHistory = studyRelationRepository.findAllByStudyAndStatus(appliedStudy, StudyMatchingStatus.ACCEPT);
 				appliedStudyHistory.forEach(this::sendStudyKakaoLink);
 
-				isAvailableApplication = false;
+				isFulleApplication = true;
 			}
 		} else {
 			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
@@ -136,7 +136,7 @@ public class StudyRelationService {
 		}
 
 		studyRelationRepository.save(studyResume);
-		response.put("available", isAvailableApplication);
+		response.put("isFull", isFulleApplication);
 
 		return response;
 	}
