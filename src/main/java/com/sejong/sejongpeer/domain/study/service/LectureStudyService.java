@@ -59,11 +59,15 @@ public class LectureStudyService {
 		Study study = Study.create(member, vo);
 		Study saveStudy = studyRepository.save(study);
 
-		List<StudyImageUrlResponse> lectureStudyImageUrlResponse = studyService.uploadFiles(saveStudy.getId(), request.base64ImagesList());
+		List<StudyImageUrlResponse> lectureStudyImageUrlResponse;
 
-		if (lectureStudyImageUrlResponse.isEmpty()) {
-			studyRepository.delete(saveStudy);
-			throw new CustomException(ErrorCode.STUDY_IMAGE_SIZE_TOO_BIG);
+		try {
+			lectureStudyImageUrlResponse = studyService.uploadFiles(saveStudy.getId(), request.base64ImagesList());
+		} catch (CustomException e) {
+			if (e.getErrorCode() == ErrorCode.STUDY_IMAGE_SIZE_TOO_BIG) {
+				studyRepository.delete(saveStudy);
+			}
+			throw e;
 		}
 
 		tagService.setTagAndStudyTagMap(vo.tags(), saveStudy);
