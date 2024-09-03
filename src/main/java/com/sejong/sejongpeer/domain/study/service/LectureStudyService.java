@@ -1,5 +1,10 @@
 package com.sejong.sejongpeer.domain.study.service;
 
+import com.sejong.sejongpeer.domain.image.dto.request.StudyImageUploadRequest;
+import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
+import com.sejong.sejongpeer.domain.image.entity.Image;
+import com.sejong.sejongpeer.domain.image.repository.ImageRepository;
+import com.sejong.sejongpeer.domain.image.service.ImageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +25,10 @@ import com.sejong.sejongpeer.global.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -33,8 +42,9 @@ public class LectureStudyService {
 	private final MemberRepository memberRepository;
 
 	private final TagService tagService;
+	private final StudyService studyService;
 
-	public StudyCreateResponse createStudy(LectureStudyCreateRequest request) {
+	public StudyCreateResponse createStudy(LectureStudyCreateRequest request) throws IOException {
 		final String memberId = securityUtil.getCurrentMemberId();
 
 		Member member =
@@ -52,8 +62,10 @@ public class LectureStudyService {
 		tagService.setTagAndStudyTagMap(vo.tags(), saveStudy);
 
 		LectureStudy lectureStudy = LectureStudy.create(lecture, saveStudy);
+
+		List<StudyImageUrlResponse> lectureStudyImageUrlResponse = studyService.uploadFiles(saveStudy.getId(), request.base64ImagesList());
 		lectureStudyRepository.save(lectureStudy);
 
-		return StudyCreateResponse.from(saveStudy);
+		return StudyCreateResponse.from(saveStudy, lectureStudyImageUrlResponse);
 	}
 }

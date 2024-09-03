@@ -54,7 +54,10 @@ public record LectureStudyCreateRequest(
 	@Schema(
 		description = "모집 마감 시간",
 		defaultValue = "2023-01-03 00:00:00",
-		type = "string") LocalDateTime recruitmentEndAt
+		type = "string") LocalDateTime recruitmentEndAt,
+
+	@Schema(description = "이미지파일을 base64 인코딩한 문자열 리스트")
+	List<String> base64ImagesList
 
 ) {
 }
