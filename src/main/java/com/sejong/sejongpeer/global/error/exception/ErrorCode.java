@@ -90,6 +90,7 @@ public enum ErrorCode {
 	STUDY_USER_MISMATCH(HttpStatus.FORBIDDEN, "스터디를 생성한 유저와 로그인한 계정이 일치하지 않습니다."),
 	STUDY_UPLOAD_STATUS_IS_NOT_NONE(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 NONE이 아닙니다."),
 	STUDY_UPLOAD_STATUS_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "스터디 이미지 업로드 상태가 PENDING이 아닙니다."),
+	STUDY_IMAGE_SIZE_TOO_BIG(HttpStatus.PAYLOAD_TOO_LARGE, "이미지 크기가 서버 수용 한도를 초과했습니다."),
 
 	// 스크랩 에러
 	SCRAP_CANNOT_BE_DUPLICATED(HttpStatus.CONFLICT, "이미 스크랩한 게시글입니다."),

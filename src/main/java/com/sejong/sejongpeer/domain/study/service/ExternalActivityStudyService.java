@@ -46,10 +46,14 @@ public class ExternalActivityStudyService {
 
 		StudyVo vo = StudyVo.from(request);
 		Study study = Study.create(member, vo);
-
-		List<StudyImageUrlResponse> externalActivityStudyImageUrlResponse = studyService.uploadFiles(study.getId(), request.base64ImagesList());
-
 		Study savedStudy = studyRepository.save(study);
+
+		List<StudyImageUrlResponse> externalActivityStudyImageUrlResponse = studyService.uploadFiles(savedStudy.getId(), request.base64ImagesList());
+
+		if (externalActivityStudyImageUrlResponse.isEmpty()) {
+			studyRepository.delete(savedStudy);
+			throw new CustomException(ErrorCode.STUDY_IMAGE_SIZE_TOO_BIG);
+		}
 
 		tagService.setTagAndStudyTagMap(vo.tags(), savedStudy);
 
