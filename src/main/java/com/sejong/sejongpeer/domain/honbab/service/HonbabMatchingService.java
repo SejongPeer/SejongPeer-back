@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class HonbabMatchingService {
-	private static final long FIXED_WAIT_TIME_SECONDS = 900; // 15분
+	private static final long FIXED_WAIT_TIME_SECONDS = 3600; // 60분
 
 	private final SmsService smsService;
 
