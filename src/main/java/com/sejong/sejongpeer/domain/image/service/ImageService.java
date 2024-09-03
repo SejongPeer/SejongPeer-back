@@ -205,7 +205,7 @@ public class ImageService {
 			.collect(Collectors.toUnmodifiableList());
 	}
 
-	private StudyImageUrlResponse uploadFile(Long studyId, String base64Image) throws IOException {
+	public StudyImageUrlResponse uploadFile(Long studyId, String base64Image) throws IOException {
 		String extension = "";
 		Pattern pattern = Pattern.compile("^data:image/([a-zA-Z]+);base64,");
 		Matcher matcher = pattern.matcher(base64Image);

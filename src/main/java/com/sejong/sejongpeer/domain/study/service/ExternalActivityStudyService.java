@@ -1,5 +1,6 @@
 package com.sejong.sejongpeer.domain.study.service;
 
+import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ import com.sejong.sejongpeer.global.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,8 +34,9 @@ public class ExternalActivityStudyService {
 	private final MemberRepository memberRepository;
 	private final SecurityUtil securityUtil;
 	private final TagService tagService;
+	private final StudyService studyService;
 
-	public StudyCreateResponse createStudy(ExternalActivityStudyCreateRequest request) {
+	public StudyCreateResponse createStudy(ExternalActivityStudyCreateRequest request) throws IOException {
 		final String memberId = securityUtil.getCurrentMemberId();
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -46,9 +51,11 @@ public class ExternalActivityStudyService {
 		tagService.setTagAndStudyTagMap(vo.tags(), savedStudy);
 
 		ExternalActivityStudy externalActivityStudy = ExternalActivityStudy.create(externalActivity, savedStudy);
+
+		List<StudyImageUrlResponse> externalActivityStudyImageUrlResponse = studyService.uploadFiles(savedStudy.getId(), request.base64ImagesList());
 		externalActivityStudyRepository.save(externalActivityStudy);
 
-		return StudyCreateResponse.from(savedStudy);
+		return StudyCreateResponse.from(savedStudy, externalActivityStudyImageUrlResponse);
 	}
 
 }

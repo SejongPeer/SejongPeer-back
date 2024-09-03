@@ -2,6 +2,10 @@ package com.sejong.sejongpeer.domain.study.service;
 
 import com.sejong.sejongpeer.domain.externalactivity.entity.ExternalActivity;
 import com.sejong.sejongpeer.domain.externalactivity.repository.ExternalActivityRepository;
+import com.sejong.sejongpeer.domain.image.dto.response.StudyImageUrlResponse;
+import com.sejong.sejongpeer.domain.image.entity.Image;
+import com.sejong.sejongpeer.domain.image.repository.ImageRepository;
+import com.sejong.sejongpeer.domain.image.service.ImageService;
 import com.sejong.sejongpeer.domain.lecture.entity.Lecture;
 import com.sejong.sejongpeer.domain.lecture.repository.LectureRepository;
 import com.sejong.sejongpeer.domain.member.entity.Member;
@@ -32,6 +36,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +57,9 @@ public class StudyService {
 	private final StudyRepository studyRepository;
 	private final StudyRelationRepository studyRelationRepository;
 	private final ScrapRepository scrapRepository;
+	private final ImageRepository imageRepository;
 	private final SmsService smsService;
+	private final ImageService imageService;
 	private final MemberUtil memberUtil;
 
 
@@ -263,5 +270,20 @@ public class StudyService {
 
 	private boolean isStudyPostScrappedByMember(Member member, Study study) {
 		return scrapRepository.existsByMemberAndStudy(member, study);
+	}
+
+	public List<StudyImageUrlResponse> uploadFiles(Long studyId, List<String> base64ImagesList) {
+		List<Image> originalImages = imageRepository.findAllByStudyId(studyId);
+		imageRepository.deleteAll(originalImages);
+
+		return base64ImagesList.parallelStream()
+			.map(base64Image -> {
+				try {
+					return imageService.uploadFile(studyId, base64Image);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			})
+			.collect(Collectors.toUnmodifiableList());
 	}
 }
