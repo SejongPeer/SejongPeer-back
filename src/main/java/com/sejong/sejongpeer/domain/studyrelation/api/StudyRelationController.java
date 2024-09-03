@@ -50,8 +50,8 @@ public class StudyRelationController {
 
 	@Operation(summary = "스터디 지원자 수락/거절", description = "자신이 개설한 스터디 지원자의 스터디 신청에 대해 수락/거절을 처리합니다.")
 	@PatchMapping("/matching/status")
-	public void processStudyMatchingStatus(@Valid @RequestBody StudyMatchingRequest request) {
-		studyRelationService.updateStudyMatchingStatus(request);
+	public ResponseEntity<Map<String, Boolean>> processStudyMatchingStatus(@Valid @RequestBody StudyMatchingRequest request) {
+		return ResponseEntity.ok(studyRelationService.updateStudyMatchingStatus(request));
 	}
 
 	@Operation(summary = "스터디 조기마감", description = "스터디 신청을 조기마감 시킵니다.")
