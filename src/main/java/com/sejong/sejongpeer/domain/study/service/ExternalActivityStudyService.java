@@ -46,13 +46,15 @@ public class ExternalActivityStudyService {
 
 		StudyVo vo = StudyVo.from(request);
 		Study study = Study.create(member, vo);
+
+		List<StudyImageUrlResponse> externalActivityStudyImageUrlResponse = studyService.uploadFiles(study.getId(), request.base64ImagesList());
+
 		Study savedStudy = studyRepository.save(study);
 
 		tagService.setTagAndStudyTagMap(vo.tags(), savedStudy);
 
 		ExternalActivityStudy externalActivityStudy = ExternalActivityStudy.create(externalActivity, savedStudy);
 
-		List<StudyImageUrlResponse> externalActivityStudyImageUrlResponse = studyService.uploadFiles(savedStudy.getId(), request.base64ImagesList());
 		externalActivityStudyRepository.save(externalActivityStudy);
 
 		return StudyCreateResponse.from(savedStudy, externalActivityStudyImageUrlResponse);

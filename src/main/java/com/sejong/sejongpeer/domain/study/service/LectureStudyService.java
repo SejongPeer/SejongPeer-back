@@ -57,13 +57,15 @@ public class LectureStudyService {
 
 		StudyVo vo = StudyVo.from(request);
 		Study study = Study.create(member, vo);
+
+		List<StudyImageUrlResponse> lectureStudyImageUrlResponse = studyService.uploadFiles(study.getId(), request.base64ImagesList());
+
 		Study saveStudy = studyRepository.save(study);
 
 		tagService.setTagAndStudyTagMap(vo.tags(), saveStudy);
 
 		LectureStudy lectureStudy = LectureStudy.create(lecture, saveStudy);
 
-		List<StudyImageUrlResponse> lectureStudyImageUrlResponse = studyService.uploadFiles(saveStudy.getId(), request.base64ImagesList());
 		lectureStudyRepository.save(lectureStudy);
 
 		return StudyCreateResponse.from(saveStudy, lectureStudyImageUrlResponse);
