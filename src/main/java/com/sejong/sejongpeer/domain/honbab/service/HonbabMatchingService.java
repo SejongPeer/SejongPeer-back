@@ -68,7 +68,7 @@ public class HonbabMatchingService {
 
 		HonbabMatched honbabMatched = HonbabMatched.registerMatchingPair(me, partner);
 		completeMatching(partner, me);
-		return honbabMatched;
+		return honbabMatchedRepository.save(honbabMatched);
 	}
 
 	private void completeMatching(Honbab partner, Honbab me) {
