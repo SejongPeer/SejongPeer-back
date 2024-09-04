@@ -27,10 +27,7 @@ public class Lecture {
 
 	private String professor;
 
-	private String code; // 학수번호
-
-	private Integer classNo; // 분반
-
+	private String major; // 개설 학과
 	private String college; // 단과대
 
 	@OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
