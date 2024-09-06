@@ -15,7 +15,7 @@ public record SignUpRequest(
 	@NotBlank(message = "비밀번호는 비워둘 수 없습니다.")
 	@Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*?]{10,}$", message = "비밀번호는 최소 10자 이상의 영문, 숫자 및 특수문자(!@#$%^&*?)로만 이루어져야 합니다.") String password,
 	@NotBlank(message = "비밀번호 확인 칸은 비워둘 수 없습니다.")
-	@Pattern(regexp = "^[a-zA-Z0-9]{10,}$") String passwordCheck,
+	@Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*?]{10,}$") String passwordCheck,
 	@NotBlank(message = "이름은 비워둘 수 없습니다.") String name,
 	@NotBlank(message = "학번은 비워둘 수 없습니다.") String studentId,
 	@NotBlank(message = "단과대학교는 비워둘 수 없습니다.") String college,
