@@ -10,6 +10,7 @@ public final class WebSecurityURIs {
 		List.of(
 			"/api/v1/auth/sign-in",
 			"/sejongpeer-actuator/**",
+			"/api/v1/study/unauthenticated/**",
 			"/api/v1/auth/sejong-auth",
 			"/api/v1/member/sign-up",
 			"/api/v1/member/check-account",
