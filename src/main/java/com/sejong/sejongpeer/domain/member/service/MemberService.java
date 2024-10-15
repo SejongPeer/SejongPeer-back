@@ -78,7 +78,7 @@ public class MemberService {
 	}
 
 	private void updateMember(Member member, MemberUpdateRequest request) {
-		memberVerificationService.verifyUpdatable(request);
+		memberVerificationService.verifyUpdatable(member, request);
 		MemberInfo.NICKNAME.executeUpdate(member, request.nickname());
 		MemberInfo.PHONE_NUMBER.executeUpdate(member, request.phoneNumber());
 		MemberInfo.KAKAO_ACCOUNT.executeUpdate(member, request.kakaoAccount());
