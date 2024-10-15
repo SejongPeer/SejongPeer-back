@@ -42,6 +42,7 @@ public class WebSecurityConfig {
 
 		// configuration.setAllowedOrigins(WebSecurityURIs.CORS_ALLOW_URIS);
 		configuration.addAllowedOriginPattern(UrlConstants.DEV_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.DEV_DOMAIN_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.WWW_DEV_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.LOCAL_DOMAIN_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.LOCAL_SECURE_DOMAIN_URL.getValue());
