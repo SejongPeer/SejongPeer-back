@@ -40,7 +40,7 @@ public class WebSecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		// configuration.setAllowedOrigins(WebSecurityURIs.CORS_ALLOW_URIS);
+		configuration.setAllowedOrigins(WebSecurityURIs.CORS_ALLOW_URIS);
 		configuration.addAllowedOriginPattern(UrlConstants.DEV_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.DEV_DOMAIN_URL.getValue());
 		configuration.addAllowedOriginPattern(UrlConstants.WWW_DEV_URL.getValue());
