@@ -1,7 +1,10 @@
 package com.sejong.sejongpeer.domain.member.service;
 
+import java.util.function.Predicate;
+
 import com.sejong.sejongpeer.domain.member.dto.request.MemberUpdateRequest;
 import com.sejong.sejongpeer.domain.member.dto.request.SignUpRequest;
+import com.sejong.sejongpeer.domain.member.entity.Member;
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
@@ -83,18 +86,17 @@ public class MemberVerificationService {
 		return memberRepository.existsByKakaoAccount(kakaoAccount);
 	}
 
-	public void verifyUpdatable(MemberUpdateRequest request) {
-		// 원자성 보장을 위해 하나라도 잘못되거나 중복된 정보가 있으면 업데이트 되어서는 안됨
-		if (request.nickname() != null && existsNickname(request.nickname())) {
-			throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
-		}
+	public void verifyUpdatable(Member member, MemberUpdateRequest request) {
+		// 원자성을 보장하기 위해, 중복된 정보가 있으면 업데이트가 중단됨
+		validateFieldChange(member.getNickname(), request.nickname(), this::existsNickname, ErrorCode.DUPLICATED_NICKNAME);
+		validateFieldChange(member.getPhoneNumber(), request.phoneNumber(), this::existsPhoneNumber, ErrorCode.DUPLICATED_PHONE_NUMBER);
+		validateFieldChange(member.getKakaoAccount(), request.kakaoAccount(), this::existsKakaoAccount, ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
+	}
 
-		if (request.phoneNumber() != null && existsPhoneNumber(request.phoneNumber())) {
-			throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
-		}
-
-		if (request.kakaoAccount() != null && existsKakaoAccount(request.kakaoAccount())) {
-			throw new CustomException(ErrorCode.DUPLICATED_KAKAO_ACCOUNT);
+	private void validateFieldChange(String currentValue, String newValue, Predicate<String> existsPredicate, ErrorCode errorCode) {
+		// 값이 변경된 경우만 중복 검사
+		if (newValue != null && !newValue.equals(currentValue) && existsPredicate.test(newValue)) {
+			throw new CustomException(errorCode);
 		}
 	}
 }
