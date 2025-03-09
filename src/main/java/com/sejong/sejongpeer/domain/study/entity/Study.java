@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.sejong.sejongpeer.domain.image.entity.Image;
 import com.sejong.sejongpeer.domain.study.entity.type.Frequency;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyMethod;
 import com.sejong.sejongpeer.domain.studyrelation.entity.StudyRelation;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
 import com.sejong.sejongpeer.domain.common.BaseAuditEntity;
@@ -23,18 +23,6 @@ import com.sejong.sejongpeer.domain.study.vo.StudyVo;
 import com.sejong.sejongpeer.global.error.exception.CustomException;
 import com.sejong.sejongpeer.global.error.exception.ErrorCode;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -116,6 +104,9 @@ public class Study extends BaseAuditEntity {
 
 	@OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Image> images = new ArrayList<>();
+
+	@Version
+	private Long version;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private Study(
