@@ -39,6 +39,9 @@ public class StudyRelation extends BaseAuditEntity {
 	@Enumerated(EnumType.STRING)
 	private StudyMatchingStatus status;
 
+	@Version
+	private Integer version;
+
 	@Builder(access = AccessLevel.PRIVATE)
 	private StudyRelation(Member member, Study study, StudyMatchingStatus status) {
 		this.member = member;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.scrap.application.ScrapService;
@@ -13,6 +14,8 @@ import com.sejong.sejongpeer.domain.study.entity.type.RecruitmentStatus;
 import com.sejong.sejongpeer.domain.study.entity.type.StudyType;
 import com.sejong.sejongpeer.domain.studyrelation.dto.request.StudyMatchingRequest;
 import com.sejong.sejongpeer.global.util.SecurityUtil;
+import jakarta.persistence.OptimisticLockException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,60 +87,74 @@ public class StudyRelationService {
 		smsService.sendSms(newStudyApplicaitonHistory.getStudy().getMember().getPhoneNumber(), SmsText.STUDY_APPLY_ALARM);
 	}
 
+	@Transactional
 	public void deleteStudyApplicationHistory(final Long studyId) {
 		final String loginMemberId = securityUtil.getCurrentMemberId();
 
-		StudyRelation studyApplicationHistory = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(loginMemberId, studyId)
-			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
+		for (int attempt = 0; attempt < 3; attempt++) {
+			try {
+				StudyRelation studyApplicationHistory = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(loginMemberId, studyId)
+					.orElseThrow(() -> new CustomException(ErrorCode.STUDY_RELATION_NOT_FOUND));
 
-		studyApplicationHistory.registerCanceledAt(LocalDateTime.now());
-		studyApplicationHistory.changeStudyMatchingStatus(StudyMatchingStatus.CANCEL);
-		studyRelationRepository.save(studyApplicationHistory);
-
+				studyApplicationHistory.registerCanceledAt(LocalDateTime.now());
+				studyApplicationHistory.changeStudyMatchingStatus(StudyMatchingStatus.CANCEL);
+				studyRelationRepository.save(studyApplicationHistory);
+				return;
+			} catch (OptimisticLockException e) {
+				if (attempt == 2) {
+					throw new CustomException(ErrorCode.CONCURRENT_UPDATE_CONFLICT);
+				}
+			}
+		}
 	}
 
+	@Transactional
 	public Map<String, Boolean> updateStudyMatchingStatus(StudyMatchingRequest request) {
-		Member studyApplicant = memberRepository.findByNickname(request.applicantNickname())
-			.orElseThrow(() -> new CustomException(ErrorCode.NICKNAME_IS_NULL));
-
-		StudyRelation studyResume = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(studyApplicant.getId(), request.studyId())
-			.orElseThrow(() -> new CustomException(ErrorCode.STUDY_APPLY_HISTORY_NOT_FOUND));
-
-		boolean isFulleApplication = false;
+		boolean isFullApplication = false;
 		Map<String, Boolean> response = new HashMap<>();
 
-		if (studyResume.getStatus().equals(StudyMatchingStatus.CANCEL)) {
-			throw new CustomException(ErrorCode.INVALID_STUDY_MATHCING_STATUS_UPDATE_CONDITION);
-		}
+		try {
+			Member studyApplicant = memberRepository.findByNickname(request.applicantNickname())
+				.orElseThrow(() -> new CustomException(ErrorCode.NICKNAME_IS_NULL));
 
-		Study appliedStudy = studyResume.getStudy();
+			StudyRelation studyResume = studyRelationRepository.findTopByMemberIdAndStudyIdOrderByIdDesc(studyApplicant.getId(), request.studyId())
+				.orElseThrow(() -> new CustomException(ErrorCode.STUDY_APPLY_HISTORY_NOT_FOUND));
 
-		if (request.isAccept()) {
-			if (appliedStudy.getRecruitmentCount() <= appliedStudy.getParticipantsCount()) {
-				throw new CustomException(ErrorCode.STUDY_APPLICANT_CANNOT_BE_ACCEPTED);
+
+			if (studyResume.getStatus().equals(StudyMatchingStatus.CANCEL)) {
+				throw new CustomException(ErrorCode.INVALID_STUDY_MATHCING_STATUS_UPDATE_CONDITION);
 			}
 
-			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
-			appliedStudy.addParticipantsCount();
-			studyRepository.save(appliedStudy);
+			Study appliedStudy = studyResume.getStudy();
 
-			if (appliedStudy.getRecruitmentCount() <= appliedStudy.getParticipantsCount()) {
-				appliedStudy.changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
+			if (request.isAccept()) {
+				if (appliedStudy.getRecruitmentCount() <= appliedStudy.getParticipantsCount()) {
+					throw new CustomException(ErrorCode.STUDY_APPLICANT_CANNOT_BE_ACCEPTED);
+				}
+
+				studyResume.changeStudyMatchingStatus(StudyMatchingStatus.ACCEPT);
+				appliedStudy.addParticipantsCount();
 				studyRepository.save(appliedStudy);
 
-				List<StudyRelation> appliedStudyHistory = studyRelationRepository.findAllByStudyAndStatus(appliedStudy, StudyMatchingStatus.ACCEPT);
-				appliedStudyHistory.forEach(this::sendStudyKakaoLink);
+				if (appliedStudy.getRecruitmentCount() <= appliedStudy.getParticipantsCount()) {
+					appliedStudy.changeStudyRecruitmentStatus(RecruitmentStatus.CLOSED);
+					studyRepository.save(appliedStudy);
 
-				isFulleApplication = true;
+					List<StudyRelation> appliedStudyHistory = studyRelationRepository.findAllByStudyAndStatus(appliedStudy, StudyMatchingStatus.ACCEPT);
+					appliedStudyHistory.forEach(this::sendStudyKakaoLink);
+
+					isFullApplication = true;
+				}
+			} else {
+				studyResume.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
+				sendStudyRejectAlarmToStudyApplicant(studyResume);
 			}
-		} else {
-			studyResume.changeStudyMatchingStatus(StudyMatchingStatus.REJECT);
-			sendStudyRejectAlarmToStudyApplicant(studyResume);
+
+			studyRelationRepository.save(studyResume);
+			response.put("isFull", isFullApplication);
+		} catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
+			throw new CustomException(ErrorCode.CONCURRENT_UPDATE_CONFLICT);
 		}
-
-		studyRelationRepository.save(studyResume);
-		response.put("isFull", isFulleApplication);
-
 		return response;
 	}
 
@@ -198,20 +215,19 @@ public class StudyRelationService {
 
 		studyRelations.sort((sr1, sr2) -> sr2.getStudy().getId().compareTo(sr1.getStudy().getId()));
 
-		List<AppliedStudyResponse> list = new ArrayList<>();
-		studyRelations.stream()
-			.forEach(studyRelation -> {
-				if(!studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
-					Study study = studyRelation.getStudy();
+		return studyRelations.stream()
+			.filter(studyRelation -> !studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL))
+			.map(studyRelation -> {
+				Study study = studyRelation.getStudy();
 
-					Long scrapCount = scrapService.getScrapCountByStudyPost(study.getId());
-					List<String> tags = tagService.getTagsNameByStudy(study);
-					boolean hasMemberScrappedStudy = scrapService.hasMemberScrappedStudy(loginMember, study);
+				Long scrapCount = scrapService.getScrapCountByStudyPost(study.getId());
+				List<String> tags = tagService.getTagsNameByStudy(study);
+				boolean hasMemberScrappedStudy = scrapService.hasMemberScrappedStudy(loginMember, study);
 
-					list.add(AppliedStudyResponse.of(study, tags, scrapCount, hasMemberScrappedStudy));
-				}
-			});
-		return list;
+				return AppliedStudyResponse.of(study, tags, scrapCount, hasMemberScrappedStudy);
+
+			})
+			.collect(Collectors.toList());
 	}
 
 	public Map<String, List<StudyApplicantsListRespone>> getApplicatnsList() {
