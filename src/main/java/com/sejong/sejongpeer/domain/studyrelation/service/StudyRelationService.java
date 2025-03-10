@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.sejong.sejongpeer.domain.member.repository.MemberRepository;
 import com.sejong.sejongpeer.domain.scrap.application.ScrapService;
@@ -214,20 +215,19 @@ public class StudyRelationService {
 
 		studyRelations.sort((sr1, sr2) -> sr2.getStudy().getId().compareTo(sr1.getStudy().getId()));
 
-		List<AppliedStudyResponse> list = new ArrayList<>();
-		studyRelations.stream()
-			.forEach(studyRelation -> {
-				if(!studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL)) {
-					Study study = studyRelation.getStudy();
+		return studyRelations.stream()
+			.filter(studyRelation -> !studyRelation.getStatus().equals(StudyMatchingStatus.CANCEL))
+			.map(studyRelation -> {
+				Study study = studyRelation.getStudy();
 
-					Long scrapCount = scrapService.getScrapCountByStudyPost(study.getId());
-					List<String> tags = tagService.getTagsNameByStudy(study);
-					boolean hasMemberScrappedStudy = scrapService.hasMemberScrappedStudy(loginMember, study);
+				Long scrapCount = scrapService.getScrapCountByStudyPost(study.getId());
+				List<String> tags = tagService.getTagsNameByStudy(study);
+				boolean hasMemberScrappedStudy = scrapService.hasMemberScrappedStudy(loginMember, study);
 
-					list.add(AppliedStudyResponse.of(study, tags, scrapCount, hasMemberScrappedStudy));
-				}
-			});
-		return list;
+				return AppliedStudyResponse.of(study, tags, scrapCount, hasMemberScrappedStudy);
+
+			})
+			.collect(Collectors.toList());
 	}
 
 	public Map<String, List<StudyApplicantsListRespone>> getApplicatnsList() {
